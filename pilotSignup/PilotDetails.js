@@ -1,0 +1,153 @@
+import { View, Text, Image, TextInput, StyleSheet, Pressable, ScrollView  } from 'react-native'
+import React, { useState, useRef } from 'react'
+import { SelectList } from 'react-native-dropdown-select-list'
+import { MultipleSelectList } from 'react-native-dropdown-select-list'
+
+
+export default function PilotDetails({ formData, setFormData }) {
+  const [shouldShow, setshouldShow] = useState(false)
+  const [selectedDrone, setSelectedDrone] = React.useState([]);
+  const [selectedExperience, setSelectedExperience] = React.useState("");
+
+  const drone = [
+    { key: '1', value: 'Tropogo' },
+    { key: '2', value: 'Slider' },
+    { key: '3', value: 'Agri' },
+    { key: '4', value: 'Delivery' },
+    { key: '5', value: 'Survey Mapping' },
+  ]
+
+  const experience = [
+    { key: '1', value: '0-1 Years'},
+    { key: '2', value: '1-2 Years'},
+    { key: '3', value: '2-3 Years'},
+    { key: '4', value: '3-5 Years'},
+    { key: '5', value: '5+ Years'},
+  ]
+
+  return (
+    
+    <View style={styles.container}>
+      <View style={shouldShow ? styles.inputViewPP : styles.inputView}>
+        {
+          shouldShow ?
+            (
+              <View style={[styles.button_inp]}>
+                <Pressable
+                  style={styles.pressable}
+                  onPress={() => {
+                    setshouldShow((prev) => !prev)
+                    setFormData({ ...formData, dcgaCert:false });
+                  }}>
+                  <Text style={styles.button}>Press if you don't have DCGA Certification!</Text>
+                </Pressable>
+                <TextInput
+                  style={styles.TextInput}
+                  placeholderTextColor="black"
+                  placeholder='Address House No/Street No/Area'
+                  value={formData.certNum}
+                  onChangeText={(certNum) => {
+                    setFormData({ ...formData, certNum });
+                  }}
+                >
+                </TextInput>
+              </View>
+            ) :
+            (
+              <View style={[styles.button_inp]}>
+                <Pressable
+                  onPress={() => {
+                    setshouldShow((prev) => !prev)
+                    setFormData({ ...formData, dcgaCert:true });
+                  }}>
+                  <Text style={styles.button}>Press if you have DCGA Certification!</Text>
+                </Pressable>
+              </View>
+            )
+        }
+      </View>
+      <View >
+        <MultipleSelectList
+          placeholder='Select Drones'
+          notFoundText='Drone not found'
+          setSelected={(val) => setSelectedDrone(val)}
+          data={drone}
+          save="value"
+          onSelect={(droneSelect) => {
+            setFormData({ ...formData, droneSelect:selectedDrone });
+          }}
+          label="Drones"
+        />
+      </View>
+      <View >
+        <SelectList
+          placeholder='Experience'
+          search={false}
+          setSelected={(val) => setSelectedExperience(val)}
+          data={experience}
+          save="value"
+          onSelect={(droneSelect) => {
+            setFormData({ ...formData, experience: selectedExperience});
+            console.log(formData);
+          }}
+          label="Experience"
+        />
+      </View>
+    </View > 
+  )
+}
+
+const styles = StyleSheet.create({
+  container: {
+    marginBottom: 20
+  },
+  TextInput: {
+    backgroundColor: "white",
+    borderRadius: 8,
+    borderWidth:1,
+    borderColor:'grey',
+    width: 280,
+    height: 45,
+    marginBottom: 20,
+    alignItems: "flex-start",
+    justifyContent: "center",
+    padding: 10,
+    fontSize: 15,
+    color: 'grey'
+  },
+  passwordContainer: {
+    position: 'absolute',
+    right: 15, 
+    top:13
+  },
+  button_inp: {
+    padding: 10,
+    flexDirection: "column"
+  },
+  pressable: {
+    padding: 10
+  },
+  containerT: {
+    flex: 1,
+  },
+  heading: {
+    fontSize: 20,
+    fontWeight: '800',
+    marginTop: 100,
+    alignSelf: 'center',
+  },
+  dropdownSelector: {
+    width: 90,
+    height: 50,
+    borderRadius: 10,
+    borderWidth: 0.5,
+    borderColor: '#8e8e8e',
+    alignSelf: 'center',
+    marginTop: 50,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingLeft: 15,
+    paddingRight: 15,
+  },
+})
