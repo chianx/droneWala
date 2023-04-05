@@ -1,13 +1,21 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {View, Text, ImageBackground, Image,Share, Alert, TouchableOpacity} from 'react-native'
 import {DrawerContentScrollView, DrawerItemList} from '@react-navigation/drawer';
 import Images from '../images/index';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import EditProfileModal from '../screens/editProfile';
 // import Share from 'react-native-share';
 
 const CustomDrawer = ({prop, navigation}) => {
+    const [user, setUser] = useState({
+        firstName: 'John Doe',
+        lastName: 'johndoe@example.com',
+        headline: 'I love React Native!',
+        summary: 'I love React Native!'
+    });
+    const [launch , setLaunch] = useState(false)
     const signout =() => {
         AsyncStorage.setItem("login", ""+false);
         AsyncStorage.setItem("userType", "");
@@ -34,25 +42,26 @@ const CustomDrawer = ({prop, navigation}) => {
             Alert.alert(error.message);
         }
     }
-    //     const shareOptions = {
-    //       message: 'This is test message',
-    //     }
-    //     try {
-    //       const ShareResponse = await Share.open(shareOptions);
-    //     } catch(error) {
-    //       console.log('Share error : ' + error);
-    //     }
+    const closeEditProfile =() => {
+        setLaunch(false)
+    }
+    const launchEditProfile =() => {
+        setLaunch(true)
+    }
     return (
         <View style={{flex:1}}>
             <DrawerContentScrollView contentContainerStyle={{backgroundColor:'coral'}}>
                 <ImageBackground source={Images.background} style={{padding:20}}>
                     <Image source = {Images.profile} style={{height:80, width:80, borderRadius:40, marginBottom:10}} />
                     <Text style={{color:'white', fontSize:18, paddingBottom:5}}>Chintan Grover</Text>
-                    <View style={{flex:1, flexDirection:'row'}}>
+                    
+                        <View> 
+                        <TouchableOpacity style={{flex:1, flexDirection:'row'}} onPress={launchEditProfile}>
+                            <FontAwesome5 name="user-edit" size={12} color="#7DF9FF" />
+                            <Text style={{color:'#7DF9FF', paddingLeft:3, position:'relative', bottom:3}}>Edit Profile </Text>
+                        </TouchableOpacity>
+                        </View>
                         
-                        <FontAwesome5 name="user-edit" size={12} color="#7DF9FF" />
-                        <Text style={{color:'#7DF9FF', paddingLeft:3, position:'relative', bottom:3}}>Edit Profile </Text>
-                    </View>
                 </ImageBackground>
             <View style={{flex:1, backgroundColor:'white', paddingTop:10}}>
                 <DrawerItemList {...prop} />
@@ -68,7 +77,16 @@ const CustomDrawer = ({prop, navigation}) => {
                     <Text style={{fontSize:15, marginLeft:5}}>Sign Out</Text>
                 </TouchableOpacity>
             </View>
+
+            <EditProfileModal
+                visible={launch}
+                onSave={launchEditProfile}
+                onClose={closeEditProfile}
+                user={user}
+            />
         </View>
+
+        
         
     )
 }

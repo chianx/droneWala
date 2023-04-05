@@ -1,7 +1,9 @@
 import { View, Text, TextInput, StyleSheet,Image, TouchableOpacity, Button } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { SelectList } from 'react-native-dropdown-select-list'
-import * as ImagePicker from 'expo-image-picker'
+import React, { useEffect, useState } from 'react';
+import { SelectList } from 'react-native-dropdown-select-list';
+import * as ImagePicker from 'expo-image-picker';
+// import {storage} from '../firebase/firebase';
+// import { ref, uploadBytesResumable, getDownloadURL} from 'firebase/storage';
 
 export default function PersonalDetails({ formData, setFormData }) {
     const [selectedNumPeople, setSelectedNumPeople] = React.useState("");
@@ -14,6 +16,8 @@ export default function PersonalDetails({ formData, setFormData }) {
         const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
         setHasGalleryPermission(galleryStatus.status === 'granted');
       })();
+
+      console.log(Date.now())
     }, []);
 
     const pickImage = async () => {

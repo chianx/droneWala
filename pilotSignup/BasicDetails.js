@@ -13,7 +13,8 @@ export default function BasicDetails({ formData, setFormData }) {
                 placeholder='Full Name'
                 value={formData.name}
                 onChangeText={(name) => {
-                    setFormData({ ... formData, name });
+                    let isName = true;
+                    setFormData({ ... formData, name,isName });
                 }}
             />
         </View>
@@ -24,7 +25,8 @@ export default function BasicDetails({ formData, setFormData }) {
                 placeholder='Email'
                 value={formData.email}
                 onChangeText={(email) => {
-                    setFormData({ ... formData, email });
+                    let isEmail = true;
+                    setFormData({ ... formData, email, isEmail });
                 }}
             />
         </View>

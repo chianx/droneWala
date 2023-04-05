@@ -159,45 +159,6 @@ const EditProfileModal = ({ visible, onClose, user, onSave }) => {
               />
             </View>
 
-            <View style={shouldShow ? styles.inputViewPP : styles.inputView}>
-        {
-          shouldShow ?
-            (
-              <View style={[styles.button_inp]}>
-                <Pressable
-                  style={styles.pressable}
-                  onPress={() => {
-                    setshouldShow((prev) => !prev)
-                    setFormData({ ...formData, dcgaCert:false });
-                  }}>
-                  <Text style={styles.button}>Press if you don't have DCGA Certification!</Text>
-                </Pressable>
-                <TextInput
-                  style={styles.TextInput}
-                  placeholderTextColor="black"
-                  placeholder='Address House No/Street No/Area'
-                  value={formData.certNum}
-                  onChangeText={(certNum) => {
-                    setFormData({ ...formData, certNum });
-                  }}
-                >
-                </TextInput>
-              </View>
-            ) :
-            (
-              <View style={[styles.button_inp]}>
-                <Pressable
-                  onPress={() => {
-                    setshouldShow((prev) => !prev)
-                    setFormData({ ...formData, dcgaCert:true });
-                  }}>
-                  <Text style={styles.button}>Press if you have DCGA Certification!</Text>
-                </Pressable>
-              </View>
-            )
-        }
-        </View>
-
             <View style={{marginBottom:20, width:300}}>
             <Text style={styles.label}>Interests</Text>
               <MultipleSelectList
@@ -213,7 +174,7 @@ const EditProfileModal = ({ visible, onClose, user, onSave }) => {
           </ScrollView>
 
           <View style={{alignItems:'center', width:'100%', backgroundColor:'white',position:'absolute', bottom:0, borderTopWidth:1, borderTopColor:'grey', marginVertical:7}}>
-          <TouchableOpacity style={styles.saveButton} onPress={() => onSave({ firstName, lastName, headline, summary })}>
+          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
             <Text style={styles.saveButtonText}>Save</Text>
           </TouchableOpacity>
           </View>

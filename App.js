@@ -11,7 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // import 'react-native-gesture-handler';
 
 export default function App() {
-  const [login, setLogin] = useState(true);
+  const [login, setLogin] = useState(false);
   AsyncStorage.setItem("login", ""+login)
   AsyncStorage.setItem("userType", "pilot")
   if (login)
@@ -22,14 +22,13 @@ export default function App() {
     // <View style={styles.container}>
     // <JobForm />
     // </View> 
-    // elipside
-    
+
   );
   else return (
     <NavigationContainer>
       {/* <WalkthroughStack /> */}
-      {/* <SignupStack /> */}
-      <LoginStack />
+      <SignupStack />
+      {/* <LoginStack /> */}
     </NavigationContainer>
   )
 }

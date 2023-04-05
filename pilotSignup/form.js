@@ -14,13 +14,14 @@ export default function PilotForm({navigation}) {
         "Personal Details",
         "Pilot Details"
     ]
+    const [errorMessage, setErrorMessage] = useState("");
     const [formData, setFormData] = useState(
         {
             // BasicDetails
             name: "",
             email: "",
-            password: "",
-            cpassword: "",
+            isName:false,
+            isEmail:false,
             contactNo: "",
 
             // PersonalDetails
@@ -47,11 +48,40 @@ export default function PilotForm({navigation}) {
         }
     }
     const createUserInFirebase = () => {
-        set(ref(db, 'users/'), {formData})
-
+        // set(ref(db, 'users/'), {formData})
+        // Screen 2 Vadilaton
         console.log(formData)
+        // const userData = {name:formData.name}
         navigation.navigate("Login")
     } 
+
+    const callNext = () => {
+        console.log(formData);
+        if(screen === 0) {
+            var errMsg = "";
+            var validate = false;
+            // validate name
+            if(formData.name.length <= 2)  errMsg = "Name length... short"
+            // else if (email is wrong) errorMsg = "...."
+            else validate = true;
+
+            if(validate && formData.isName && formData.isEmail) {
+                setScreen((currScreen) => currScreen + 1);
+            }
+            else {
+                setErrorMessage(errMsg);
+            }
+        }else if(screen === 1) {
+            // validate address 
+            // validate city, pincode, etc
+            // if(validate === true && isAdhar && isCity) {
+                setScreen((currScreen) => currScreen + 1);
+            // }else {
+                // show error message in red generated through validation process
+            // }
+        }
+                
+    }
     return (
         <ScrollView contentContainerStyle={{flexGrow:1}}>
         <View style={styles.content}>
@@ -68,16 +98,13 @@ export default function PilotForm({navigation}) {
                     }}>
                     <Text style={styles.button}>Previous</Text>
                 </Pressable>
-                <Pressable 
-                    disabled={screen === 2}
-                    onPress={() => {
-                        setScreen((currScreen) => currScreen + 1)
-                    }}>
-                    {screen === 2 ? <TouchableOpacity onPress={() => {createUserInFirebase()}} style={styles.button}><Text>Submit</Text></TouchableOpacity> 
-                    : <Text style={styles.button}>Next</Text>}
+
+                {screen === 2 ? <TouchableOpacity onPress={() => {createUserInFirebase()}} style={styles.button}><Text>Submit</Text></TouchableOpacity> 
+                : <TouchableOpacity onPress={callNext}><Text style={styles.button}>Next</Text></TouchableOpacity>}
                     
-                </Pressable>
+
             </View>
+            {errorMessage != "" ? <View><Text style={{color:'red'}}>{errorMessage}</Text></View> : <></>}
         </View>
         </ScrollView>
     )
@@ -113,4 +140,4 @@ const styles = StyleSheet.create({
         textAlign: "center",
         borderRadius: 10,
     }
-})
+});
