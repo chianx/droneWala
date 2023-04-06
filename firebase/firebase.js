@@ -16,5 +16,5 @@ export const firebaseConfig = {
 // Initialize Firebase
 // if(firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
-  // export const storage = getStorage(firebaseConfig)
+  export const storage = getStorage()
 // }

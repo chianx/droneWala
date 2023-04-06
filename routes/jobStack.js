@@ -1,6 +1,7 @@
 import react from 'react'; 
 import Jobs from '../screens/jobs';
 import JobDetails from '../screens/jobDetails'
+import Apply from '../screens/apply';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -21,6 +22,10 @@ export default function JobStack({navigation}) {
             <Stack.Screen 
                 name="JobDetails" 
                 component={JobDetails}
+            />
+            <Stack.Screen 
+                name="Apply" 
+                component={Apply}
             />
             
         </Stack.Navigator>

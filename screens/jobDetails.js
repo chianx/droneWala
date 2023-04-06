@@ -4,9 +4,8 @@ import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'rea
 import Images from '../images/index'
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
-// import { MaterialIcons } from '@expo/vector-icons';
 
-export default function JobDetails({route}) {
+export default function JobDetails({route, navigation}) {
     const job = route.params.job;
   return (
     <ScrollView>
@@ -59,7 +58,9 @@ export default function JobDetails({route}) {
             </Text>
           </View>
           <View style={styles.apply}>
-          <TouchableOpacity style={{backgroundColor:'coral', paddingVertical:9, borderRadius:10}}><Text style={{color:'white', fontSize:17, textAlign:'center'}}>Apply Now</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("Apply", {job:job})} style={{backgroundColor:'coral', paddingVertical:9, borderRadius:10}}>
+            <Text style={{color:'white', fontSize:17, textAlign:'center'}}>Apply Now</Text>
+          </TouchableOpacity>
           </View>
         </View>
 

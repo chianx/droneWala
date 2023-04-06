@@ -2,8 +2,8 @@ import { View, Text, TextInput, StyleSheet,Image, TouchableOpacity, Button } fro
 import React, { useEffect, useState } from 'react';
 import { SelectList } from 'react-native-dropdown-select-list';
 import * as ImagePicker from 'expo-image-picker';
-// import {storage} from '../firebase/firebase';
-// import { ref, uploadBytesResumable, getDownloadURL} from 'firebase/storage';
+import {storage} from '../firebase/firebase'
+import { ref, getDownloadURL,uploadBytesResumable, uploadBytes} from 'firebase/storage';
 
 export default function PersonalDetails({ formData, setFormData }) {
     const [selectedNumPeople, setSelectedNumPeople] = React.useState("");
@@ -16,23 +16,61 @@ export default function PersonalDetails({ formData, setFormData }) {
         const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
         setHasGalleryPermission(galleryStatus.status === 'granted');
       })();
-
-      console.log(Date.now())
     }, []);
 
     const pickImage = async () => {
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes:ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
-        // aspect: [4,3],
+        aspect: [4,4],
         quality:1
       });
 
       if(!result.canceled) {
         setImage(result.assets[0].uri);
-        console.log(image);
-      }
-
+        console.log("Hello", image);
+        // Save image code starts from here
+        const metadata = {
+          contentType: 'image/jpeg'
+        };
+        const storageRef  = ref(storage, 'profiles/' + Date.now())
+        const blobImage = await new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.onload = function() {
+            resolve(xhr.response);
+          };
+          xhr.onerror = function() {
+            reject(new TypeError("Network request failed"));
+          };
+          xhr.responseType = "blob";
+          xhr.open("GET", image, true);
+          xhr.send(null);
+        })
+        const uploadTask = uploadBytesResumable(storageRef, blobImage, metadata);
+        uploadTask.on('state_changed',
+          (snapshot) => {
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log('Upload is ' + progress + '% done');
+            switch (snapshot.state) {
+              case 'paused':
+                console.log('Upload is paused');
+                break;
+              case 'running':
+                console.log('Upload is running');
+                break;
+            }
+          }, 
+          (error) => {
+            console.log(error)
+          }, 
+          () => {
+            // Upload completed successfully, now we can get the download URL
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              console.log('File available at', downloadURL);
+            });
+          });
+          // Save image code ends from here
+        }
     };
 
     if(hasGalleryPermission === false) {
