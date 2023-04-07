@@ -2,6 +2,9 @@ import { View, Text, Button, TextInput, StyleSheet, Pressable, ScrollView, Touch
 import React, { useState } from 'react'
 import Precise from './Precise';
 import Description from './Description';
+// import firestore from '@react-native-firebase/firestore';
+import { db } from '../firebase/databaseConfig'
+import {ref, set} from 'firebase/database'
 
 export default function JobForm() {
     const [screen, setScreen] = useState(0)
@@ -9,6 +12,7 @@ export default function JobForm() {
         "Precise Details",
         "Descriptions"
     ]
+    const [errorMessage, setErrorMessage] = useState("");
     const [formData, setFormData] = useState(
         {
             // ShortDetails
@@ -17,10 +21,18 @@ export default function JobForm() {
             ftORpt: "",
             numOpen: "",
             date: "",
+            jobTitleIsSet: false,
+            salRangeIsSet: false,
+            ftORptIsSet: false,
+            numOpenIsSet: false,
+            dateIsSet: false,
+            
 
             // LongDetails
             aboutJob: "",
-            whoApply: ""
+            whoApply: "",
+            aboutJobIsSet: false,
+            whoApplyIsSet: false,
         }
     )
     const ScreenDisplay = () => {
@@ -30,6 +42,69 @@ export default function JobForm() {
             return <Description formData={formData} setFormData={setFormData}/>
         }
     }
+    const createUserInFirebase = () => {
+        if(screen === 1) {
+            var errMsg = "";
+            var validate = false;
+            
+            // validate name
+            if (!formData.aboutJobIsSet) {
+                errMsg = "Invalid About"
+                formData.aboutJobIsSet = false
+            }else if(!formData.whoApplyIsSet)  {
+                errMsg = "Invalid Who can Apply"
+                formData.whoApplyIsSet = false
+            }else validate = true;
+            
+            if(validate && formData.aboutJobIsSet && formData.whoApplyIsSet) {
+                // navigation.navigate("Login")
+                setErrorMessage("");
+                var final =  { jobTitle: formData.jobTitle,salRange: formData.salRange,ftORpt: formData.ftORpt,numOpen: formData.numOpen,date: formData.date,aboutJob: formData.aboutJob,whoApply: formData.whoApply, }
+                console.log(final)
+            }
+            else {
+                setErrorMessage(errMsg);
+            }
+            // console.log(formData)
+            
+        }
+        // set(ref(db, 'users/'), {formData})
+        // Screen 2 Vadilaton
+        // const userData = {name:formData.name}
+    } 
+    const callNext = () => {
+        console.log(formData);
+        if(screen === 0) {
+            var errMsg = "";
+            var validate = false;
+            
+            // validate name
+            if(!formData.jobTitleIsSet)  {
+                errMsg = "Invalid Job Title"
+                formData.jobTitleIsSet = false
+            }else if(!formData.salRangeIsSet) {
+                errMsg = "Invalid Salary Range"
+                formData.salRangeIsSet = false
+            }else if (!formData.ftORptIsSet) {
+                errMsg = "Set Job Type FT/PT"
+                formData.ftORptIsSet = false
+            }else if (!formData.numOpenIsSet) {
+                errMsg = "Set Number of Openings"
+                formData.numOpenIsSet = false
+            }else if (!formData.dateIsSet) {
+                errMsg = "Invalid Date of Form Close"
+                formData.dateIsSet = false
+            }else validate = true;
+            
+            if(validate && formData.jobTitleIsSet && formData.salRangeIsSet && formData.ftORptIsSet && formData.numOpenIsSet && formData.dateIsSet) {
+                setScreen((currScreen) => currScreen + 1);
+                setErrorMessage("");
+            }
+            else {
+                setErrorMessage(errMsg);
+            }
+        }                
+    }
     return (
         <ScrollView contentContainerStyle={{flexGrow:1}}>
         <View style={styles.content}>
@@ -37,24 +112,17 @@ export default function JobForm() {
                 <Text style={styles.title}>{FormTitle[screen]}</Text>
                 <View>{ScreenDisplay()}</View>
             </View>
+            {errorMessage != "" ? <View style={{marginLeft:20, marginBottom: 20}}><Text style={{color:'red', borderRadius: 8, textAlign: 'center',width: 160, height: 30, }}>{errorMessage}</Text></View> : <></>}
             <View style={styles.buttonContainer}>
                 <TouchableOpacity
                     disabled={screen === 0}
                     onPress={() => {
                         setScreen((currScreen) => currScreen - 1)
-
                     }}>
                     <Text style={styles.button}>Previous</Text>
                 </TouchableOpacity>
-                <TouchableOpacity 
-                    disabled={screen === 1}
-                    onPress={() => {
-                        setScreen((currScreen) => currScreen + 1)
-                    }}>
-                    {screen === 1 ? <TouchableOpacity onPress={() => {console.log(formData)}} style={styles.button}><Text style={{color:'white'}}>Submit</Text></TouchableOpacity> 
-                    : <Text style={styles.button}>Next</Text>}
-                    
-                </TouchableOpacity>
+                {screen === 1 ? <TouchableOpacity onPress={() => {createUserInFirebase()}} style={styles.button}><Text>Submit</Text></TouchableOpacity> 
+                : <TouchableOpacity onPress={callNext}><Text style={styles.button}>Next</Text></TouchableOpacity>}
             </View>
         </View>
         </ScrollView>

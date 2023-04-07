@@ -15,14 +15,16 @@ export default function PilotForm({navigation}) {
         "Pilot Details"
     ]
     const [errorMessage, setErrorMessage] = useState("");
+
     const [formData, setFormData] = useState(
         {
             // BasicDetails
             name: "",
             email: "",
-            isName:false,
-            isEmail:false,
-            contactNo: "",
+            dob: "",
+            nameIsSet:false,
+            dateIsSet:false,
+            emailIsSet:false,
 
             // PersonalDetails
             address: "",
@@ -30,12 +32,20 @@ export default function PilotForm({navigation}) {
             state: "",
             pincode: "",
             aadhar: "",
+            addressIsSet: false,
+            cityIsSet: false,
+            stateIsSet: false,
+            pinIsSet: false,
+            aadhaarIsSet: false,
 
             // PilotDetails
             dcgaCert: false,
             certNum: "",
             droneSelect: [],
             experience: "",
+            selectedDroneIsSet: false,
+            dcgaCertIsSet: false,
+            experienceIsSet: false,
         }
     )
     const ScreenDisplay = () => {
@@ -48,37 +58,91 @@ export default function PilotForm({navigation}) {
         }
     }
     const createUserInFirebase = () => {
+        if(screen === 2) {
+            var errMsg = "";
+            var validate = false;
+            
+            // validate name
+            if (formData.dcgaCert && !formData.dcgaCertIsSet) {
+                errMsg = "Enter the DCGA Number!"
+                formData.dcgaCert = false
+                formData.experienceIsSet = false
+            }else if(!formData.experienceIsSet)  {
+                errMsg = "Select the Experience!"
+                formData.experienceIsSet = false
+            }else validate = true;
+            
+            if(validate && formData.experienceIsSet && (!formData.dcgaCert || (formData.dcgaCert && formData.dcgaCertIsSet))) {
+                navigation.navigate("Login")
+                setErrorMessage("");
+                var final =  { name: formData.name, email: formData.email, dob: formData.dob, address: formData.address, city: formData.city, state: formData.state, pincode: formData.pincode, aadhar: formData.aadhar, dcgaCert: formData.dcgaCert, certNum: formData.certNum, droneSelect: formData.droneSelect, experience: formData.experience}
+                console.log(final)
+            }
+            else {
+                setErrorMessage(errMsg);
+            }
+            // console.log(formData)
+            
+        }
         // set(ref(db, 'users/'), {formData})
         // Screen 2 Vadilaton
-        console.log(formData)
         // const userData = {name:formData.name}
-        navigation.navigate("Login")
     } 
-
     const callNext = () => {
         console.log(formData);
         if(screen === 0) {
             var errMsg = "";
             var validate = false;
+            
             // validate name
-            if(formData.name.length <= 2)  errMsg = "Name length... short"
-            // else if (email is wrong) errorMsg = "...."
+            if(!formData.nameIsSet)  {
+                errMsg = "Name Length too short"
+                formData.nameIsSet = false
+            }else if(!formData.dateIsSet) {
+                errMsg = "DOB Not Set"
+                formData.dateIsSet = false
+            }else if (!formData.emailIsSet) {
+                errMsg = "Invalid Email"
+                formData.emailIsSet = false
+            }
             else validate = true;
-
-            if(validate && formData.isName && formData.isEmail) {
+            
+            if(validate && formData.nameIsSet && formData.dateIsSet && formData.emailIsSet) {
                 setScreen((currScreen) => currScreen + 1);
+                setErrorMessage("");
             }
             else {
                 setErrorMessage(errMsg);
             }
         }else if(screen === 1) {
-            // validate address 
-            // validate city, pincode, etc
-            // if(validate === true && isAdhar && isCity) {
+            var errMsg = "";
+            var validate = false;
+            
+            // validate name
+            if(!formData.addressIsSet)  {
+                errMsg = "Invalid Address"
+                formData.addressIsSet = false
+            }else if (!formData.cityIsSet) {
+                errMsg = "Invalid City"
+                formData.cityIsSet = false
+            }else if(!formData.stateIsSet) {
+                errMsg = "Invalid State"
+                formData.stateIsSet = false
+            }else if(!formData.pinIsSet) {
+                errMsg = "Invalid PIN Code"
+                formData.pinIsSet = false
+            }else if(!formData.aadhaarIsSet) {
+                errMsg = "Invalid Aadhaar Number"
+                formData.aadhaarIsSet = false
+            }else validate = true;
+            
+            if(validate && formData.aadhaarIsSet && formData.addressIsSet && formData.cityIsSet && formData.stateIsSet && formData.pinIsSet) {
                 setScreen((currScreen) => currScreen + 1);
-            // }else {
-                // show error message in red generated through validation process
-            // }
+                setErrorMessage("");
+            }
+            else {
+                setErrorMessage(errMsg);
+            }
         }
                 
     }
@@ -89,6 +153,7 @@ export default function PilotForm({navigation}) {
                 <Text style={styles.title}>{FormTitle[screen]}</Text>
                 <View>{ScreenDisplay()}</View>
             </View>
+            {errorMessage != "" ? <View style={{marginLeft:20, marginBottom: 20}}><Text style={{color:'red', borderRadius: 8, textAlign: 'center',width: 160, height: 30, }}>{errorMessage}</Text></View> : <></>}
             <View style={styles.buttonContainer}>
                 <Pressable
                     disabled={screen === 0}
@@ -98,13 +163,9 @@ export default function PilotForm({navigation}) {
                     }}>
                     <Text style={styles.button}>Previous</Text>
                 </Pressable>
-
                 {screen === 2 ? <TouchableOpacity onPress={() => {createUserInFirebase()}} style={styles.button}><Text>Submit</Text></TouchableOpacity> 
                 : <TouchableOpacity onPress={callNext}><Text style={styles.button}>Next</Text></TouchableOpacity>}
-                    
-
             </View>
-            {errorMessage != "" ? <View><Text style={{color:'red'}}>{errorMessage}</Text></View> : <></>}
         </View>
         </ScrollView>
     )

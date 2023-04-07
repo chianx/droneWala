@@ -4,34 +4,80 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-nativ
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
 import { WebView } from 'react-native-webview';
+import { AntDesign } from '@expo/vector-icons';
+import * as OpenAnything from 'react-native-openanything'
+import {storage} from '../firebase/firebase'
+import { ref, getDownloadURL,uploadBytesResumable, uploadBytes} from 'firebase/storage';
 
 export default function Apply({route, navigation}) {
     const job = route.params.job;
     const [answer, setAnswer] = useState("");
     const [file, setFile] = useState(null);
+    const [fileName, setFileName] = useState("")
+    const [url, setUrl] = useState(null)
 
     const selectDoc = async() => {
         
-        let result = await DocumentPicker.getDocumentAsync({});
+        let result = await DocumentPicker.getDocumentAsync({ type: "application/pdf", copyToCacheDirectory: true});
         if (result.type === 'success') {
             console.log(result);
             setFile(result.uri);
-        }
-        let fileInfo = await FileSystem.getInfoAsync(result.uri);
-        if (fileInfo.exists) {
-            console.log(fileInfo);
-            // let directory = await FileSystem.requestDirectoryPermissionsAsync(result.uri)
-            // console.log(directory);
-            let fileContent = await FileSystem.readAsStringAsync(result.uri, {
-                encoding: FileSystem.EncodingType.Base64,
-            });
-            // Display the document contents in a WebView
-            return <WebView source={{ html: fileContent }} />;
-        }   
+            setFileName(result.name);
+            // OpenAnything.Pdf(result.uri);
+        }  
+    }
+
+    const handleSubmit = async() => {
+      const metadata = {
+        contentType: 'application/pdf'
+      };
+
+      const storageRef  = ref(storage, 'resume/' + Date.now())
+      const blobImage = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function() {
+          resolve(xhr.response);
+        };
+        xhr.onerror = function() {
+          reject(new TypeError("Network request failed"));
+        };
+        xhr.responseType = "blob";
+        xhr.open("GET", file, true);
+        xhr.send(null);
+      })
+      const uploadTask = uploadBytesResumable(storageRef, blobImage, metadata);
+      uploadTask.on('state_changed',
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+          switch (snapshot.state) {
+            case 'paused':
+              console.log('Upload is paused');
+              break;
+            case 'running':
+              console.log('Upload is running');
+              break;
+          }
+        }, 
+        (error) => {
+          console.log(error)
+        }, 
+        () => {
+          // Upload completed successfully, now we can get the download URL
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            console.log('File available at', downloadURL);
+            if(url != null) {
+              setUrl(downloadURL)
+            }
+          });
+        });
+
+        navigation.navigate("Jobs")
     }
   return (
         <View style={styles.container}>
-            <Text>Why do you think you are fit for this Job ?</Text>
+          <View style={{width:'90%'}}>
+            <Text style={styles.text}>Why do you think you are fit for this Job ?</Text>
             <TextInput
                 placeholder='Your Answer goes here!'
                 multiline
@@ -39,14 +85,33 @@ export default function Apply({route, navigation}) {
                 onChangeText={(text) => setAnswer(text)}
                 value={answer}  
                 style={styles.textArea}
-              />
-              <View style={{margin:50, width:'90%', alignItems:'center'}}>
-              <Text>Upload Resume here</Text>
-              <TouchableOpacity style={styles.btn} onPress={selectDoc}>
-                <Text style={{color:'white', fontSize:18}}>Choose</Text>
-            </TouchableOpacity>
+            />
             </View>
-            {/* {file != null ? <WebView source={{uri:file}} /> : <></>} */}
+            <View style={{ width:'90%', marginTop:40}}>
+              <Text style={styles.text}>Add your Resume</Text>
+
+              {file === null ?
+                <TouchableOpacity style={styles.btn} onPress={selectDoc}>
+                  <Text style={{color:'coral', fontSize:16, fontWeight:500}}>Choose</Text>
+                </TouchableOpacity>
+                :
+                <View style={styles.filename}>
+                  <Text style={{color:'#404040', fontSize:17, height:49}}>{fileName}</Text>
+                  <TouchableOpacity style={styles.cross} onPress={() => {
+                    setFile(null);
+                    setFileName("");
+                  }}>
+                    <AntDesign name="closecircleo" size={24} color="#404040" />
+                  </TouchableOpacity>
+                </View>
+              }
+              
+            </View>
+            <View style={{alignItems:'center', width:'100%', backgroundColor:'white',position:'absolute', bottom:0, borderTopWidth:1, borderTopColor:'grey', marginVertical:7}}>
+              <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+                <Text style={styles.submitButtonText}>Submit</Text>
+              </TouchableOpacity>
+          </View>
         </View>
     )
 }
@@ -56,7 +121,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    paddingTop:70
+    paddingTop:20
     // justifyContent: 'center',
   },
   textArea: {
@@ -73,13 +138,57 @@ const styles = StyleSheet.create({
     fontSize:15
   },
   btn: {
-    width:'90%',
+    width:'45%',
     height:40,
-    backgroundColor:'coral',
+    backgroundColor:'#ffffff',
     alignItems:'center',
     justifyContent:'center',
     borderRadius:5,
-    marginTop:10,
+    // marginTop:10,
+    borderColor:'coral',
+    borderWidth:2,
     elevation:5
-  }
+  },
+  text: {
+    color:'grey',
+    fontWeight:500,
+    fontSize:20,
+    paddingLeft:7,
+    marginBottom:10
+  },
+  filename: {
+    borderRadius:17,
+    borderWidth:1,
+    borderColor:'grey',
+    width:'100%',
+    height:50,
+    padding:12,
+    backgroundColor:'#e0e0e0',
+    flexDirection:'row'
+  } ,
+  cross : {
+    position:'absolute',
+    justifyContent:'center',
+    right:15,
+    top:0,
+    borderLeftColor:'#404040',
+    borderLeftWidth:1,
+    height:48,
+    paddingLeft:10
+  },
+  submitButton: {
+    backgroundColor: 'coral',
+    paddingVertical: 10,
+    width:'90%',
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginTop: 10,
+    alignItems:'center',
+    elevation:5
+  },
+  submitButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight:500
+  },
 });

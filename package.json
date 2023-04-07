@@ -33,6 +33,7 @@
     "react-native-gesture-handler": "^2.9.0",
     "react-native-modal-datetime-picker": "^14.0.1",
     "react-native-modern-datepicker": "^1.0.0-beta.91",
+    "react-native-openanything": "^0.0.6",
     "react-native-otp-textinput": "^1.0.0",
     "react-native-pager-view": "6.1.2",
     "react-native-phone-number-input": "^2.1.0",
@@ -43,7 +44,8 @@
     "react-native-swiper": "^1.6.0",
     "react-native-tab-view": "^3.5.1",
     "react-native-web": "^0.18.12",
-    "react-native-webview": "^11.26.0"
+    "react-native-webview": "^11.26.0",
+    "validator": "^13.9.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
