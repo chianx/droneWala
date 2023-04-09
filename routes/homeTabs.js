@@ -54,10 +54,19 @@ export default function HomeTab({navigation}) {
         })}
       >
         <Tab.Screen name="Home" component={Home} />
-        <Tab.Screen name="Jobs" component={JobStack} />
+        <Tab.Screen name="Jobs" component={JobStack} 
+          options={{
+            headerRight: () => (
+            <TouchableOpacity onPress={() => navigation.goBack()}
+              style={{paddingRight:'11%'}}
+            >
+              <FontAwesome5 name="user-edit" size={19} color="black" />
+            </TouchableOpacity>
+          )
+          }} 
+        />
         <Tab.Screen name="Learnings" component={Learning} />
         <Tab.Screen name="My Account" 
-          initialParams={{isClicked:isClicked}}
           options={{
             headerRight: () => (
             <TouchableOpacity onPress={handleClick}
@@ -67,7 +76,8 @@ export default function HomeTab({navigation}) {
             </TouchableOpacity>
           )
           }} 
-        >{props => <Account {...props} isClicked={isClicked} setIsClicked={setIsClicked}/>}</Tab.Screen>
+        >{props => <Account {...props} isClicked={isClicked} setIsClicked={setIsClicked}/>}
+        </Tab.Screen>
       </Tab.Navigator>
       </NavigationContainer>
   );

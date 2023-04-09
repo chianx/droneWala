@@ -54,7 +54,7 @@ export default function BasicDetails({ formData, setFormData }) {
                         style={[formData.dateIsSet ? { color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', padding: 5, borderColor: 'grey', marginRight: 20, marginBottom: 15 } : { color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', padding: 5, borderColor: 'red', marginRight: 20, marginBottom: 15 }]}
                     />
 
-                    {open ? <TouchableOpacity onPress={handleButtonOpen} style={{ padding: 0 }}><Text style={styles.btn}>Close</Text></TouchableOpacity> :
+                    {open ? <TouchableOpacity onPress={handleButtonOpen} style={{ padding: 0 }}><Text style={styles.btn}>Select</Text></TouchableOpacity> :
                         <TouchableOpacity onPress={() => { setOpen(!open) }} style={{ padding: 0 }}><Text style={styles.btn}>Choose Date</Text></TouchableOpacity>
                     }
                 </View>
@@ -108,9 +108,15 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: 'grey'
     },
-    passwordContainer: {
-        position: 'absolute',
-        right: 15,
-        top: 13
+    btn: {
+        textAlign: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#A9A9A9',
+        fontSize: 15,
+        borderRadius: 8,
+        // height:40,
+        padding: 9,
+        width: 135,
+        color: 'white'
     }
 })

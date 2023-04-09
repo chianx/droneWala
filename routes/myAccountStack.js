@@ -1,26 +1,22 @@
-import react from 'react'; 
-import Jobs from '../screens/jobs';
+import React from 'react'; 
+import Account from '../screens/companyAccount';
 import { Text, View, TouchableOpacity, Image } from 'react-native';
 import JobDetails from '../screens/jobDetails'
-import Apply from '../screens/apply';
 import { NavigationContainer } from '@react-navigation/native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Applicants from '../screens/applicants'
-import Images from '../images/index'
+import Images from '../images/index' 
+import Application from '../screens/application'
 
 const Stack = createNativeStackNavigator();
 
-export default function JobStack({navigation}) {
-    console.log(navigation)
+export default function CompanyAccountStack({navigation}) {
     return (
         // <NavigationContainer independent={true}>
-        <Stack.Navigator
-            
-        >
+        <Stack.Navigator>
             <Stack.Screen 
-                name="Jobs" 
-                component={Jobs}  
+                name="My Account" 
+                component={Account}
                 options = {{
                     headerLeft: () => (
                     <TouchableOpacity onPress={() => navigation.openDrawer()}>
@@ -33,28 +29,19 @@ export default function JobStack({navigation}) {
                 }}
             />
             <Stack.Screen 
-                name="JobDetails" 
-                component={JobDetails}
-                options = {{
-
-                    headerLeft : () => (
-                    <TouchableOpacity onPress={() => navigation.navigate("Jobs")}
-                        style={{paddingRight:'11%'}}
-                    >
-                        <Ionicons name="arrow-back" size={24} color="black" />
-                    </TouchableOpacity>
-                )
-                }}
-            />
-            <Stack.Screen 
-                name="Apply" 
-                component={Apply}
-            />
-            <Stack.Screen 
                 name="Applicants" 
                 component={Applicants}
             />
             
+            <Stack.Screen 
+                name="JobDetails" 
+                component={JobDetails}
+            />
+            <Stack.Screen 
+                name="Application" 
+                component={Application}
+            />
+
         </Stack.Navigator>
         // </NavigationContainer>
     );

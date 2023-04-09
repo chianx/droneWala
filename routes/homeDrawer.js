@@ -30,18 +30,10 @@ export default function HomeDrawer({navigation}) {
     
     console.log("userType = " + userType);
     return (
-      <NavigationContainer independent={true}>
+      // <NavigationContainer independent={true}>
         <Drawer.Navigator 
           initialRouteName="Home"
           screenOptions={{
-            headerLeft: () => (
-            <TouchableOpacity onPress={() => navigation.openDrawer()}>
-              <Image
-                source={{uri: 'https://reactjs.org/logo-og.png'}}
-                style={{ height: 40, width: 40, borderRadius:40, marginLeft:10, }}
-              />
-            </TouchableOpacity>
-          ),
             headerShown : false, 
             drawerActiveBackgroundColor:'#fda172',
             drawerActiveTintColor:'white',
@@ -55,10 +47,10 @@ export default function HomeDrawer({navigation}) {
             options={{drawerIcon: ({color}) => 
               <Ionicons name="home-outline" size={22} color={color}/>}}
             />
-          <Drawer.Screen name="Settings" component={Settings} 
+          {/* <Drawer.Screen name="Settings" component={Settings} 
             options={{drawerIcon: ({color}) => 
               <Ionicons name="settings-outline" size={22} color={color}/>}}  
-          />
+          /> */}
           <Drawer.Screen name="About" component={About} 
             options={{drawerIcon: ({color}) => 
               <Ionicons name="information-circle-outline" size={22} color={color}/>}}
@@ -74,6 +66,6 @@ export default function HomeDrawer({navigation}) {
           />
 
         </Drawer.Navigator>
-      </NavigationContainer>
+      // </NavigationContainer>
     );
   }

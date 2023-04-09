@@ -12,7 +12,8 @@ const Images = {
     droneDelivery: require('./DroneDelivery.png'),
     searchJobs: require('./searchJobs.jpeg'),
     myDrones: require('./myDrones.jpg'),
-    learnDrone: require('./learnDrone.jpg')
+    learnDrone: require('./learnDrone.jpg'),
+    loading: require('../assets/giphy.gif')
  }
 
 export default Images;

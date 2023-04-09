@@ -118,7 +118,7 @@ const EditProfileModal = ({ visible, onClose, user, onSave }) => {
                     style={{color:'grey', backgroundColor:'white', borderWidth:1, borderRadius:8, textAlign:'center', justifyContent:'center', padding:5, borderColor:'grey', marginRight:20, marginBottom:15}}    
                 />
                 
-                {open? <TouchableOpacity onPress={handleButtonOpen} style={{padding:0}}><Text style={styles.btn}>Close</Text></TouchableOpacity> : 
+                {open? <TouchableOpacity onPress={handleButtonOpen} style={{padding:0}}><Text style={styles.btn}>Select</Text></TouchableOpacity> : 
                     <TouchableOpacity onPress={()=> {setOpen(!open)}} style={{padding:0}}><Text style={styles.btn}>Choose Date</Text></TouchableOpacity>
                 }
               </View>

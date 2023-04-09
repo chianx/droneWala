@@ -121,5 +121,16 @@ errorTextInput: {
   passwordContainer: {
       position: 'absolute',
       right: 10
-  }
+  },
+  btn: {
+    textAlign: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#A9A9A9',
+    fontSize: 15,
+    borderRadius: 8,
+    // height:40,
+    padding: 9,
+    width: 135,
+    color: 'white'
+}
 })
