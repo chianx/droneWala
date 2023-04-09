@@ -13,7 +13,8 @@ const Images = {
     searchJobs: require('./searchJobs.jpeg'),
     myDrones: require('./myDrones.jpg'),
     learnDrone: require('./learnDrone.jpg'),
-    loading: require('../assets/giphy.gif')
- }
-
+    loading: require('../assets/giphy.gif'),
+    companyCoral: require('./companyCoral.png'),
+    institute: require('./institute.png'),
+}
 export default Images;

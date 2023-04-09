@@ -5,7 +5,9 @@ import Images from '../images/index';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StackActions } from '@react-navigation/native';
 import EditProfileModal from '../screens/editProfile';
+import {Restart} from 'fiction-expo-restart';
 // import Share from 'react-native-share';
 
 const CustomDrawer = ({prop, navigation}) => {
@@ -20,7 +22,11 @@ const CustomDrawer = ({prop, navigation}) => {
         AsyncStorage.setItem("login", ""+false);
         AsyncStorage.setItem("userType", "");
         AsyncStorage.setItem("userId", "");
+        // prop.navigation.reset();
+        
+        Restart();
         prop.navigation.navigate("Login")
+        console.log(prop.navigation)
     }
     const myCustomShare = async () => {
     
@@ -85,9 +91,7 @@ const CustomDrawer = ({prop, navigation}) => {
                 user={user}
             />
         </View>
-
-        
-        
+                
     )
 }
 export default CustomDrawer;

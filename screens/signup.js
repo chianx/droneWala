@@ -6,23 +6,41 @@ import Images from '../images';
 export default function Signup({navigation}) {
   return (
         <View style={styles.container}>
-            <Image style={{position:'absolute', bottom:0, width:"100%", resizeMode:'contain'}} source={Images.drone} />
-            <View style={{position:'relative', top:110, alignItems: 'center', justifyContent: 'center'}}>
-              <View style={{paddingBottom:40}}><Text style={styles.heading}>Welcome to DronesWala</Text></View>
+              {/* Logo */}
+              <View style={{marginBottom:0, marginTop:60}}>
+                <Text style={{fontSize:30, color:'grey', fontWeight:'bold'}}>Drone<Text style={{fontWeight:'bold', fontSize:30, color:'coral'}}>Walas</Text></Text>
+              </View>
+
+              <Image style={{width:'100%', height:240}} source={Images.droneBanner} />
+
               <Text style={styles.ques}>You are ..?</Text>
               
               <TouchableOpacity style={styles.button} onPress={()=> navigation.navigate("Pilot")}>
-                <Text style={styles.btnText}>Drone Pilot</Text>
+                <View style={{width:'40%', height:'100%', position:'absolute',left:0}}>
+                  <Image source={Images.profile} style={{width:"100%", height:"100%", borderTopLeftRadius:16, borderBottomLeftRadius:16}} />
+                </View>
+                <View style={{width:'60%', position:'absolute', right:0, justifyContent:'center'}}>
+                  <Text style={styles.btnText}>Drone Pilot</Text>
+                </View>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.button} onPress={()=> navigation.navigate("Company")}>
-                <Text style={styles.btnText}>Company</Text>
+                <View style={{width:'40%', height: '100%', position:'absolute',left:0, backgroundColor:'white', borderTopLeftRadius:16, borderBottomLeftRadius:16}}>
+                  <Image source={Images.companyCoral} style={{width:80, height:'100%', alignSelf:'center'}} />
+                </View>
+                <View style={{width:'60%', position:'absolute', right:0, justifyContent:'center'}}>
+                  <Text style={styles.btnText}>Company</Text>
+                </View>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.button} onPress={()=> navigation.navigate("Institute")}>
-                <Text style={styles.btnText}>Training Instutution</Text>
+              <TouchableOpacity style={styles.button} onPress={()=> navigation.navigate("Company")}>
+                <View style={{width:'40%', height: '100%', position:'absolute',left:0, backgroundColor:'white', borderTopLeftRadius:16, borderBottomLeftRadius:16}}>
+                  <Image source={Images.institute} style={{width:80, height:'100%', alignSelf:'center'}} />
+                </View>
+                <View style={{width:'60%', position:'absolute', right:0, justifyContent:'center'}}>
+                  <Text style={styles.btnText}>Training Institute</Text>
+                </View>
               </TouchableOpacity>
-            </View>
         </View>
     )
 }
@@ -31,26 +49,30 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    backgroundColor: '#ffe5d3',
     alignItems: 'center',
-    justifyContent: 'center',
   },
   button: {
-    width:200,
-    padding:15,
+    width:'90%',
+    justifyContent:'center',
+    height:80,
     borderRadius:16,
-    margin:20,
+    margin: 10,
     // backgroundColor:'#fda172' ,
-    backgroundColor:'#ff7f50' ,
+    backgroundColor:'coral' ,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 20,
-    elevation: 10
+    elevation: 10,
+    flexDirection:'row',
+    borderWidth:2,
+    borderColor:'coral'
   },
   ques: {
-    fontSize: 21,
-    color:'#9c9c9c'
+    fontSize: 25,
+    color:'grey',
+    fontWeight:600,
+    marginBottom:'8%'
 
   },
   heading: {
@@ -62,7 +84,8 @@ const styles = StyleSheet.create({
   btnText : {
     color:'white',
     textAlign:'center',
-    fontSize:17,
-    fontWeight:'bold'
+    fontSize:20,
+    fontWeight:'bold',
+    paddingVertical:22
   }
 });
