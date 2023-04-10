@@ -73,7 +73,7 @@ export default function PilotForm({navigation}) {
             }else validate = true;
             
             if(validate && formData.experienceIsSet && (!formData.dcgaCert || (formData.dcgaCert && formData.dcgaCertIsSet))) {
-                navigation.navigate("Login")
+                navigation.navigate("LoginStack")
                 setErrorMessage("");
                 var final =  { name: formData.name, email: formData.email, dob: formData.dob, address: formData.address, city: formData.city, state: formData.state, pincode: formData.pincode, aadhar: formData.aadhar, dcgaCert: formData.dcgaCert, certNum: formData.certNum, droneSelect: formData.droneSelect, experience: formData.experience}
                 console.log(final)

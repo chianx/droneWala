@@ -11,7 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // import 'react-native-gesture-handler';
 
 export default function App() {
-  const [login, setLogin] = useState(true);
+  const [login, setLogin] = useState(false);
   AsyncStorage.setItem("login", ""+login)
   AsyncStorage.setItem("userType", "company")
   if (login)
@@ -27,8 +27,8 @@ export default function App() {
   else return (
     <NavigationContainer>
       {/* <WalkthroughStack /> */}
-      <SignupStack />
-      {/* <LoginStack /> */}
+      {/* <SignupStack /> */}
+      <LoginStack />
     </NavigationContainer>
   )
 }

@@ -35,6 +35,7 @@ export default function HomeDrawer({navigation}) {
           initialRouteName="Home"
           screenOptions={{
             headerShown : false, 
+           
             drawerActiveBackgroundColor:'#fda172',
             drawerActiveTintColor:'white',
             drawerInactiveTintColor:'#333',
@@ -61,7 +62,8 @@ export default function HomeDrawer({navigation}) {
           />
           <Drawer.Screen name="Login" component={LoginStack} 
             options={{
-              drawerItemStyle: {height:0}
+              drawerItemStyle: {height:0},
+              swipeEdgeWidth: 0,
             }}
           />
 

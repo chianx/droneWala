@@ -1,4 +1,4 @@
-import react, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert, Button, Image, ScrollView } from 'react-native';
 import {FirebaseAuthApplicationVerifier, FirebaseRecaptcha, FirebaseRecaptchaVerifierModal} from 'expo-firebase-recaptcha';
 import {firebaseConfig} from '../firebase/firebase'
@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import OTPTextView from 'react-native-otp-textinput';
 import PhoneInput from "react-native-phone-number-input";
 import Images from '../images';
+import { BackHandler } from 'react-native';
 
 export default function Login( {navigation} ) {
   const [userType, setUserType] = useState('company');
@@ -16,9 +17,11 @@ export default function Login( {navigation} ) {
   const [showOTP, setShowOTP] = useState(false);
   const [verificationId, setVerificationId] = useState(null);
   const recaptchaVerifier = useRef(null);
+  const [allowSend, setAllowSend] = useState(false);
   const otpRef = useRef(null);
 
   const sendVerification = async() => {
+    if(allowSend) {
     const phoneProvider = new firebase.auth.PhoneAuthProvider();
     
     phoneProvider
@@ -27,6 +30,7 @@ export default function Login( {navigation} ) {
       setPhoneNumber('');    
       setShowOTP(true);
       console.log(verificationId);
+    }
   };
 
   const confirmCode =() => {
@@ -53,8 +57,24 @@ export default function Login( {navigation} ) {
       Alert.alert("Invalid Verification Code", "Please try again or choose a different phone number", [{text:'Ok'}]);
       return;
     })
-
   }
+
+  const handleBackButton = () => {
+    // Prevent default action (navigating back)
+    return true;
+  };
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+
+    // Return a cleanup function (optional)
+    return () => {
+      // Code to be executed when component unmounts
+      BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
+    };
+  }, []);
+
+
   return (
     <View style={styles.container}>
         <FirebaseRecaptchaVerifierModal
@@ -66,7 +86,7 @@ export default function Login( {navigation} ) {
         <View style={{marginBottom:0, marginTop:60}}>
             <Text style={{fontSize:30, color:'grey', fontWeight:'bold'}}>Drone<Text style={{fontWeight:'bold', fontSize:30, color:'coral'}}>Walas</Text></Text>
         </View>
-        
+
         <Image style={{width:'100%', height:240}} source={Images.droneDelivery} />
 
         <View style={styles.divider}>
@@ -81,25 +101,28 @@ export default function Login( {navigation} ) {
           defaultCode="IN"
           onChangeFormattedText={(text) => {
             setPhoneNumber(text);
+            if(text.trim().length === 13) {
+              setAllowSend(true);
+            }else setAllowSend(false);
           }}
           withShadow
           autoFocus
           containerStyle={{marginTop:25, width:'88%'}}
         />
-        <TouchableOpacity style={{backgroundColor:'coral', justifyContent:'center', borderRadius:10, width:'88%', height:40, marginVertical:20}} 
+        <TouchableOpacity disabled={!allowSend} style={{backgroundColor:'coral', elevation:5, opacity: allowSend? 1:0.7, justifyContent:'center', borderRadius:10, width:'88%', height:40, marginVertical:20}} 
           onPress={sendVerification}>
           <Text style={{color:'white', textAlign:'center', fontSize:16}}>
             Send verification
           </Text>
         </TouchableOpacity>
         </View> : 
-        <View style={{width:'100%', alignItems:'center', marginTop:25}}>
+        <View style={{width:'100%', alignItems:'center', marginTop:15}}>
           <OTPTextView
             handleTextChange={setCode}
             containerStyle={styles.textInputContainer}
             textInputStyle={styles.roundedTextInput}
             inputCount={6}
-            autoFocus={true}
+            autoFocus
           />
           <TouchableOpacity style={{backgroundColor:'coral', justifyContent:'center', borderRadius:10, width:'88%', height:40, marginBottom:15}} 
             onPress={confirmCode}>
@@ -107,6 +130,7 @@ export default function Login( {navigation} ) {
               Confirm Code
             </Text>
           </TouchableOpacity>
+          <TouchableOpacity onPress={() => setShowOTP(false)}><Text style={{color:'grey'}}>Chnage Phone Number</Text></TouchableOpacity>
         </View> }
         
     </View>

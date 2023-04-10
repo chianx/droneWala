@@ -37,7 +37,7 @@ export default function SignupStack({loginNav, navigation}) {
                 component={Institute}
             />
             <Stack.Screen 
-                name="Login" 
+                name="LoginStack" 
                 component={LoginStack}
             />
         </Stack.Navigator>

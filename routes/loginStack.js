@@ -8,24 +8,24 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Stack = createNativeStackNavigator();
 
-export default function LoginStack({navigations}) {
+export default function LoginStack({navigation}) {
     return (
-        <NavigationContainer independent={true}>
+        // <NavigationContainer independent={true}>
         <Stack.Navigator
             screenOptions={{
                 headerShown: false
             }}
         >
             <Stack.Screen 
-                name="Login" 
+                name="LoginScreen" 
                 component={Login}
             />
             <Stack.Screen 
-                name="Signup" 
+                name="SignupStack" 
                 component={SignupStack}
             />
             <Stack.Screen 
-                name="Home" 
+                name="HomeDrawer" 
                 component={HomeDrawer}
             />
             <Stack.Screen 
@@ -33,6 +33,6 @@ export default function LoginStack({navigations}) {
                 component={CompanyHomeTab}
             />
         </Stack.Navigator>
-        </NavigationContainer>
+        // </NavigationContainer>
     );
 }
