@@ -8,6 +8,8 @@ import OTPTextView from 'react-native-otp-textinput';
 import PhoneInput from "react-native-phone-number-input";
 import Images from '../images';
 import { BackHandler } from 'react-native';
+import { db } from '../firebase/databaseConfig'
+import { ref, child, get } from 'firebase/database'
 
 export default function Login( {navigation} ) {
   const [userType, setUserType] = useState('company');
@@ -33,6 +35,22 @@ export default function Login( {navigation} ) {
     }
   };
 
+  const getUserData = (uid) => {
+    console.log(uid);
+    return get(child(ref(db), "users/" + uid)).then((userSnap) => {
+      if(userSnap.exists) {
+        var user = userSnap.val()
+        console.log(user);
+        AsyncStorage.setItem("userData", user.toString());  
+        navigation.navigate("Home");
+      }else {
+        console.log("No user found!!!");
+      }
+    }).catch((error) => {
+      console.error("Error while fetching user data ");
+    })
+  }
+
   const confirmCode =() => {
     const credential = firebase.auth.PhoneAuthProvider.credential(
       verificationId,
@@ -42,17 +60,15 @@ export default function Login( {navigation} ) {
     .then((res)=> {
       console.log(res);
       const isNewUser = res.additionalUserInfo.isNewUser;
-      const phone = res.user.phoneNumber;
       const userId = res.user.uid;
       if(isNewUser) { 
         navigation.navigate("Signup");
       }else {
-        AsyncStorage.setItem("userType", userType);  
-        AsyncStorage.setItem("id", userId);        
-        navigation.navigate("Home");
+        getUserData(userId)
       }
     })
     .catch((error) => {
+      console.log("ERROR!!!: " + error);
       setCode('');
       Alert.alert("Invalid Verification Code", "Please try again or choose a different phone number", [{text:'Ok'}]);
       return;

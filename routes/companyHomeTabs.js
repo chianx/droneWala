@@ -8,6 +8,7 @@ import Images from '../images/index';
 // import CreatePost from '../screens/createPost'
 import JobForm from '../jobForm/jobForm'
 import CompanyAccountStack from './myAccountStack'
+import CompanyAccount from '../screens/companyAccount'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { FontAwesome5 } from '@expo/vector-icons';
 

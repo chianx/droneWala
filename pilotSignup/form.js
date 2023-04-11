@@ -5,7 +5,8 @@ import PersonalDetails from './PersonalDetails';
 import PilotDetails from './PilotDetails';
 // import firestore from '@react-native-firebase/firestore';
 import { db } from '../firebase/databaseConfig'
-import {ref, set} from 'firebase/database'
+import { ref, set } from 'firebase/database'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function PilotForm({navigation}) {
     const [screen, setScreen] = useState(0)
@@ -19,6 +20,7 @@ export default function PilotForm({navigation}) {
     const [formData, setFormData] = useState(
         {
             // BasicDetails
+            uid: "",
             name: "",
             email: "",
             dob: "",
@@ -46,6 +48,7 @@ export default function PilotForm({navigation}) {
             selectedDroneIsSet: false,
             dcgaCertIsSet: false,
             experienceIsSet: false,
+            type: ""
         }
     )
     const ScreenDisplay = () => {
@@ -61,14 +64,10 @@ export default function PilotForm({navigation}) {
         if(screen === 2) {
             var errMsg = "";
             var validate = false;
-            
             // validate name
             if (formData.dcgaCert && !formData.dcgaCertIsSet) {
                 errMsg = "Enter the DCGA Number!"
                 formData.dcgaCert = false
-                formData.experienceIsSet = false
-            }else if(!formData.experienceIsSet)  {
-                errMsg = "Select the Experience!"
                 formData.experienceIsSet = false
             }else validate = true;
             
@@ -76,15 +75,21 @@ export default function PilotForm({navigation}) {
                 navigation.navigate("LoginStack")
                 setErrorMessage("");
                 var final =  { name: formData.name, email: formData.email, dob: formData.dob, address: formData.address, city: formData.city, state: formData.state, pincode: formData.pincode, aadhar: formData.aadhar, dcgaCert: formData.dcgaCert, certNum: formData.certNum, droneSelect: formData.droneSelect, experience: formData.experience}
-                console.log(final)
+                var uid = getAuth().currentUser.uid
+                setFormData({ ...final, uid, isPilot: true, type: "pilot"})
+                set(ref(db, 'users/' + uid), formData).then(() => {
+                    // Add loading icon.
+                    AsyncStorage.setItem("userData", user.toString());  
+                    navigation.navigate("Login")
+                }).catch((error) => {
+                    // Correct this.
+                    setErrorMessage(error.toString);
+                })
             }
             else {
                 setErrorMessage(errMsg);
             }
-            // console.log(formData)
-            
         }
-        // set(ref(db, 'users/'), {formData})
         // Screen 2 Vadilaton
         // const userData = {name:formData.name}
     } 

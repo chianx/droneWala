@@ -2,9 +2,9 @@ import { View, Text, Button, TextInput, StyleSheet, Pressable, ScrollView, Touch
 import React, { useState } from 'react'
 import Precise from './Precise';
 import Description from './Description';
-// import firestore from '@react-native-firebase/firestore';
-import { db } from '../firebase/databaseConfig'
-import {ref, set} from 'firebase/database'
+import {db} from '../firebase/databaseConfig'
+import {set, ref, push} from 'firebase/database';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function JobForm() {
     const [screen, setScreen] = useState(0)
@@ -16,6 +16,7 @@ export default function JobForm() {
     const [formData, setFormData] = useState(
         {
             // ShortDetails
+            jobId: "",
             jobTitle: "",
             salRange: "",
             ftORpt: "",
@@ -26,6 +27,7 @@ export default function JobForm() {
             ftORptIsSet: false,
             numOpenIsSet: false,
             dateIsSet: false,
+            logo: "",
             
 
             // LongDetails
@@ -60,17 +62,21 @@ export default function JobForm() {
                 // navigation.navigate("Login")
                 setErrorMessage("");
                 var final =  { jobTitle: formData.jobTitle,salRange: formData.salRange,ftORpt: formData.ftORpt,numOpen: formData.numOpen,date: formData.date,aboutJob: formData.aboutJob,whoApply: formData.whoApply, }
-                console.log(final)
+                AsyncStorage.getItem("userData", (error, result) => {
+                    if(error != null || result != null) {
+                        console.error("Error in reading user logo");
+                        return
+                    }
+                    var userJson = JSON.parse(result);
+                    var refs = push(ref(db, "jobs/"));
+                    setFormData({...final, jobId: refs.key, logo: userJson.logo});
+                    set(refs, formData);
+                })
             }
             else {
                 setErrorMessage(errMsg);
             }
-            // console.log(formData)
-            
         }
-        // set(ref(db, 'users/'), {formData})
-        // Screen 2 Vadilaton
-        // const userData = {name:formData.name}
     } 
     const callNext = () => {
         console.log(formData);

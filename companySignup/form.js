@@ -3,6 +3,9 @@ import React, { useState } from 'react'
 import BasicDetails from './BasicDetailsComp';
 import PersonalDetails from './PersonalDetailsComp';
 import CompanyDetails from './CompanyDetails';
+import { db, auth } from '../firebase/databaseConfig'
+import {ref, set} from 'firebase/database'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Form({navigation}) {
     const [screen, setScreen] = useState(0)
@@ -15,6 +18,7 @@ export default function Form({navigation}) {
     const [formData, setFormData] = useState(
         {
             // PersonalDetails
+            uid: "",
             name: "",
             email: "",
             foundedin : "",
@@ -36,7 +40,7 @@ export default function Form({navigation}) {
             pinIsSet:false,
             cinIsSet:false,
             gstIsSet:false,
-
+            isPilot: false,
             // CompanyDetails
             logo: "", // Fix Later
             website: "",
@@ -44,6 +48,7 @@ export default function Form({navigation}) {
             numPeople: "",
             websiteIsSet : false,
             aboutIsSet: false,
+            type: ""
         }
     )
     const ScreenDisplay = () => {
@@ -70,8 +75,23 @@ export default function Form({navigation}) {
             }else validate = true;
             
             if(validate && formData.websiteIsSet && formData.aboutIsSet) {
-                navigation.navigate("Login")
                 setErrorMessage("");
+                var final =  {name:formData.name, email:formData.email, foundedin :formData.foundedin, CINno:formData.CINno, 
+                GSTno:formData.GSTno, category:formData.category, address:formData.address, city:formData.city, state:formData.state, 
+                pincode:formData.pincode, logo:formData.logo, website:formData.website, about:formData.about, numPeople:formData.numPeople }
+                
+                // Final
+                var uid = auth.currentUser.uid
+                setFormData({})
+                setFormData({ ...final, uid, isPilot: false, type: "company"})
+                set(ref(db, 'users/' + uid), formData).then(() => {
+                    // Add loading icon.
+                    AsyncStorage.setItem("userData", user.toString());  
+                    navigation.navigate("Login")
+                }).catch((error) => {
+                    // Correct this.
+                    setErrorMessage(error.toString);
+                })
             }
             else {
                 setErrorMessage(errMsg);

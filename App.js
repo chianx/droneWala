@@ -13,7 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function App() {
   const [login, setLogin] = useState(false);
   AsyncStorage.setItem("login", ""+login)
-  AsyncStorage.setItem("userType", "company")
+  AsyncStorage.setItem("userType", "pilot")
   if (login)
   return (
     <NavigationContainer>

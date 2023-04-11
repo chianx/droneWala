@@ -5,6 +5,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import JobDetails from './jobDetails';
+import {  
+  ref,
+  onValue,
+  push,
+  update,
+  remove
+} from 'firebase/database';
 
 export default function Jobs({navigation}) {
   const details = [{key:1, jobTitle:'Job Title', company:'Company-Name', salary: '3,000-5,000/month', type:'Full Time', Location:'Jaipur'},
