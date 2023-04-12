@@ -5,10 +5,11 @@ import Images from '../images/index'
 
 export default function About({navigation}) {
   return (
-        <View style={styles.container}>
-            {/* <Text>This is About Screen </Text> */}
-            <Image source={Images.loading}  style={styles.gif} />
-        </View>
+    <View style={styles.container}>
+      <Image source={Images.loading}  style={styles.gif} />
+      <Text style={{fontSize:34, color:'grey', fontWeight:700}}>Coming Soon...</Text>
+      <Text style={{fontSize:16, color:'grey'}}>Press back</Text>
+    </View>
     )
 }
 

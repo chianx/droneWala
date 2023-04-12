@@ -73,7 +73,7 @@ export default function PilotDetails({ formData, setFormData }) {
             )
         }
       </View>
-      <View style={{ marginBottom: 20 }} >
+      <View style={{ marginBottom: 20, width:280 }} >
         <MultipleSelectList
           style={[formData.selectedDroneIsSet ? null : {borderColor: "red"}]}
           placeholder='Select Drones *'

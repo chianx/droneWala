@@ -1,4 +1,4 @@
-import react from 'react';
+import React from 'react';
 import { useState } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import Images from '../images/index';

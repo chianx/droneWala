@@ -1,12 +1,36 @@
 import React from 'react';
-import { useState } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, ScrollView } from 'react-native';
+import { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native';
 import Images from '../images/index';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+import EditProfileModalComp from './editProfileComp';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function Account({ navigation }) {
+export default function Account({isClicked, setIsClicked, navigation }) {
+
+    const [user, setUser] = useState({});
+    const mount = async() => {
+      const userdata = await AsyncStorage.getItem("userData");
+      const val = JSON.parse(userdata)
+    //   setUser(val);
+      console.log(val);
+
+    }
+    useEffect(() => {
+      mount();
+    }, []);
+    
+      const handleSaveProfile =() => {
+        setIsClicked(!isClicked);
+      };
+    
+      const handleCancelEdit = () => {
+        setIsClicked(!isClicked);
+      };
+
+
     const jobs = [{ key: 2, jobTitle: 'Lorem Ipsum dolor ebel candle jameesrirf', company: 'Garud Survey', salary: '10,000-15,000/month', type: 'Full Time', Location: 'Jaipur' },
     { key: 3, jobTitle: 'Job Title-2', company: 'Garud Survey', salary: '10,000-15,000/month', type: 'Full Time', Location: 'Jaipur' },];
     const freelance = [{ key: 4, jobTitle: 'Job Title-2', company: 'Garud Survey', salary: '10,000-15,000/month', type: 'Full Time', Location: 'Jaipur' },
@@ -21,13 +45,13 @@ export default function Account({ navigation }) {
             <View style={styles.basic}>
                 <View style={{ paddingHorizontal: 20, flex: 1, justifyContent: 'center' }}>
                     <View style={{ flexDirection: 'row' }}>
-                        <Image source={Images.profile} style={styles.avatar} />
+                        <Image source={{uri: user.logo}} style={styles.avatar} />
                         <View style={{ flex: 1, justifyContent: 'center', paddingLeft: 15 }}>
 
-                            <Text style={{ fontSize: 20, color: 'white' }}>ABC Organization</Text>
-                            <Text style={{ color: 'white' }}><Ionicons name='location-outline' size={16} color='white' /> Jaipur, Rajasthan, 302563</Text>
-                            <Text style={{ color: 'white' }}><Ionicons name='ios-call-outline' size={16} color='white' /> abc@gxy.com</Text>
-                            <Text style={{ color: 'white' }}><Ionicons name='ios-call-outline' size={16} color='white' /> www.acborg.com</Text>
+                            <Text style={{ fontSize: 20, color: 'white' }}>{user.name}</Text>
+                            <Text style={{ color: 'white' }}><Ionicons name='location-outline' size={16} color='white' /> {user.city + ", " +user.state + ", "+ user.pincode}</Text>
+                            <Text style={{ color: 'white' }}><Ionicons name='ios-call-outline' size={16} color='white' /> {user.email}</Text>
+                            <Text style={{ color: 'white' }}><Ionicons name='ios-call-outline' size={16} color='white' /> {user.website}</Text>
                         </View>
                     </View>
                 </View>
@@ -101,6 +125,12 @@ export default function Account({ navigation }) {
             </View>
 
         </View>
+        <EditProfileModalComp
+            visible={isClicked}
+            onSave={handleSaveProfile}
+            onClose={handleCancelEdit}
+            user={user}
+        />
         </ScrollView>
     )
 }

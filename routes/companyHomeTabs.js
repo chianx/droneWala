@@ -1,4 +1,4 @@
-import react from 'react';
+import React, {useState} from 'react';
 import { Text, View, TouchableOpacity, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -15,6 +15,10 @@ import { FontAwesome5 } from '@expo/vector-icons';
 const Tab = createBottomTabNavigator();
 
 export default function CompanyHomeTab({navigation}) {
+  const [isClicked, setIsClicked] = useState(false);
+  const handleClick = () => {
+    setIsClicked(true)
+  }
   
   return (
     // <NavigationContainer independent={true}>
@@ -33,7 +37,7 @@ export default function CompanyHomeTab({navigation}) {
              else if (route.name === 'JobsStack') {
               iconName = focused ? 'ios-briefcase-sharp' : 'ios-briefcase-outline';
             }
-             else if (route.name === 'CompanyAccountStack') {
+             else if (route.name === 'My Account') {
               iconName = focused ? 'person-circle' : 'person-circle-outline';
             }
 
@@ -92,10 +96,27 @@ export default function CompanyHomeTab({navigation}) {
           )
           }}
         />
-        <Tab.Screen name="CompanyAccountStack" component={CompanyAccountStack} 
-          
-          
-        />
+        <Tab.Screen name="My Account" 
+          options={{
+            headerShown:true,
+            headerRight: () => (
+            <TouchableOpacity onPress={handleClick}
+              style={{paddingRight:'11%'}}
+            >
+              <FontAwesome5 name="user-edit" size={19} color="black" />
+            </TouchableOpacity>
+          ),
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.openDrawer()}>
+              <Image
+                source={Images.profile}
+                style={{ height: 40, width: 40, borderRadius:40, marginLeft:10, borderWidth:1, borderColor:'black'}}
+              />
+            </TouchableOpacity>
+          )
+          }} 
+        >{props => <CompanyAccount {...props} isClicked={isClicked} setIsClicked={setIsClicked}/>}
+        </Tab.Screen>
       </Tab.Navigator>
       //</NavigationContainer>
   );

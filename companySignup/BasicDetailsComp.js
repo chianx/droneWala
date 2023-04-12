@@ -6,7 +6,7 @@ export default function PersonalDetails({ formData, setFormData }) {
     const [selectedCategory, setSelectedCategory] = useState([]);
     const [logo, setLogo] = React.useState();
 
-    const category = [//(Agri , delivery,survey mapping, events others. (Specify))
+    const category = [
         { key: '1', value: 'Agriculture' },
         { key: '2', value: 'Delivery' },
         { key: '3', value: 'Survey Mapping' },
@@ -88,7 +88,7 @@ export default function PersonalDetails({ formData, setFormData }) {
                     onChangeText={(GSTno) => handleGSTChange(GSTno)}
                 />
             </View>
-            <View style={{marginBottom: 20}}>
+            <View style={{marginBottom: 20, width:280}}>
                 <MultipleSelectList
                     setSelected={(val) => {
                         setSelectedCategory(val)
@@ -96,7 +96,7 @@ export default function PersonalDetails({ formData, setFormData }) {
                     data={category}
                     placeholder='Select Category *'
                     save="value"
-                    boxStyles={[formData.categoryIsSet ? null : {borderColor : "red"}, {backgroundColor: "white"}]}
+                    boxStyles={[formData.categoryIsSet ? null : {borderColor : "red"}, {backgroundColor: "white", padding:16}]}
                     label="Category"
                     onSelect={() => {
                         setFormData({ ...formData, category:selectedCategory});
@@ -146,25 +146,18 @@ export default function PersonalDetails({ formData, setFormData }) {
 }
 
 const styles = StyleSheet.create({
-    inputView: {
-        width: 280,
-        height: 45,
-        marginBottom: 20,
-        alignItems: "flex-start",
-        justifyContent: "center",
-    },
     TextInput: {
         backgroundColor: "white",
         borderRadius: 8,
         borderWidth: 1,
         borderColor: 'grey',
         width: 280,
-        height: 45,
+        height: 55,
         marginBottom: 20,
         alignItems: "flex-start",
         justifyContent: "center",
-        padding: 10,
-        fontSize: 15,
+        padding: 15,
+        fontSize: 17,
         color: 'grey'
     },
     errorTextInput: {
@@ -173,12 +166,12 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'red',
         width: 280,
-        height: 45,
+        height: 55,
         marginBottom: 20,
         alignItems: "flex-start",
         justifyContent: "center",
-        padding: 10,
-        fontSize: 15,
+        padding: 15,
+        fontSize: 17,
         color: 'grey'
     },
     passwordContainer: {

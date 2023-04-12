@@ -1,4 +1,4 @@
-import { View, Text, Button, TextInput, StyleSheet, Pressable, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, Modal, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import BasicDetails from './BasicDetailsComp';
 import PersonalDetails from './PersonalDetailsComp';
@@ -166,37 +166,49 @@ export default function Form({navigation}) {
                 
     }
     return (
-        <ScrollView contentContainerStyle={{flexGrow:1}}>
-        <View style={styles.content}>
+        <Modal visible={true} animationType="slide">
             <View style={styles.wrapper}>
                 <Text style={styles.title}>{FormTitle[screen]}</Text>
-                <View>{ScreenDisplay()}</View>
             </View>
-            {errorMessage != "" ? <View style={{marginLeft:20, marginBottom: 20}}><Text style={{color:'red', borderRadius: 8, textAlign: 'center',width: 160, height: 30, }}>{errorMessage}</Text></View> : <></>}
-            <View style={styles.buttonContainer}>
-                <Pressable
-                    disabled={screen === 0}
-                    onPress={() => {
-                        setScreen((currScreen) => currScreen - 1)
 
-                    }}>
-                    <Text style={styles.button}>Previous</Text>
-                </Pressable>
-                {screen === 2 ? <TouchableOpacity onPress={() => {createUserInFirebase()}} style={styles.button}><Text>Submit</Text></TouchableOpacity> 
-                : <TouchableOpacity onPress={callNext}><Text style={styles.button}>Next</Text></TouchableOpacity>}
+            <ScrollView>
+            <View style={{width:'100%', alignItems:'center', marginBottom:100}}>
+                {ScreenDisplay()}
+
+                {errorMessage != "" ? <View style={{marginLeft:20, marginBottom: 20}}><Text style={{color:'red', borderRadius: 8, textAlign: 'center',width: 160, height: 30, }}>{errorMessage}</Text></View> : <></>}
             </View>
-            
-        </View>
-        </ScrollView>
+            </ScrollView> 
+
+            <View style={styles.apply}>
+                <TouchableOpacity 
+                    style={[styles.prevButton]}
+                    onPress={() => {
+                        if(screen === 0) {
+                            navigation.goBack();
+                        }else {
+                            setScreen((currScreen) => currScreen - 1)
+                        }
+                    }}
+                >
+                    <Text style={{color:'coral', fontSize:20, textAlign:'center'}}>Previous</Text>
+                </TouchableOpacity>
+
+                {screen === 2? 
+                <TouchableOpacity style={[styles.nextButton]} onPress={() => {createUserInFirebase()}}>
+                    <Text style={{color:'white', fontSize:20, textAlign:'center'}}>Submit</Text>
+                </TouchableOpacity>
+                : <TouchableOpacity style={[styles.nextButton]} onPress={callNext}>
+                    <Text style={{color:'white', fontSize:20, textAlign:'center'}}>Next</Text>
+                </TouchableOpacity>
+                }
+            </View>
+        </Modal>
     )
 }
 
 const styles = StyleSheet.create({
-    content: {
-        marginTop: 10
-    },
     wrapper: {
-        // display: "flex",
+        marginTop:50,
         alignItems: "center",
     },
     title: {
@@ -206,19 +218,37 @@ const styles = StyleSheet.create({
         marginVertical: 30
         // fontFamily: 
     },
-    buttonContainer: {
-        flexDirection: "row", 
-        display: "flex", 
-        alignItems: "center",
+    prevButton: {
+        backgroundColor:'white',
+        justifyContent:'center', 
+        margin:5, 
+        height:55, 
+        flex:1 ,
+        borderRadius:10, 
+        width:'48%', 
+        borderWidth:2, 
+        borderColor:'coral', 
+        elevation:5
     },
-    button: {
-        justifyContent: "center", 
-        color: "white",
-        backgroundColor: "coral", 
-        paddingVertical: 5, 
-        paddingHorizontal: 25, 
-        marginLeft: 35, 
-        textAlign: "center",
-        borderRadius: 10,
-    }
-})
+    nextButton: {
+        backgroundColor:'coral', 
+        flex:1,
+        height:55, 
+        justifyContent:'center', 
+        margin:5, 
+        borderRadius:10, 
+        width:'48%',
+        elevation:5
+    },
+    apply: {
+        paddingVertical: 15,
+        alignItems:'center',
+        width:'100%',
+        borderTopWidth:1, borderTopColor:'grey',
+        paddingHorizontal: 10,
+        flexDirection:'row',
+        position:'absolute',
+        bottom:0,
+        backgroundColor:'#f0f0f0'
+    },
+});

@@ -44,28 +44,30 @@ export default function BasicDetails({ formData, setFormData }) {
                 />
             </View>
 
-            <View style={{ marginBottom: 20, width: 270 }}>
+            <View style={{ marginBottom: 20 }}>
                 <View style={{ flexDirection: 'row' }}>
                     <TextInput
                         editable={false}
                         placeholderTextColor="grey"
                         placeholder='Date of Birth *'
                         value={formData.dob}
-                        style={[formData.dateIsSet ? { color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', padding: 5, borderColor: 'grey', marginRight: 20, marginBottom: 15 } : { color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', padding: 5, borderColor: 'red', marginRight: 20, marginBottom: 15 }]}
+                        style={{width:125, fontSize:17 ,height:55, color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', borderColor: formData.dateIsSet? 'grey': 'red', marginRight: 20, marginBottom: 15 }}
                     />
 
                     {open ? <TouchableOpacity onPress={handleButtonOpen} style={{ padding: 0 }}><Text style={styles.btn}>Select</Text></TouchableOpacity> :
                         <TouchableOpacity onPress={() => { setOpen(!open) }} style={{ padding: 0 }}><Text style={styles.btn}>Choose Date</Text></TouchableOpacity>
                     }
                 </View>
+                <View>
                 {open ? <DatePicker
                     onSelectedChange={(date) => {
                         setDate(date)
                     }}
                     mode="calendar"
                     maximumDate={todaysDate}
-                /> : null}
-            </View >
+                /> : <></>}
+                </View>
+            </View>
             <View style={styles.inputView}>
                 <TextInput
                     style={[formData.emailIsSet ? styles.TextInput : styles.errorTextInput]}
@@ -86,12 +88,12 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'grey',
         width: 280,
-        height: 45,
+        height: 55,
         marginBottom: 20,
         alignItems: "flex-start",
         justifyContent: "center",
-        padding: 10,
-        fontSize: 15,
+        padding: 15,
+        fontSize: 17,
         color: 'grey'
     },
     errorTextInput: {
@@ -100,12 +102,12 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'red',
         width: 280,
-        height: 45,
+        height: 55,
         marginBottom: 20,
         alignItems: "flex-start",
         justifyContent: "center",
-        padding: 10,
-        fontSize: 15,
+        padding: 15,
+        fontSize: 17,
         color: 'grey'
     },
     btn: {
@@ -114,8 +116,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#A9A9A9',
         fontSize: 15,
         borderRadius: 8,
-        // height:40,
-        padding: 9,
+        height:55,
+        padding: 15,
         width: 135,
         color: 'white'
     }

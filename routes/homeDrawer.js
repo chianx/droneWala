@@ -4,15 +4,12 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import HomeTabs from './homeTabs';
 import CompanyHomeTab from './companyHomeTabs';
-import EditProfileModal from '../screens/editProfile'
-import Settings from '../screens/settings'
 import About from '../screens/about'
 import Contact from '../screens/contact'
 import CustomDrawer from './customDrawer'
 import LoginStack from './loginStack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Login from '../screens/login';
 
 const Drawer = createDrawerNavigator();
 

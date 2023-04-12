@@ -1,5 +1,4 @@
-import react from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import WalkthroughStack from './routes/walkthroughStack'
 import { NavigationContainer } from '@react-navigation/native';
@@ -26,9 +25,9 @@ export default function App() {
   );
   else return (
     <NavigationContainer>
-      <WalkthroughStack />
-      {/* <SignupStack />
-      <LoginStack /> */}
+      {/* <WalkthroughStack /> */}
+      <SignupStack />
+      {/* <LoginStack /> */}
     </NavigationContainer>
   )
 }
