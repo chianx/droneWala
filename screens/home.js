@@ -6,7 +6,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
 export default function Home({navigation}) {
   const [suggestions, setSuggestions] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
@@ -35,13 +34,6 @@ export default function Home({navigation}) {
   {key:2, jobTitle:'Job Title-2', profileImage: Images.profile, company:'Garud Survey', salary: '10,000-15,000/month', type:'Full Time', Location:'Jaipur', companyIcon:Images.droneIcon},
   {key:3, jobTitle:'Job Title-3', profileImage: Images.profile, company:'DronePilots Network', salary: '30,000-35,000/month', type:'Part Time', Location:'Jaipur', companyIcon:Images.droneIcon},
   {key:4, jobTitle:'Drone Survey Job', profileImage: Images.profile, company:'Fire Drone', type:'Full Time', salary:'20000/month', Location:'Jaipur', companyIcon:Images.droneIcon}];
-
-  const cards = [
-    { key: '1', title: 'Card 1', image: Images.profile },
-    { key: '2', title: 'Card 2', image: Images.profile },
-    { key: '3', title: 'Card 3', image: Images.profile },
-    { key: '4', title: 'Card 4', image: Images.profile },
-  ];
   
   const Card = ({ item }) => (
     <View style={styles.card} key={item.key}>
@@ -116,7 +108,7 @@ export default function Home({navigation}) {
               contentContainerStyle={styles.carouselContainer}
             />
             <View style={styles.dotContainer}>
-              {cards.map((_, index) => renderDot(_, index))}
+              {jobs.map((_, index) => renderDot(_, index))}
             </View>
           </View>
 

@@ -6,57 +6,49 @@ import DatePicker from 'react-native-modern-datepicker';
 import { MultipleSelectList } from 'react-native-dropdown-select-list'
 import { configureProps } from 'react-native-reanimated/lib/reanimated2/core';
 
-const EditProfileModal = ({ visible, onClose, user, onSave }) => {
+const EditProfileModalComp = ({ visible, onClose, user, onSave }) => {
   const [name, setName] = useState("Chintan Grover");
+  const [date, setDate] = useState('07/06/2002');
+  const [email, setEmail] = useState('abc@gmail.com');
   const [address, setAddress] = useState("203, Midas Heights");
   const [state, setState] = useState("Rajasthan");
   const [city, setCity] = useState("Jaipur");
   const [pincode, setPincode] = useState("302017");
-  const [date, setDate] = useState('07/06/2002');
-  const [experience, setExperience] = useState("1-2 Years");
-  const [drones, setDrones] = useState(["Tropogo"]);
+  const [about, setAbout] = useState("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+  const [website, setWebsite] = useState("www.google.com");
+  const [num, setNum] = useState("50+");
   const [interests, setInterests] = useState([]);
-
 
   const [open, setOpen] = useState(false)
   const [isCertified, setIsCertified] = useState(false);
 
-
   const [nameIsSet, setNameIsSet] = useState(true);
   const [dateIsSet, setDateIsSet] = useState(true);
+  const [emailIsSet, setEmailIsSet] = useState(true);
   const [addressIsSet, setAddressIsSet] = useState(true);
   const [stateIsSet, setStateIsSet] = useState(true);
   const [cityIsSet, setCityIsSet] = useState(true);
   const [pinIsSet, setPinIsSet] = useState(true);
-  const [experienceIsSet, setExperienceIsSet] = useState(true);
-  const [droneIsSet, setDroneIsSet] = useState(true);
+  const [numIsSet, setNumIsSet] = useState(true);
   const [interestIsSet, setInterestIsSet] = useState(true);
+  const [websiteIsSet, setWebsiteIsSet] = useState(true);
+  const [aboutIsSet, setAboutIsSet] = useState(true);
+
+
   const handleSave = () => {
-    if(nameIsSet && dateIsSet && addressIsSet && stateIsSet && cityIsSet && pinIsSet && experienceIsSet && droneIsSet && interestIsSet) {
-      onSave({name, address, state, city, pincode, date, experience, drones, interests,});
-      console.log({name, address, state, city, pincode, date, experience, drones, interests,})
+    if(nameIsSet && dateIsSet && emailIsSet && addressIsSet && stateIsSet && cityIsSet && pinIsSet && numIsSet && interestIsSet && websiteIsSet && aboutIsSet) {
+      onSave({name, date, email, address, state, city, pincode, about, website, num, interests});
+      console.log({name, date, email, address, state, city, pincode, about, website, num, interests});
       onClose();
     }
   };
+  
+  
   const handleButtonOpen =() => {
     setOpen(!open);
     setDate(date);
     setDateIsSet(true)
   }
-  const exp = [
-    { key: '1', value: '0-1 Years'},
-    { key: '2', value: '1-2 Years'},
-    { key: '3', value: '2-3 Years'},
-    { key: '4', value: '3-5 Years'},
-    { key: '5', value: '5+ Years'},
-  ]
-  const dronesList = [
-    { key: '1', value: 'Tropogo' },
-    { key: '2', value: 'Slider' },
-    { key: '3', value: 'Agri' },
-    { key: '4', value: 'Delivery' },
-    { key: '5', value: 'Survey Mapping' },
-  ]
   const category = [
     { key: '1', value: 'Agriculture' },
     { key: '2', value: 'Delivery' },
@@ -65,6 +57,30 @@ const EditProfileModal = ({ visible, onClose, user, onSave }) => {
   ]
 
   const [shouldShow, setshouldShow] = useState(false)
+  const numPeople = [
+    { key: '1', value: '1 - 10' },
+    { key: '2', value: '10 - 20' },
+    { key: '3', value: '20 - 50' },
+    { key: '4', value: '50+' },
+  ]
+  const handleWebsiteChange = (website) => {
+    if (validator.isURL(website)) {
+      setWebsite(website)
+      setWebsiteIsSet(true);
+    } else {
+      setWebsite(website)
+      setWebsiteIsSet(false);
+    }
+  }
+  const handleAboutChange = (about) => {
+    if (about.trim().length >= 50) {
+      setAbout(about)
+      setAboutIsSet(true);
+    } else {
+      setAbout(about)
+      setAboutIsSet(false);
+    }
+  }
   const handleNameChange = (name) => {
     if (name.trim().length > 2) {
         setName(name)
@@ -81,6 +97,16 @@ const EditProfileModal = ({ visible, onClose, user, onSave }) => {
     } else {
       setAddress(address)
       setAddressIsSet(false);
+    }
+  }
+  const handleEmailChange = (email) => {
+    var validRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (email.match(validRegex)) {
+      setEmail(email)
+      setEmailIsSet(true)
+    } else {
+      setEmail(email)
+      setEmailIsSet(false)
     }
   }
   const handleCityChange = (city) => {
@@ -117,13 +143,13 @@ const EditProfileModal = ({ visible, onClose, user, onSave }) => {
       <TouchableOpacity style={styles.closeButton} onPress={onClose}>
         <AntDesign name="close" size={28} color="white" />
       </TouchableOpacity>
-      <Text style={styles.heading}>Edit Profile</Text>
+      <Text style={styles.heading}>Edit Company Profile</Text>
     </View>
     <ScrollView>
         <View style={styles.modalContainer}>
           <View style={styles.formContainer}>
 
-            <Text style={styles.label}>Full Name</Text>
+            <Text style={styles.label}>Company Name</Text>
             <TextInput
                 style={[nameIsSet ? styles.TextInput : styles.errorTextInput]}
                 placeholderTextColor="grey"
@@ -132,6 +158,14 @@ const EditProfileModal = ({ visible, onClose, user, onSave }) => {
                 onChangeText={(name) => {
                   handleNameChange(name)
                 }}
+            />
+            <Text style={styles.label}>Email</Text>
+            <TextInput
+              style={[emailIsSet ? styles.TextInput : styles.errorTextInput]}
+              placeholderTextColor="grey"
+              placeholder={email}
+              value={email}
+              onChangeText={(email) => handleEmailChange(email)}
             />
             <Text style={styles.label}>Address House No/Street No/Area</Text>
             <TextInput
@@ -167,14 +201,30 @@ const EditProfileModal = ({ visible, onClose, user, onSave }) => {
                 keyboardType='numeric'
                 maxLength={6}
             />
+            <Text style={styles.label}>Website</Text>
+            <TextInput
+                style={[websiteIsSet ? styles.TextInput : styles.errorTextInput]}
+                placeholderTextColor="grey"
+                placeholder={website}
+                value={website}
+                onChangeText={(website) => handleWebsiteChange(website)}
+            />
+            <Text style={styles.label}>About</Text>
+            <TextInput
+                style={[aboutIsSet ? styles.TextInput : styles.errorTextInput]}
+                placeholderTextColor="grey"
+                placeholder={about}
+                value={about}
+                onChangeText={(about) => handleAboutChange(about)}
+            />
 
-            <View style={{marginBottom:10, width: 300}}>
-            <Text style={styles.label}>Date of Birth</Text>
+            <View style={{marginBottom:10, width: 270}}>
+            <Text style={styles.label}>Founded In</Text>
               <View style={{flexDirection:'row'}}>
                 <TextInput
                     editable={false}    
                     placeholderTextColor="grey"
-                    placeholder='Last date to Apply'   
+                    placeholder='Founded In'   
                     value={date}
                     style={[dateIsSet ? { color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', padding: 5, borderColor: 'grey', marginRight: 20, marginBottom: 15 } : { color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', padding: 5, borderColor: 'red', marginRight: 20, marginBottom: 15 }]}    
                 />
@@ -188,46 +238,28 @@ const EditProfileModal = ({ visible, onClose, user, onSave }) => {
                 mode="calendar"
               /> : <></>}
             </View>   
-            
-            <View style={{marginBottom:20, width:300}}>
-              <Text style={styles.label}>Experience</Text>
-              <SelectList
-                placeholder={experience}
-                search={false}
-                setSelected={(val) => {
-                  setExperience(val)
-                  setExperienceIsSet(true)
-                }}
-                data={exp}
-                save="value"
-                onSelect={(exp) => setExperience(exp)}
-                boxStyles={[experienceIsSet ? null : { borderColor: "red" }, { backgroundColor: "white" }]}
-                label="Experience"
-              />
-            </View>
 
             <View style={{marginBottom:20, width:300}}>
-              <Text style={styles.label}>My Drones</Text>
+              <Text style={styles.label}>Number of Employees</Text>
               <MultipleSelectList
-                // placeholder='Select Drones'
-                notFoundText='Drone not found'
+                placeholder={num}
+                notFoundText='Num People not found'
                 setSelected={(val) => {
-                  setDrones(val)
-                  setDroneIsSet(true)
+                  setNum(val)
+                  setNumIsSet(true)
                 }}
-                data={dronesList}
+                data={numPeople}
                 save="value"
                 onSelect={() => {
                   // setDrones(droneSelect)
-                  console.log(drones);
+                  console.log(numPeople);
                 }}
-                boxStyles={[droneIsSet ? null : { borderColor: "red" }, { backgroundColor: "white" }]}
-                label="Drones"
+                boxStyles={[numIsSet ? null : { borderColor: "red" }, { backgroundColor: "white" }]}
+                label="NumPeople"
               />
             </View>
-
             <View style={{marginBottom:20, width:300}}>
-            <Text style={styles.label}>Interests</Text>
+            <Text style={styles.label}>Categories</Text>
               <MultipleSelectList
                 setSelected={(val) => {
                   setInterests(val)
@@ -244,7 +276,6 @@ const EditProfileModal = ({ visible, onClose, user, onSave }) => {
                 boxStyles={[interestIsSet ? null : { borderColor: "red" }, { backgroundColor: "white" }]}
               />
             </View>
-
           </View>
           </View>
           </ScrollView>
@@ -308,7 +339,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth:1,
     borderColor:'grey',
-    width: 300,
+    width: 280,
     height: 45,
     marginBottom: 20,
     alignItems: "flex-start",
@@ -330,7 +361,7 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 15,
     color: 'grey'
-},
+  },
   btn : {
     textAlign:'center',
     justifyContent:'center',
@@ -340,7 +371,7 @@ const styles = StyleSheet.create({
     padding:9,
     width:135,
     color:'white'
-}
+  }
 });
 
-export default EditProfileModal;
+export default EditProfileModalComp;

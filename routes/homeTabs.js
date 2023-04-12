@@ -16,7 +16,7 @@ export default function HomeTab({navigation}) {
   const [isClicked, setIsClicked] = useState(false);
   const handleClick = () => {
     setIsClicked(true)
-  }
+  } 
   
   return (
     <NavigationContainer independent={true}>

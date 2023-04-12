@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import DatePicker from 'react-native-modern-datepicker';
 
 export default function PersonalDetails({ formData, setFormData }) {
-  const [date, setDate] = useState('');
+    const [date, setDate] = useState('');
     const handleButtonOpen = () => {
         setOpen(!open);
         if(date.length !== '') setFormData({ ...formData, foundedin: date, dateIsSet: true });
@@ -15,7 +15,6 @@ export default function PersonalDetails({ formData, setFormData }) {
     const month = date1.getMonth() + 1;
     const day = date1.getDate();
     const todaysDate = year + '-0' + month + '-' + day;
-
 
     const [nameIsSet, setNameIsSet] = useState(false);
     const [dateIsSet, setDateIsSet] = useState(false);
@@ -56,68 +55,63 @@ export default function PersonalDetails({ formData, setFormData }) {
           onChangeText={(email) => handleEmailChange(email)}
         />
       </View>
-      <View style={{ marginBottom: 20, width: 270 }}>
-                <View style={{ flexDirection: 'row' }}>
-                    <TextInput
-                        editable={false}
-                        placeholderTextColor="grey"
-                        placeholder='Founded In *'
-                        value={formData.foundedin}
-                        style={[formData.dateIsSet ? { color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', padding: 5, borderColor: 'grey', marginRight: 20, marginBottom: 15 } : { color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', padding: 5, borderColor: 'red', marginRight: 20, marginBottom: 15 }]}
-                    />
+      <View style={{ marginBottom: 20 }}>
+        <View style={{ flexDirection: 'row' }}>
+          <TextInput
+            editable={false}
+            placeholderTextColor="grey"
+            placeholder='Date of Birth *'
+            value={formData.foundedin}
+            style={{width:125, fontSize:17 ,height:55, color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', borderColor: formData.dateIsSet? 'grey': 'red', marginRight: 20, marginBottom: 15 }}
+          />
 
-                    {open ? <TouchableOpacity onPress={handleButtonOpen} style={{ padding: 0 }}><Text style={styles.btn}>Close</Text></TouchableOpacity> :
-                        <TouchableOpacity onPress={() => { setOpen(!open) }} style={{ padding: 0 }}><Text style={styles.btn}>Choose Date</Text></TouchableOpacity>
-                    }
-                </View>
-                {open ? <DatePicker
-                    onSelectedChange={(date) => {
-                        setDate(date)
-                    }}
-                    mode="calendar"
-                    maximumDate={todaysDate}
-                /> : null}
-            </View >
+        {open ? <TouchableOpacity onPress={handleButtonOpen} style={{ padding: 0 }}><Text style={styles.btn}>Select</Text></TouchableOpacity> :
+          <TouchableOpacity onPress={() => { setOpen(!open) }} style={{ padding: 0 }}><Text style={styles.btn}>Choose Date</Text></TouchableOpacity>
+        }
+        </View>
+        <View>
+          {open ? <DatePicker
+            onSelectedChange={(date) => {
+              setDate(date)
+            }}
+            mode="calendar"
+            maximumDate={todaysDate}
+          /> : <></>}
+        </View>
+      </View>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  inputView: {
-    width: 280,
-    height: 45,
-    marginBottom: 20,
-    alignItems: "flex-start",
-    justifyContent: "center",
-},
-TextInput: {
+  TextInput: {
     backgroundColor: "white",
     borderRadius: 8,
     borderWidth: 1,
     borderColor: 'grey',
     width: 280,
-    height: 45,
+    height: 55,
     marginBottom: 20,
     alignItems: "flex-start",
     justifyContent: "center",
-    padding: 10,
-    fontSize: 15,
+    padding: 15,
+    fontSize: 17,
     color: 'grey'
-},
-errorTextInput: {
+  },
+  errorTextInput: {
     backgroundColor: "white",
     borderRadius: 8,
     borderWidth: 1,
     borderColor: 'red',
     width: 280,
-    height: 45,
+    height: 55,
     marginBottom: 20,
     alignItems: "flex-start",
     justifyContent: "center",
-    padding: 10,
-    fontSize: 15,
+    padding: 15,
+    fontSize: 17,
     color: 'grey'
-},
+  },
   passwordContainer: {
       position: 'absolute',
       right: 10
@@ -128,9 +122,9 @@ errorTextInput: {
     backgroundColor: '#A9A9A9',
     fontSize: 15,
     borderRadius: 8,
-    // height:40,
-    padding: 9,
+    height:55,
+    padding: 15,
     width: 135,
     color: 'white'
-}
+  }
 })

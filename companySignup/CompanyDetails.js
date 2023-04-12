@@ -106,7 +106,7 @@ export default function PersonalDetails({ formData, setFormData }) {
     <View>
 
       <View style={{ width: '100%', marginBottom:20, alignItems:'center'}}>
-        <TouchableOpacity onPress={() => pickImage()} style={[styles.logobtn]}><Text style={{ color: 'black', fontSize: 16 }}>Select Logo</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => pickImage()} style={[styles.logobtn]}><Text style={{ color: 'grey', fontSize: 17 }}>Select Logo (Click Here)</Text></TouchableOpacity>
         {image && <Image source={{ uri: image }} style={{ width: 180, height: 180, marginBottom: 15, borderRadius:10}} />}
       </View>
 
@@ -151,25 +151,18 @@ export default function PersonalDetails({ formData, setFormData }) {
 }
 
 const styles = StyleSheet.create({
-  inputView: {
-    width: 280,
-    height: 45,
-    marginBottom: 20,
-    alignItems: "flex-start",
-    justifyContent: "center",
-  },
   TextInput: {
     backgroundColor: "white",
     borderRadius: 8,
     borderWidth: 1,
     borderColor: 'grey',
     width: 280,
-    height: 45,
+    height: 55,
     marginBottom: 20,
     alignItems: "flex-start",
     justifyContent: "center",
-    padding: 10,
-    fontSize: 15,
+    padding: 15,
+    fontSize: 17,
     color: 'grey'
   },
   errorTextInput: {
@@ -178,12 +171,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'red',
     width: 280,
-    height: 45,
+    height: 55,
     marginBottom: 20,
     alignItems: "flex-start",
     justifyContent: "center",
-    padding: 10,
-    fontSize: 15,
+    padding: 15,
+    fontSize: 17,
     color: 'grey'
   },
   passwordContainer: {
@@ -193,10 +186,9 @@ const styles = StyleSheet.create({
   logobtn: {
     backgroundColor: "white",
     borderColor: "black",
-    color: "black",
     borderRadius: 8,
     width: 280,
-    height: 45,
+    height: 55,
     marginBottom: 10,
     // alignItems:'center',
     borderWidth:1,

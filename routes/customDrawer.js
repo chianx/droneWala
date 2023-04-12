@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {View, Text, ImageBackground, Image,Share, Alert, TouchableOpacity} from 'react-native'
 import {DrawerContentScrollView, DrawerItemList} from '@react-navigation/drawer';
 import Images from '../images/index';
@@ -7,9 +7,19 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackActions } from '@react-navigation/native';
 import EditProfileModal from '../screens/editProfile';
-// import Share from 'react-native-share';
+import EditProfileModalComp from '../screens/editProfileComp';
 
 const CustomDrawer = ({prop, navigation}) => {
+    const [userType, setUserType] = useState("");
+    const mount = async() => {
+      const userdata = await AsyncStorage.getItem("userData");
+      const val = JSON.parse(userdata)
+      setUserType(val.userType);
+    }
+    useEffect(() => {
+      mount();
+    }, [userType]);
+
     const [user, setUser] = useState({
         firstName: 'John Doe',
         lastName: 'johndoe@example.com',
@@ -22,8 +32,6 @@ const CustomDrawer = ({prop, navigation}) => {
         AsyncStorage.setItem("userType", "");
         AsyncStorage.setItem("userId", "");
         AsyncStorage.setItem("userData", "");
-
-        // prop.navigation.reset();
 
         prop.navigation.navigate("Login")
     }
@@ -83,12 +91,18 @@ const CustomDrawer = ({prop, navigation}) => {
                 </TouchableOpacity>
             </View>
 
-            <EditProfileModal
+            {userType === "pilot"? <EditProfileModal
                 visible={launch}
                 onSave={launchEditProfile}
                 onClose={closeEditProfile}
                 user={user}
-            />
+            /> :
+            <EditProfileModalComp
+                visible={launch}
+                onSave={launchEditProfile}
+                onClose={closeEditProfile}
+                user={user}
+            />}
         </View>
                 
     )

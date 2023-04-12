@@ -33,7 +33,7 @@ export default function Signup({navigation}) {
                 </View>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.button} onPress={()=> navigation.navigate("Company")}>
+              <TouchableOpacity style={styles.button} onPress={()=> navigation.navigate("Institute")}>
                 <View style={{width:'40%', height: '100%', position:'absolute',left:0, backgroundColor:'white', borderTopLeftRadius:16, borderBottomLeftRadius:16}}>
                   <Image source={Images.institute} style={{width:80, height:'100%', alignSelf:'center'}} />
                 </View>

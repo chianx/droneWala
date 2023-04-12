@@ -1,4 +1,4 @@
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 
 export default function PersonalDetails({ formData, setFormData }) {
@@ -46,7 +46,7 @@ export default function PersonalDetails({ formData, setFormData }) {
         <TextInput
           style={[formData.addressIsSet ? styles.TextInput : styles.errorTextInput]}
           placeholderTextColor="grey"
-          placeholder='Address House No/Street No/Area *'
+          placeholder='Address House No/Street No *'
           required={true}
           value={formData.address}
           onChangeText={(address) => handleAddressChange(address)}
@@ -114,12 +114,12 @@ const styles = StyleSheet.create({
     borderWidth:1,
     borderColor:'grey',
     width: 280,
-    height: 45,
+    height: 55,
     marginBottom: 20,
     alignItems: "flex-start",
     justifyContent: "center",
-    padding: 10,
-    fontSize: 15,
+    padding: 15,
+    fontSize: 17,
     color: 'grey'
 },
 errorTextInput: {
@@ -128,12 +128,12 @@ errorTextInput: {
   borderWidth: 1,
   borderColor: 'red',
   width: 280,
-  height: 45,
+  height: 55,
   marginBottom: 20,
   alignItems: "flex-start",
   justifyContent: "center",
-  padding: 10,
-  fontSize: 15,
+  padding: 15,
+  fontSize: 17,
   color: 'grey'
 },
   passwordContainer: {
