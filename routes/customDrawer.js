@@ -21,6 +21,8 @@ const CustomDrawer = ({prop, navigation}) => {
         AsyncStorage.setItem("login", ""+false);
         AsyncStorage.setItem("userType", "");
         AsyncStorage.setItem("userId", "");
+        AsyncStorage.setItem("userData", "");
+
         // prop.navigation.reset();
 
         prop.navigation.navigate("Login")

@@ -2,6 +2,8 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, Image, ScrollView, TouchableOpacity, FlatList, Dimensions } from 'react-native';
 import Images from '../images';
+import { Ionicons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -29,10 +31,10 @@ export default function Home({navigation}) {
     const index = event.nativeEvent.contentOffset.x / slideSize;
     setActiveIndex(Math.round(index));
   };
-  const jobs = [{key:1, jobTitle:'Job Title-2', company:'Garud Survey', salary: '10,000-15,000/month', type:'Full Time', Location:'Jaipur', companyIcon:Images.droneIcon},
-  {key:2, jobTitle:'Job Title-2', company:'Garud Survey', salary: '10,000-15,000/month', type:'Full Time', Location:'Jaipur', companyIcon:Images.droneIcon},
-  {key:3, jobTitle:'Job Title-3', company:'DronePilots Network', salary: '30,000-35,000/month', type:'Part Time', Location:'Jaipur', companyIcon:Images.droneIcon},
-  {key:4, jobTitle:'Drone Survey Job', company:'Fire Drone', type:'Full Time', salary:'20000/month', Location:'Jaipur', companyIcon:Images.droneIcon}];
+  const jobs = [{key:1, jobTitle:'Job Title-2 Drone Service ', profileImage: Images.profile, company:'Garud Survey', salary: '10,000-15,000/month', type:'Full Time', Location:'Jaipur', companyIcon:Images.droneIcon},
+  {key:2, jobTitle:'Job Title-2', profileImage: Images.profile, company:'Garud Survey', salary: '10,000-15,000/month', type:'Full Time', Location:'Jaipur', companyIcon:Images.droneIcon},
+  {key:3, jobTitle:'Job Title-3', profileImage: Images.profile, company:'DronePilots Network', salary: '30,000-35,000/month', type:'Part Time', Location:'Jaipur', companyIcon:Images.droneIcon},
+  {key:4, jobTitle:'Drone Survey Job', profileImage: Images.profile, company:'Fire Drone', type:'Full Time', salary:'20000/month', Location:'Jaipur', companyIcon:Images.droneIcon}];
 
   const cards = [
     { key: '1', title: 'Card 1', image: Images.profile },
@@ -43,11 +45,18 @@ export default function Home({navigation}) {
   
   const Card = ({ item }) => (
     <View style={styles.card} key={item.key}>
-      <Image source={item.image} style={styles.cardImage} />
-      <View style={styles.cardContent}>
-        <Text style={styles.cardTitle}>{item.title}</Text>
-        <Text style={styles.cardDescription}>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</Text>
+      <View style={{flexDirection:'row'}}>
+        <Image source={item.profileImage} style={styles.cardImage} />
+        <View style={styles.cardContent}>
+          <Text style={styles.cardTitle}>{item.jobTitle}</Text>
+          <Text style={styles.cardDescription}>{item.company}</Text>
+        </View>
       </View>
+      <View style={{marginLeft:5, marginTop:10}}>
+        <Text style={{color:'#808080'}}><Ionicons name="location-outline" size={14} color="#808080" />{item.Location}</Text>
+        <Text style={{color:'#808080'}}><Ionicons name="ios-cash-outline" size={14} color="#808080" />{' ₹' + item.salary}</Text>
+        <Text style={{color:'#808080'}}><AntDesign name="calendar" size={14} color="#808080" />{' '+item.type}</Text>
+      </View>   
     </View>
   );
 
@@ -71,13 +80,13 @@ export default function Home({navigation}) {
 
           {/* Icons */}
           <View style={{flexDirection:'row', width:'90%', justifyContent:'space-between'}}>
-            <View style={styles.imageContainer}>
+            <View>
               <TouchableOpacity onPress={() => {navigation.navigate("Jobs")}}>
               <Image style={styles.icons} source={Images.searchJobs}/>
               <Text style={{textAlign:'center', marginVertical:7, color:'#696969'}}>Search Jobs</Text>
               </TouchableOpacity>
             </View>
-            <View style={styles.imageContainer}>
+            <View>
               <TouchableOpacity onPress={() => {userType==="company"? navigation.navigate("Create Post") : navigation.navigate("Learnings") }}>
               <Image style={styles.icons} source={Images.learnDrone}/>
               <Text style={{textAlign:'center', marginVertical:7, color:'#696969'}}>
@@ -85,7 +94,7 @@ export default function Home({navigation}) {
               </Text>
               </TouchableOpacity>
             </View>
-            <View style={styles.imageContainer}>
+            <View>
               <TouchableOpacity onPress={() => {navigation.navigate("My Account")}}>
               <Image style={styles.icons} source={Images.myDrones}/>
               <Text style={{textAlign:'center', marginVertical:7, color:'#696969'}}>My Drones</Text>
@@ -97,7 +106,7 @@ export default function Home({navigation}) {
           <View style={{width:'90%', marginVertical:25}}>
             <Text style={{width:'100%', textAlign:'left', fontSize:20, color:'#696969', fontWeight:'bold', marginBottom:10, marginLeft:5}}>Trending Job Opportunities</Text>
             <FlatList
-              data={cards}
+              data={jobs}
               renderItem={({ item }) => <Card item={item} />}
               keyExtractor={(item) => item.key}
               horizontal
@@ -177,10 +186,10 @@ const styles = StyleSheet.create({
   icons : {
     height:100,
     width: 100,
-    borderRadius:20
+    borderRadius:20,
   },
   carouselContainer: {
-    paddingLeft: 16,
+    paddingRight: 16,
     paddingBottom: 16,
   },
   card: {
@@ -190,6 +199,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     overflow: 'hidden',
     marginRight: 16,
+    padding:15
   },
   cardImage: {
     width: 80,
@@ -198,6 +208,7 @@ const styles = StyleSheet.create({
   },
   cardContent: {
     padding: 8,
+    width:150
   },
   cardTitle: {
     fontSize: 18,

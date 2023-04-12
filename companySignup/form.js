@@ -18,13 +18,14 @@ export default function Form({navigation}) {
     const [formData, setFormData] = useState(
         {
             // PersonalDetails
-            uid: "",
+            userId: "",
             name: "",
             email: "",
             foundedin : "",
             nameIsSet:false,
             dateIsSet:false,
             emailIsSet:false,
+            userType:"company",
 
             // BasicDetails
             CINno: "",
@@ -60,7 +61,7 @@ export default function Form({navigation}) {
             return <CompanyDetails formData={formData} setFormData={setFormData}/>
         }
     }
-    const createUserInFirebase = () => {
+    const createUserInFirebase = async() => {
         if(screen === 2) {
             var errMsg = "";
             var validate = false;
@@ -82,12 +83,12 @@ export default function Form({navigation}) {
                 
                 // Final
                 var uid = auth.currentUser.uid
-                setFormData({})
-                setFormData({ ...final, uid, isPilot: false, type: "company"})
-                set(ref(db, 'users/' + uid), formData).then(() => {
+                console.log(uid);
+                // setFormData({})
+                setFormData({ ...final, userId:uid, type:"company"})
+                set(ref(db, 'users/' + uid), formData).then(async() => {
                     // Add loading icon.
-                    AsyncStorage.setItem("userData", user.toString());  
-                    navigation.navigate("Login")
+                    navigation.navigate("LoginStack")
                 }).catch((error) => {
                     // Correct this.
                     setErrorMessage(error.toString);

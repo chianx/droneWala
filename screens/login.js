@@ -35,14 +35,14 @@ export default function Login( {navigation} ) {
     }
   };
 
-  const getUserData = (uid) => {
+  const getUserData = async(uid) => {
     console.log(uid);
-    return get(child(ref(db), "users/" + uid)).then((userSnap) => {
+    return get(child(ref(db), "users/" + uid)).then(async (userSnap) => {
       if(userSnap.exists) {
         var user = userSnap.val()
         console.log(user);
-        AsyncStorage.setItem("userData", user.toString());  
-        navigation.navigate("Home");
+        await AsyncStorage.setItem("userData", JSON.stringify(user));  
+        navigation.navigate("HomeDrawer");
       }else {
         console.log("No user found!!!");
       }
@@ -62,7 +62,7 @@ export default function Login( {navigation} ) {
       const isNewUser = res.additionalUserInfo.isNewUser;
       const userId = res.user.uid;
       if(isNewUser) { 
-        navigation.navigate("Signup");
+        navigation.navigate("SignupStack");
       }else {
         getUserData(userId)
       }

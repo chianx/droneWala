@@ -18,17 +18,20 @@ const Drawer = createDrawerNavigator();
 
 export default function HomeDrawer({navigation}) {
     const [userType, setUserType] = useState("");
-    let type = ""; 
-    const mount = async () => {
-      type = await AsyncStorage.getItem("userType");
-      setUserType(type);
+    const mount = async() => {
+      const userdata = await AsyncStorage.getItem("userData");
+      console.log("In home drawer")
+      const val = JSON.parse(userdata)
+      console.log(userdata)
+      console.log(userdata)
+      setUserType(val.userType);
     }
     useEffect(() => {
       mount();
       
-    }, []);
+    }, [userType]);
     
-    console.log("userType = " + userType);
+    console.log("userType in homeDrawer = " + userType);
     return (
       // <NavigationContainer independent={true}>
         <Drawer.Navigator 

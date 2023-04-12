@@ -6,7 +6,7 @@ import {db} from '../firebase/databaseConfig'
 import {set, ref, push} from 'firebase/database';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function JobForm() {
+export default function JobForm({navigation}) {
     const [screen, setScreen] = useState(0)
     const FormTitle = [
         "Precise Details",
@@ -27,6 +27,8 @@ export default function JobForm() {
             ftORptIsSet: false,
             numOpenIsSet: false,
             dateIsSet: false,
+            location:"",
+            locationIsSet:false,
             logo: "",
             
 
@@ -61,17 +63,20 @@ export default function JobForm() {
             if(validate && formData.aboutJobIsSet && formData.whoApplyIsSet) {
                 // navigation.navigate("Login")
                 setErrorMessage("");
-                var final =  { jobTitle: formData.jobTitle,salRange: formData.salRange,ftORpt: formData.ftORpt,numOpen: formData.numOpen,date: formData.date,aboutJob: formData.aboutJob,whoApply: formData.whoApply, }
+                
                 AsyncStorage.getItem("userData", (error, result) => {
-                    if(error != null || result != null) {
-                        console.error("Error in reading user logo");
-                        return
-                    }
+                    console.log(result);
+                    
                     var userJson = JSON.parse(result);
                     var refs = push(ref(db, "jobs/"));
-                    setFormData({...final, jobId: refs.key, logo: userJson.logo});
-                    set(refs, formData);
+                    var final =  {aboutCompany: userJson.about, logo: userJson.logo, companyName: userJson.name, jobId: refs.key, jobTitle: formData.jobTitle, location:formData.location ,salRange: formData.salRange,ftORpt: formData.ftORpt,numOpen: formData.numOpen,date: formData.date,aboutJob: formData.aboutJob,whoApply: formData.whoApply, }
+                    // setFormData({...final , logo: userJson.logo, });
+                    set(refs, final);
                 })
+
+                setFormData({});
+                setScreen(0);
+                navigation.navigate("Home");
             }
             else {
                 setErrorMessage(errMsg);
@@ -127,7 +132,7 @@ export default function JobForm() {
                     }}>
                     <Text style={styles.button}>Previous</Text>
                 </TouchableOpacity>
-                {screen === 1 ? <TouchableOpacity onPress={() => {createUserInFirebase()}} style={styles.button}><Text>Submit</Text></TouchableOpacity> 
+                {screen === 1 ? <TouchableOpacity onPress={() => {createUserInFirebase()}} style={styles.button}><Text style={{color:'white'}}>Submit</Text></TouchableOpacity> 
                 : <TouchableOpacity onPress={callNext}><Text style={styles.button}>Next</Text></TouchableOpacity>}
             </View>
         </View>

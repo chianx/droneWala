@@ -4,7 +4,7 @@ import BasicDetails from './BasicDetails';
 import PersonalDetails from './PersonalDetails';
 import PilotDetails from './PilotDetails';
 // import firestore from '@react-native-firebase/firestore';
-import { db } from '../firebase/databaseConfig'
+import { db, auth } from '../firebase/databaseConfig'
 import { ref, set } from 'firebase/database'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -27,6 +27,7 @@ export default function PilotForm({navigation}) {
             nameIsSet:false,
             dateIsSet:false,
             emailIsSet:false,
+            useType:"pilot",
 
             // PersonalDetails
             address: "",
@@ -75,12 +76,12 @@ export default function PilotForm({navigation}) {
                 navigation.navigate("LoginStack")
                 setErrorMessage("");
                 var final =  { name: formData.name, email: formData.email, dob: formData.dob, address: formData.address, city: formData.city, state: formData.state, pincode: formData.pincode, aadhar: formData.aadhar, dcgaCert: formData.dcgaCert, certNum: formData.certNum, droneSelect: formData.droneSelect, experience: formData.experience}
-                var uid = getAuth().currentUser.uid
+                var uid = auth.currentUser.uid
                 setFormData({ ...final, uid, isPilot: true, type: "pilot"})
                 set(ref(db, 'users/' + uid), formData).then(() => {
                     // Add loading icon.
-                    AsyncStorage.setItem("userData", user.toString());  
-                    navigation.navigate("Login")
+                    AsyncStorage.setItem("userData", JSON.stringify(formData));  
+                    navigation.navigate("LoginStack")
                 }).catch((error) => {
                     // Correct this.
                     setErrorMessage(error.toString);

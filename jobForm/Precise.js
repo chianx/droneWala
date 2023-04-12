@@ -49,6 +49,13 @@ export default function Precise({ formData, setFormData }) {
             setFormData({ ...formData, numOpen:numOpen, numOpenIsSet: false });
         }
     }
+    const handleJobLoaction = (location) => {
+        if(formData.location.trim().length >= 4) {
+            setFormData({ ...formData, location:location, locationIsSet: true });
+        }else {
+            setFormData({ ...formData, location:location, locationIsSet: false });
+        }
+    }
 
     return (
         <View>
@@ -59,6 +66,15 @@ export default function Precise({ formData, setFormData }) {
                     placeholder='Job Title *'
                     value={formData.jobTitle}
                     onChangeText={(jobTitle) => handlejobTitle(jobTitle)}
+                />
+            </View>
+            <View style={styles.inputView}>
+                <TextInput
+                    style={[formData.locationIsSet ? styles.TextInput : styles.errorTextInput]}
+                    placeholderTextColor="grey"
+                    placeholder='Job Location *'
+                    value={formData.location}
+                    onChangeText={(jobLocation) => handleJobLoaction(jobLocation)}
                 />
             </View>
             <View style={styles.inputView}>

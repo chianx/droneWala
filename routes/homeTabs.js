@@ -41,9 +41,23 @@ export default function HomeTab({navigation}) {
             // You can return any component that you like here!
             return <Ionicons name={iconName} size={size} color={color} />;
           },
+          headerShown:false,
           tabBarActiveTintColor: '#ed7117',
           tabBarInactiveTintColor: 'gray',
-          headerLeft: () => (
+          // headerLeft: () => (
+          //   <TouchableOpacity onPress={() => navigation.openDrawer()}>
+          //     <Image
+          //       source={Images.profile}
+          //       style={{ height: 40, width: 40, borderRadius:40, marginLeft:10, borderWidth:1, borderColor:'black'}}
+          //     />
+          //   </TouchableOpacity>
+          // )
+        })}
+      >
+        <Tab.Screen name="Home" component={Home} 
+          options ={{
+            headerShown:true,
+            headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.openDrawer()}>
               <Image
                 source={Images.profile}
@@ -51,28 +65,38 @@ export default function HomeTab({navigation}) {
               />
             </TouchableOpacity>
           )
-        })}
-      >
-        <Tab.Screen name="Home" component={Home} />
-        <Tab.Screen name="Jobs" component={JobStack} 
-          options={{
-            headerRight: () => (
-            <TouchableOpacity onPress={() => navigation.goBack()}
-              style={{paddingRight:'11%'}}
-            >
-              <FontAwesome5 name="user-edit" size={19} color="black" />
+          }}
+        />
+        <Tab.Screen name="Jobs" component={JobStack}/>
+        <Tab.Screen name="Learnings" component={Learning} 
+          options ={{
+            headerShown:true,
+            headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.openDrawer()}>
+              <Image
+                source={Images.profile}
+                style={{ height: 40, width: 40, borderRadius:40, marginLeft:10, borderWidth:1, borderColor:'black'}}
+              />
             </TouchableOpacity>
           )
-          }} 
+          }}
         />
-        <Tab.Screen name="Learnings" component={Learning} />
         <Tab.Screen name="My Account" 
           options={{
+            headerShown:true,
             headerRight: () => (
             <TouchableOpacity onPress={handleClick}
               style={{paddingRight:'11%'}}
             >
               <FontAwesome5 name="user-edit" size={19} color="black" />
+            </TouchableOpacity>
+          ),
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.openDrawer()}>
+              <Image
+                source={Images.profile}
+                style={{ height: 40, width: 40, borderRadius:40, marginLeft:10, borderWidth:1, borderColor:'black'}}
+              />
             </TouchableOpacity>
           )
           }} 

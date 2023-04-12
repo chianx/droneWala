@@ -35,16 +35,6 @@ export default function JobStack({navigation}) {
             <Stack.Screen 
                 name="JobDetails" 
                 component={JobDetails}
-                options = {{
-
-                    headerLeft : () => (
-                    <TouchableOpacity onPress={() => navigation.navigate("Jobs")}
-                        style={{paddingRight:'11%'}}
-                    >
-                        <Ionicons name="arrow-back" size={24} color="black" />
-                    </TouchableOpacity>
-                )
-                }}
             />
             <Stack.Screen 
                 name="Apply" 

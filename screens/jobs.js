@@ -1,10 +1,11 @@
-import react from 'react';
+import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity } from 'react-native';
 import Images from '../images/index'
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import JobDetails from './jobDetails';
+import {db} from '../firebase/databaseConfig'
 import {  
   ref,
   onValue,
@@ -14,29 +15,45 @@ import {
 } from 'firebase/database';
 
 export default function Jobs({navigation}) {
-  const details = [{key:1, jobTitle:'Job Title', company:'Company-Name', salary: '3,000-5,000/month', type:'Full Time', Location:'Jaipur'},
-           {key:2, jobTitle:'Lorem Ipsum dolor ebel candle jameesrirf', company:'Garud Survey', salary: '10,000-15,000/month', type:'Full Time',Location:'Jaipur'},
-           {key:3, jobTitle:'Job Title-2', company:'Garud Survey', salary: '10,000-15,000/month', type:'Full Time', Location:'Jaipur'},
-           {key:4, jobTitle:'Job Title-2', company:'Garud Survey', salary: '10,000-15,000/month', type:'Full Time', Location:'Jaipur'},
-            {key:5, jobTitle:'Job Title-3', company:'DronePilots Network', salary: '30,000-35,000/month', type:'Part Time', Location:'Jaipur'},
-            {key:6, jobTitle:'Drone Survey Job', company:'Fire Drone', type:'Full Time', salary:'20000/month', Location:'Jaipur'}]
+
+  const [jobs, setJobs] = useState([]);
+
+  useEffect (() => {
+    const starCountRef = ref(db, 'jobs/');
+    onValue(starCountRef, (snapshot) => {
+      const data = snapshot.val();
+      const job = Object.keys(data).map(key => ({
+        id: key,
+        ...data[key]
+      }))
+      console.log(job);
+      setJobs(job);
+    });
+  }, [])
+
+  // const details = [{key:1, jobTitle:'Job Title', company:'Company-Name', salary: '3,000-5,000/month', type:'Full Time', Location:'Jaipur'},
+  //          {key:2, jobTitle:'Lorem Ipsum dolor ebel candle jameesrirf', company:'Garud Survey', salary: '10,000-15,000/month', type:'Full Time',Location:'Jaipur'},
+  //          {key:3, jobTitle:'Job Title-2', company:'Garud Survey', salary: '10,000-15,000/month', type:'Full Time', Location:'Jaipur'},
+  //          {key:4, jobTitle:'Job Title-2', company:'Garud Survey', salary: '10,000-15,000/month', type:'Full Time', Location:'Jaipur'},
+  //           {key:5, jobTitle:'Job Title-3', company:'DronePilots Network', salary: '30,000-35,000/month', type:'Part Time', Location:'Jaipur'},
+  //           {key:6, jobTitle:'Drone Survey Job', company:'Fire Drone', type:'Full Time', salary:'20000/month', Location:'Jaipur'}]
   return (
         <View style={styles.container}>
             <FlatList 
-              data={details}
+              data={jobs}
               renderItem={({item}) => (
                 <TouchableOpacity onPress={() => navigation.navigate('JobDetails', {job: item})}>
                 <View key={item.key} style={styles.jobContainer}>
                   <View style={{flexDirection:'row'}}>
                     <View style={{paddingRight:20}}>
-                      <Image source={Images.profile} style={styles.profilePic}/>
+                      <Image source={{uri: item.logo}} style={styles.profilePic}/>
                     </View>
                     <View style={{paddingRight:20, width:200}}>
                       <Text style={styles.title}>{item.jobTitle}</Text>
-                      <Text style={{color:'#808080', paddingBottom:7}}>{item.company}</Text>
-                      <Text style={{color:'#808080', paddingBottom:3}}><Ionicons name="location-outline" size={14} color="#808080" />{' '+ item.Location}</Text>
-                      <Text style={{color:'#808080', paddingBottom:3}}><Ionicons name="ios-cash-outline" size={14} color="#808080" />{' ₹' + item.salary}</Text>
-                      <Text style={{color:'#808080', paddingBottom:3}}><AntDesign name="calendar" size={14} color="#808080" />{' '+item.type}</Text>
+                      <Text style={{color:'#808080', paddingBottom:7}}>{item.companyName}</Text>
+                      <Text style={{color:'#808080', paddingBottom:3}}><Ionicons name="location-outline" size={14} color="#808080" />{' '+ item.location}</Text>
+                      <Text style={{color:'#808080', paddingBottom:3}}><Ionicons name="ios-cash-outline" size={14} color="#808080" />{' ₹' + item.salRange}</Text>
+                      <Text style={{color:'#808080', paddingBottom:3}}><AntDesign name="calendar" size={14} color="#808080" />{' '+item.ftORpt}</Text>
                     </View>
                     <View style={{ justifyContent:'center', width:20}}>
                     <Text><MaterialIcons name="arrow-forward-ios" size={22} color="#C8C8C8" /></Text>
