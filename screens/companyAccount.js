@@ -14,7 +14,7 @@ export default function Account({isClicked, setIsClicked, navigation }) {
     const mount = async() => {
       const userdata = await AsyncStorage.getItem("userData");
       const val = JSON.parse(userdata)
-    //   setUser(val);
+      setUser(val);
       console.log(val);
 
     }
@@ -32,10 +32,10 @@ export default function Account({isClicked, setIsClicked, navigation }) {
 
 
     const jobs = [{ key: 2, jobTitle: 'Lorem Ipsum dolor ebel candle jameesrirf', company: 'Garud Survey', salary: '10,000-15,000/month', type: 'Full Time', Location: 'Jaipur' },
-    { key: 3, jobTitle: 'Job Title-2', company: 'Garud Survey', salary: '10,000-15,000/month', type: 'Full Time', Location: 'Jaipur' },];
+        { key: 3, jobTitle: 'Job Title-2', company: 'Garud Survey', salary: '10,000-15,000/month', type: 'Full Time', Location: 'Jaipur' },];
     const freelance = [{ key: 4, jobTitle: 'Job Title-2', company: 'Garud Survey', salary: '10,000-15,000/month', type: 'Full Time', Location: 'Jaipur' },
-    { key: 5, jobTitle: 'Job Title-3', company: 'DronePilots Network', salary: '30,000-35,000/month', type: 'Part Time', Location: 'Jaipur' },
-    { key: 6, jobTitle: 'Drone Survey Job', company: 'Fire Drone', type: 'Full Time', salary: '20000/month', Location: 'Jaipur' }];
+        { key: 5, jobTitle: 'Job Title-3', company: 'DronePilots Network', salary: '30,000-35,000/month', type: 'Part Time', Location: 'Jaipur' },
+        { key: 6, jobTitle: 'Drone Survey Job', company: 'Fire Drone', type: 'Full Time', salary: '20000/month', Location: 'Jaipur' }];
 
     const [active, setActive] = useState('Jobs');
     const [dataList, setDataList] = useState([...jobs]);
@@ -60,15 +60,15 @@ export default function Account({isClicked, setIsClicked, navigation }) {
             <View style={styles.experienceBox}>
                 <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }}>
                     <View style={styles.experience}>
-                        <Text style={{ textAlign: 'center', color: 'grey', paddingBottom: 0, fontSize: 17 }}>Employees</Text>
+                        <Text style={{ textAlign: 'center', color: 'grey', paddingBottom: 0, fontSize: 17 }}>{user.numPeople}</Text>
                         <Image source={Images.droneIcon} style={styles.icons} />
                     </View>
                     <View style={styles.experience}>
-                        <Text style={{ textAlign: 'center', color: 'grey', paddingBottom: 3, fontSize: 17 }}>Founded</Text>
+                        <Text style={{ textAlign: 'center', color: 'grey', paddingBottom: 3, fontSize: 17 }}>{user.foundedin}</Text>
                         <Image source={Images.experience} style={styles.icons} />
                     </View>
                     <View style={styles.experience}>
-                        <Text style={{ textAlign: 'center', color: 'grey', paddingBottom: 3, fontSize: 17 }}>Yes</Text>
+                        <Text style={{ textAlign: 'center', color: 'grey', paddingBottom: 3, fontSize: 17 }}>{user.cinIsSet? "Yes" : "No"}</Text>
                         <Image source={Images.certified} style={styles.icons} />
                     </View>
                 </View>
@@ -79,12 +79,13 @@ export default function Account({isClicked, setIsClicked, navigation }) {
                 <View style={[styles.interests, {backgroundColor:'#ffcc99'}]}>
                     <Text style={{ fontSize: 17, color: '#303030', paddingBottom: 5, width:'100%', paddingLeft:10, paddingTop:10}}>Feilds of Work</Text>
                     <View style={{flexDirection:'row', width:'100%', flex:1, flexWrap:'wrap'}}>
-                    <Text style={{ color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>Cinematography</Text>
-                    <Text style={{color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>Mining</Text>
-                    <Text style={{color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>Mining</Text>
-                    <Text style={{color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>Mining</Text>
-                    <Text style={{color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>Agriculture</Text>
-                    <Text style={{color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>Agriculture</Text>
+                    {user.category.map((item, index) => {
+                        return (
+                            <View key = {index}>
+                            <Text style={{color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>{item}</Text>
+                            </View>
+                        )
+                    })}
                     </View>
                 </View>
             </View>
