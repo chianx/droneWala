@@ -9,9 +9,6 @@ import {db} from '../firebase/databaseConfig'
 import {  
   ref,
   onValue,
-  push,
-  update,
-  remove
 } from 'firebase/database';
 
 export default function Jobs({navigation}) {
