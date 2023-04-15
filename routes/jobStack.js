@@ -12,7 +12,6 @@ import Images from '../images/index'
 const Stack = createNativeStackNavigator();
 
 export default function JobStack({navigation}) {
-    console.log(navigation)
     return (
         // <NavigationContainer independent={true}>
         <Stack.Navigator

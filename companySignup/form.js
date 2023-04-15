@@ -105,7 +105,6 @@ export default function Form({navigation}) {
     } 
 
     const callNext = () => {
-        console.log(formData);
         if(screen === 0) {
             var errMsg = "";
             var validate = false;

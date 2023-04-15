@@ -11,10 +11,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function Account({isClicked, setIsClicked, navigation }) {
 
     const [user, setUser] = useState({});
+    const [category, setCategory] = useState([]);
     const mount = async() => {
       const userdata = await AsyncStorage.getItem("userData");
       const val = JSON.parse(userdata)
       setUser(val);
+      setCategory(val.category);
       console.log(val);
 
     }
@@ -22,13 +24,13 @@ export default function Account({isClicked, setIsClicked, navigation }) {
       mount();
     }, []);
     
-      const handleSaveProfile =() => {
-        setIsClicked(!isClicked);
-      };
+    const handleSaveProfile =() => {
+       setIsClicked(!isClicked);
+    };
     
-      const handleCancelEdit = () => {
-        setIsClicked(!isClicked);
-      };
+    const handleCancelEdit = () => {
+       setIsClicked(!isClicked);
+    };
 
 
     const jobs = [{ key: 2, jobTitle: 'Lorem Ipsum dolor ebel candle jameesrirf', company: 'Garud Survey', salary: '10,000-15,000/month', type: 'Full Time', Location: 'Jaipur' },
@@ -79,13 +81,13 @@ export default function Account({isClicked, setIsClicked, navigation }) {
                 <View style={[styles.interests, {backgroundColor:'#ffcc99'}]}>
                     <Text style={{ fontSize: 17, color: '#303030', paddingBottom: 5, width:'100%', paddingLeft:10, paddingTop:10}}>Feilds of Work</Text>
                     <View style={{flexDirection:'row', width:'100%', flex:1, flexWrap:'wrap'}}>
-                    {user.category.map((item, index) => {
+                    { category.map((item, index) => {
                         return (
                             <View key = {index}>
                             <Text style={{color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>{item}</Text>
                             </View>
                         )
-                    })}
+                    }) }
                     </View>
                 </View>
             </View>

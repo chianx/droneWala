@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Images from '../images/index'
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
@@ -17,8 +17,10 @@ import {
 export default function Jobs({navigation}) {
 
   const [jobs, setJobs] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect (() => {
+    // isLoading = true;
     const starCountRef = ref(db, 'jobs/');
     onValue(starCountRef, (snapshot) => {
       const data = snapshot.val();
@@ -28,6 +30,7 @@ export default function Jobs({navigation}) {
       }))
       console.log(job);
       setJobs(job);
+      setIsLoading(false);
     });
   }, [])
 
@@ -38,7 +41,9 @@ export default function Jobs({navigation}) {
   //           {key:5, jobTitle:'Job Title-3', company:'DronePilots Network', salary: '30,000-35,000/month', type:'Part Time', Location:'Jaipur'},
   //           {key:6, jobTitle:'Drone Survey Job', company:'Fire Drone', type:'Full Time', salary:'20000/month', Location:'Jaipur'}]
   return (
+        
         <View style={styles.container}>
+        {isLoading? <View style={{backgroundColor: '#e0e0e0aa', flex:1, justifyContent:'center'}}><ActivityIndicator size="large" color="coral" /></View> : 
             <FlatList 
               data={jobs}
               renderItem={({item}) => (
@@ -63,7 +68,9 @@ export default function Jobs({navigation}) {
                 </TouchableOpacity>
               )}
             />
+        }
         </View>
+
 
     )
 }
