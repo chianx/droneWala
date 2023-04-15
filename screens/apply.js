@@ -17,7 +17,8 @@ export default function Apply({route, navigation}) {
     const [fileName, setFileName] = useState("")
     const [url, setUrl] = useState(null);
     const [error, setError] = useState("");
-    const [allowSubmit, setAllowSubmit] = useState(false);
+    const [answerExists, setAnswerExists] = useState(false);
+    const [fileExists, setFileExists] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
     const selectDoc = async() => {
@@ -27,7 +28,8 @@ export default function Apply({route, navigation}) {
             console.log(result);
             setFile(result.uri);
             setFileName(result.name);
-            if(answer.trim().length >= 50) {
+            setFileExists(true);
+            if(answerExists) {
               setAllowSubmit(true);
               setError("");
             }
@@ -88,7 +90,7 @@ export default function Apply({route, navigation}) {
             });
           });
           
-          // navigation.navigate("Jobs")
+          navigation.navigate("Jobs")
       }
     }
   return (
@@ -101,7 +103,15 @@ export default function Apply({route, navigation}) {
                 placeholder='Your Answer goes here!'
                 multiline
                 numberOfLines={8}
-                onChangeText={(text) => setAnswer(text)}
+                onChangeText={(text) => {
+                  setAnswer(text)
+                  if(text.trim().length >= 50) {
+                    setAnswerExists(true);
+                  }else {
+                    setAnswerExists(false);
+                  }
+                  
+                }}
                 value={answer}  
                 style={styles.textArea}
             />
@@ -119,7 +129,8 @@ export default function Apply({route, navigation}) {
                   <TouchableOpacity style={styles.cross} onPress={() => {
                     setFile(null);
                     setFileName("");
-                    setAllowSubmit(false);
+                    setFileExists(false);
+                    setAnswerExists(false);
                   }}>
                     <AntDesign name="closecircleo" size={24} color="#404040" />
                   </TouchableOpacity>
@@ -129,7 +140,7 @@ export default function Apply({route, navigation}) {
             </View>
             <Text style={{marginTop:50, color:'red'}}>{error}</Text>
             <View style={{alignItems:'center', width:'100%', backgroundColor:'white',position:'absolute', bottom:0, borderTopWidth:1, borderTopColor:'grey', marginVertical:7}}>
-              <TouchableOpacity style={[styles.submitButton, {opacity: allowSubmit?1:0.5}]} onPress={handleSubmit}>
+              <TouchableOpacity style={[styles.submitButton, {opacity: (answerExists && fileExists)?1:0.5}]} onPress={handleSubmit}>
                 <Text style={styles.submitButtonText}>Submit</Text>
               </TouchableOpacity>
           </View>

@@ -4,6 +4,7 @@ import WalkthroughStack from './routes/walkthroughStack'
 import { NavigationContainer } from '@react-navigation/native';
 import LoginStack from './routes/loginStack';
 import HomeDrawer from './routes/homeDrawer';
+import CourseDetailsPage from './screens/courseDetails';
 import SignupStack from './routes/signupStack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // do not remove gesture handler (important)
@@ -15,9 +16,10 @@ export default function App() {
   // AsyncStorage.setItem("userType", "pilot")
   if (login)
   return (
-    <NavigationContainer>
-      <HomeDrawer />
-    </NavigationContainer>
+    <CourseDetailsPage />
+    // <NavigationContainer>
+    //   <HomeDrawer />
+    // </NavigationContainer>
     // <View style={styles.container}>
     // <JobForm />
     // </View> 
@@ -25,8 +27,8 @@ export default function App() {
   );
   else return (
     <NavigationContainer>
-      {/* <WalkthroughStack /> */}
-      <SignupStack />
+      <WalkthroughStack />
+      {/* <SignupStack /> */}
       {/* <LoginStack /> */}
     </NavigationContainer>
   )
