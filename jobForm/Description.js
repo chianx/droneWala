@@ -18,7 +18,7 @@ export default function Description({ formData, setFormData }) {
   }
   return (
     <View>
-      <Text style={{ paddingBottom: 7 }}>Explain your requirements</Text>
+      <Text style={{ paddingBottom: 7, fontSize:17, color:'grey', fontWeight:500}}>Explain your requirements</Text>
       <View style={styles.inputView}>
         <TextInput
           style={[formData.aboutJobIsSet ? styles.textArea : styles.errortextArea]}
@@ -31,7 +31,7 @@ export default function Description({ formData, setFormData }) {
           onChangeText={(aboutJob) => handleaboutJob(aboutJob)}
         />
       </View>
-      <Text style={{ paddingBottom: 7 }}>Eligibility Criteria</Text>
+      <Text style={{ paddingBottom: 7, fontSize:17, color:'grey', fontWeight:500 }}>Eligibility Criteria</Text>
       <View style={styles.inputView}>
         <TextInput
           style={[formData.whoApplyIsSet ? styles.textArea : styles.errortextArea]}
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     justifyContent: 'flex-start',
     textAlignVertical: 'top',
-    fontSize: 15
+    fontSize: 16
   },
   errortextArea: {
     borderWidth: 1.5,
@@ -81,6 +81,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     justifyContent: 'flex-start',
     textAlignVertical: 'top',
-    fontSize: 15
+    fontSize: 16
   }
 })

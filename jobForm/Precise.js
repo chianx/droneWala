@@ -104,7 +104,7 @@ export default function Precise({ formData, setFormData }) {
                     label="Job Type"
                 />
             </View>
-            <View style={{ marginBottom: 20, width: 270 }}>
+            <View style={{ marginBottom: 10, width: 270 }}>
                 <TextInput
                     style={[formData.numOpenIsSet ? styles.TextInput : styles.errorTextInput]}
                     placeholderTextColor="grey"
@@ -114,14 +114,14 @@ export default function Precise({ formData, setFormData }) {
                     onChangeText={(numOpen) => handlenumOpen(numOpen)}
                 />
             </View>
-            <View style={{ marginBottom: 20, width: 270 }}>
+            <View style={{ marginBottom: 10, width: 300 }}>
                 <View style={{ flexDirection: 'row' }}>
                     <TextInput
                         editable={false}
                         placeholderTextColor="grey"
                         placeholder='Last date to Apply *'
                         value={formData.date}
-                        style={[formData.dateIsSet ? { color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', padding: 5, borderColor: 'grey', marginRight: 20, marginBottom: 15 } : { color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', padding: 5, borderColor: 'red', marginRight: 20, marginBottom: 15 }]}
+                        style={[formData.dateIsSet ? { height: 55 ,color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', padding: 5, borderColor: 'grey', marginRight: 20, marginBottom: 15 } : {height:55, width:140, color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', padding: 5, borderColor: 'red', marginRight: 20, marginBottom: 15 }]}
                     />
 
                     {open ? <TouchableOpacity onPress={handleButtonOpen} style={{ padding: 0 }}><Text style={styles.btn}>Close</Text></TouchableOpacity> :
@@ -144,13 +144,13 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         borderWidth: 1,
         borderColor: 'grey',
-        width: 280,
-        height: 45,
+        width: 300,
+        height: 55,
         marginBottom: 20,
         alignItems: "flex-start",
         justifyContent: "center",
         padding: 10,
-        fontSize: 15,
+        fontSize: 17,
         color: 'grey'
     },
     errorTextInput: {
@@ -158,13 +158,13 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         borderWidth: 1,
         borderColor: 'red',
-        width: 280,
-        height: 45,
+        width: 300,
+        height: 55,
         marginBottom: 20,
         alignItems: "flex-start",
         justifyContent: "center",
         padding: 10,
-        fontSize: 15,
+        fontSize: 17,
         color: 'grey'
     },
     btn: {
@@ -174,8 +174,9 @@ const styles = StyleSheet.create({
         fontSize: 15,
         borderRadius: 8,
         // height:40,
-        padding: 9,
+        padding: 16,
         width: 135,
+        height:55,
         color: 'white'
     }
 })

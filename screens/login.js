@@ -76,6 +76,7 @@ export default function Login( {navigation} ) {
       console.log("ERROR!!!: " + error);
       setCode('');
       Alert.alert("Invalid Verification Code", "Please try again or choose a different phone number", [{text:'Ok'}]);
+      setIsLoading(false);
       return;
     })
   }

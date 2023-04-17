@@ -27,9 +27,9 @@ export default function App() {
   );
   else return (
     <NavigationContainer>
-      <WalkthroughStack />
+      {/* <WalkthroughStack /> */}
       {/* <SignupStack /> */}
-      {/* <LoginStack /> */}
+      <LoginStack />
     </NavigationContainer>
   )
 }

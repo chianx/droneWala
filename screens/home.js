@@ -12,11 +12,13 @@ import {
   query,
   orderByChild,
   limitToLast,
-  limitToFirst
+  limitToFirst,
+  push,
+  set
 } from 'firebase/database';
 
 export default function Home({navigation}) {
-  const [suggestions, setSuggestions] = useState("");
+  const [sugestions, setSugestions] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
   const [userType, setUserType] = useState("");
   const [user, setUser] = useState({});
@@ -89,6 +91,14 @@ export default function Home({navigation}) {
     />
   );
 
+  const handleSubmission =() => {
+    console.log("here in sugestion")
+    var refs = push(ref(db, "suggestions/" + user.name));
+    var final =  {name:user.name, city:user.city, state:user.state, email:user.email, feedback:sugestions }
+    setSugestions("");
+    set(refs, final);
+  }
+
   return (
         <ScrollView>
         <View style={styles.container}>
@@ -154,11 +164,11 @@ export default function Home({navigation}) {
                 placeholder='Your suggestion'
                 multiline
                 numberOfLines={8}
-                onChangeText={(text) => setSuggestions(text)}
-                value={suggestions}  
+                onChangeText={(text) => setSugestions(text)}
+                value={sugestions}  
                 style={styles.textArea}
               />
-              <TouchableOpacity style={styles.submitBtn} onPress={()=> console.log(suggestions)}><Text style={{color:'white', fontSize:17}}>Submit</Text></TouchableOpacity>
+              <TouchableOpacity style={styles.submitBtn} onPress={handleSubmission}><Text style={{color:'white', fontSize:17}}>Submit</Text></TouchableOpacity>
             </View>
           </View>
 
