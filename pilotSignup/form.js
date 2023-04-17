@@ -21,9 +21,11 @@ export default function PilotForm({navigation}) {
         {
             // BasicDetails
             uid: "",
+            profile: "",
             name: "",
             email: "",
             dob: "",
+            profileIsSet: false,
             nameIsSet:false,
             dateIsSet:false,
             emailIsSet:false,
@@ -45,10 +47,12 @@ export default function PilotForm({navigation}) {
             dcgaCert: false,
             certNum: "",
             droneSelect: [],
+            interests: [],
             experience: "",
             selectedDroneIsSet: false,
             dcgaCertIsSet: false,
             experienceIsSet: false,
+            interestsIsSet: false,
             type: ""
         }
     )
@@ -69,13 +73,16 @@ export default function PilotForm({navigation}) {
             if (formData.dcgaCert && !formData.dcgaCertIsSet) {
                 errMsg = "Enter the DCGA Number!"
                 formData.dcgaCert = false
-                formData.experienceIsSet = false
+                formData.dcgaCertIsSet = false
+            }else if(!formData.experienceIsSet) {
+                errMsg = "Select Experience";
+                formData.experienceIsSet = false;
             }else validate = true;
-            
+           
             if(validate && formData.experienceIsSet && (!formData.dcgaCert || (formData.dcgaCert && formData.dcgaCertIsSet))) {
                 navigation.navigate("LoginStack")
                 setErrorMessage("");
-                var final =  { name: formData.name, email: formData.email, dob: formData.dob, address: formData.address, city: formData.city, state: formData.state, pincode: formData.pincode, aadhar: formData.aadhar, dcgaCert: formData.dcgaCert, certNum: formData.certNum, droneSelect: formData.droneSelect, experience: formData.experience}
+                var final =  { name: formData.name, email: formData.email, dob: formData.dob, address: formData.address, city: formData.city, state: formData.state, pincode: formData.pincode, aadhar: formData.aadhar, dcgaCert: formData.dcgaCert, certNum: formData.certNum, droneSelect: formData.droneSelect, experience: formData.experience, interests: formData.interests}
                 var uid = auth.currentUser.uid
                 setFormData({ ...final, uid, isPilot: true, type: "pilot"})
                 set(ref(db, 'users/' + uid), formData).then(() => {
@@ -86,6 +93,7 @@ export default function PilotForm({navigation}) {
                     // Correct this.
                     setErrorMessage(error.toString);
                 })
+                console.log(final)
             }
             else {
                 setErrorMessage(errMsg);
@@ -93,15 +101,18 @@ export default function PilotForm({navigation}) {
         }
         // Screen 2 Vadilaton
         // const userData = {name:formData.name}
-    } 
+    }
     const callNext = () => {
         console.log(formData);
         if(screen === 0) {
             var errMsg = "";
             var validate = false;
-            
+           
             // validate name
-            if(!formData.nameIsSet)  {
+            if(!formData.profileIsSet) {
+                errMsg = "Profile Photo Not Set"
+                formData.profileIsSet = false
+            }else if(!formData.nameIsSet)  {
                 errMsg = "Name Length too short"
                 formData.nameIsSet = false
             }else if(!formData.dateIsSet) {
@@ -112,7 +123,7 @@ export default function PilotForm({navigation}) {
                 formData.emailIsSet = false
             }
             else validate = true;
-            
+           
             if(validate && formData.nameIsSet && formData.dateIsSet && formData.emailIsSet) {
                 setScreen((currScreen) => currScreen + 1);
                 setErrorMessage("");
@@ -123,7 +134,7 @@ export default function PilotForm({navigation}) {
         }else if(screen === 1) {
             var errMsg = "";
             var validate = false;
-            
+           
             // validate name
             if(!formData.addressIsSet)  {
                 errMsg = "Invalid Address"
@@ -141,7 +152,7 @@ export default function PilotForm({navigation}) {
                 errMsg = "Invalid Aadhaar Number"
                 formData.aadhaarIsSet = false
             }else validate = true;
-            
+           
             if(validate && formData.aadhaarIsSet && formData.addressIsSet && formData.cityIsSet && formData.stateIsSet && formData.pinIsSet) {
                 setScreen((currScreen) => currScreen + 1);
                 setErrorMessage("");
@@ -150,7 +161,7 @@ export default function PilotForm({navigation}) {
                 setErrorMessage(errMsg);
             }
         }
-                
+               
     }
     return (
         <Modal visible={true} animationType="slide">
@@ -164,10 +175,10 @@ export default function PilotForm({navigation}) {
 
                 {errorMessage != "" ? <View style={{marginLeft:20, marginBottom: 20}}><Text style={{color:'red', borderRadius: 8, textAlign: 'center',width: 160, height: 30, }}>{errorMessage}</Text></View> : <></>}
             </View>
-            </ScrollView> 
+            </ScrollView>
 
             <View style={styles.apply}>
-                <TouchableOpacity 
+                <TouchableOpacity
                     style={[styles.prevButton]}
                     onPress={() => {
                         if(screen === 0) {
@@ -180,7 +191,7 @@ export default function PilotForm({navigation}) {
                     <Text style={{color:'coral', fontSize:20, textAlign:'center'}}>Previous</Text>
                 </TouchableOpacity>
 
-                {screen === 2? 
+                {screen === 2?
                 <TouchableOpacity style={[styles.nextButton]} onPress={() => {createUserInFirebase()}}>
                     <Text style={{color:'white', fontSize:20, textAlign:'center'}}>Submit</Text>
                 </TouchableOpacity>
@@ -203,27 +214,27 @@ const styles = StyleSheet.create({
         color: "coral",
         fontWeight: "bold",
         marginVertical: 30
-        // fontFamily: 
+        // fontFamily:
     },
     prevButton: {
         backgroundColor:'white',
-        justifyContent:'center', 
-        margin:5, 
-        height:55, 
+        justifyContent:'center',
+        margin:5,
+        height:55,
         flex:1 ,
-        borderRadius:10, 
-        width:'48%', 
-        borderWidth:2, 
-        borderColor:'coral', 
+        borderRadius:10,
+        width:'48%',
+        borderWidth:2,
+        borderColor:'coral',
         elevation:5
     },
     nextButton: {
-        backgroundColor:'coral', 
+        backgroundColor:'coral',
         flex:1,
-        height:55, 
-        justifyContent:'center', 
-        margin:5, 
-        borderRadius:10, 
+        height:55,
+        justifyContent:'center',
+        margin:5,
+        borderRadius:10,
         width:'48%',
         elevation:5
     },

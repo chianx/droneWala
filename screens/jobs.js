@@ -28,7 +28,6 @@ export default function Jobs({navigation}) {
         id: key,
         ...data[key]
       }))
-      console.log(job);
       setJobs(job);
       setIsLoading(false);
     });

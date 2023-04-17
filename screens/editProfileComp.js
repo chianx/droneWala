@@ -1,44 +1,31 @@
-import React, { useState } from 'react';
-import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, ScrollView, Pressable } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { SelectList } from 'react-native-dropdown-select-list'
 import DatePicker from 'react-native-modern-datepicker';
 import { MultipleSelectList } from 'react-native-dropdown-select-list'
-import { configureProps } from 'react-native-reanimated/lib/reanimated2/core';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const EditProfileModalComp = ({ visible, onClose, user, onSave }) => {
-  const [name, setName] = useState("Chintan Grover");
-  const [date, setDate] = useState('07/06/2002');
-  const [email, setEmail] = useState('abc@gmail.com');
-  const [address, setAddress] = useState("203, Midas Heights");
-  const [state, setState] = useState("Rajasthan");
-  const [city, setCity] = useState("Jaipur");
-  const [pincode, setPincode] = useState("302017");
-  const [about, setAbout] = useState("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-  const [website, setWebsite] = useState("www.google.com");
-  const [num, setNum] = useState("50+");
-  const [interests, setInterests] = useState([]);
+const EditProfileModalComp = ({ visible, onClose, onSave }) => {
+
+  const [user, setUser] = useState({});
+    const mount = async() => {
+      const userdata = await AsyncStorage.getItem("userData");
+      const val = JSON.parse(userdata)
+      setUser(val);
+    }
+    useEffect(() => {
+      mount();
+    }, []);
+  
 
   const [open, setOpen] = useState(false)
-  const [isCertified, setIsCertified] = useState(false);
-
-  const [nameIsSet, setNameIsSet] = useState(true);
-  const [dateIsSet, setDateIsSet] = useState(true);
-  const [emailIsSet, setEmailIsSet] = useState(true);
-  const [addressIsSet, setAddressIsSet] = useState(true);
-  const [stateIsSet, setStateIsSet] = useState(true);
-  const [cityIsSet, setCityIsSet] = useState(true);
-  const [pinIsSet, setPinIsSet] = useState(true);
-  const [numIsSet, setNumIsSet] = useState(true);
-  const [interestIsSet, setInterestIsSet] = useState(true);
-  const [websiteIsSet, setWebsiteIsSet] = useState(true);
-  const [aboutIsSet, setAboutIsSet] = useState(true);
-
+    const [date, setDate] = useState();
 
   const handleSave = () => {
-    if(nameIsSet && dateIsSet && emailIsSet && addressIsSet && stateIsSet && cityIsSet && pinIsSet && numIsSet && interestIsSet && websiteIsSet && aboutIsSet) {
-      onSave({name, date, email, address, state, city, pincode, about, website, num, interests});
-      console.log({name, date, email, address, state, city, pincode, about, website, num, interests});
+    if(user.nameIsSet && user.dateIsSet && user.emailIsSet && user.addressIsSet && user.stateIsSet && user.cityIsSet && user.pinIsSet && user.categoryIsSet && user.websiteIsSet && user.aboutIsSet) {
+      // write code here to save this on firebase and locally
+      console.log(user.name, user.foundedin, user.email, user.address, user.state, user.city, user.pincode, user.about, user.website, user.numPeople, user.category);
       onClose();
     }
   };
@@ -46,8 +33,7 @@ const EditProfileModalComp = ({ visible, onClose, user, onSave }) => {
   
   const handleButtonOpen =() => {
     setOpen(!open);
-    setDate(date);
-    setDateIsSet(true)
+    setUser({...user, foundedin:date, dateIsSet:true})
   }
   const category = [
     { key: '1', value: 'Agriculture' },
@@ -56,84 +42,68 @@ const EditProfileModalComp = ({ visible, onClose, user, onSave }) => {
     { key: '4', value: 'Events' },
   ]
 
-  const [shouldShow, setshouldShow] = useState(false)
   const numPeople = [
     { key: '1', value: '1 - 10' },
     { key: '2', value: '10 - 20' },
-    { key: '3', value: '20 - 50' },
-    { key: '4', value: '50+' },
+    { key: '3', value: '20 - 30' },
+    { key: '4', value: '30 - 50' },
+    { key: '5', value: '50+' },
   ]
   const handleWebsiteChange = (website) => {
     if (validator.isURL(website)) {
-      setWebsite(website)
-      setWebsiteIsSet(true);
+      setUser({...user, website, websiteIsSet:true})
     } else {
-      setWebsite(website)
-      setWebsiteIsSet(false);
+      setUser({...user, website, websiteIsSet:true})
     }
   }
   const handleAboutChange = (about) => {
     if (about.trim().length >= 50) {
-      setAbout(about)
-      setAboutIsSet(true);
+      setUser({...user, about, aboutIsSet:true})
     } else {
-      setAbout(about)
-      setAboutIsSet(false);
+      setUser({...user, email, aboutIsSet:false})
     }
   }
   const handleNameChange = (name) => {
     if (name.trim().length > 2) {
-        setName(name)
-        setNameIsSet(true);
+        setUser({...user, name, nameIsSet:true})
     } else {
-      setName(name)
-      setNameIsSet(false);
+      setUser({...user, name, nameIsSet:false})
     }
   }
   const handleAddressChange = (address) => {
     if (address.trim().length >= 4) {
-      setAddress(address)
-      setAddressIsSet(true);
+      setUser({...user, address, addressIsSet:true})
     } else {
-      setAddress(address)
-      setAddressIsSet(false);
+      setUser({...user, address, addressIsSet:false})
     }
   }
   const handleEmailChange = (email) => {
     var validRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (email.match(validRegex)) {
-      setEmail(email)
-      setEmailIsSet(true)
+      setUser({...user, email, emailIsSet:true})
     } else {
-      setEmail(email)
-      setEmailIsSet(false)
+      setUser({...user, email, emailIsSet:false})
     }
   }
   const handleCityChange = (city) => {
     if (city.trim().length >= 3) {
-      setCity(city)
-      setCityIsSet(true);
+      setUser({...user, city, cityIsSet:true})
     } else {
-      setCity(city)
-      setCityIsSet(false);
+      setUser({...user, city, cityIsSet:false})
     }
   }
   const handleStateChange = (state) => {
     if (state.trim().length >= 5) {
-      setState(state)
-      setStateIsSet(true);
+      setUser({...user, state, stateIsSet:true})
     } else {
-      setState(state)
-      setStateIsSet(false);
+      setUser({...user, state, stateIsSet:false})
     }
   }
   const handlePinChange = (pincode) => {
     if (pincode.trim().length === 6) {
-      setPincode(pincode)
-      setPinIsSet(true);
+      setUser({...user, pincode, pinIsSet:true})
     } else {
-      setPincode(pincode)
-      setPinIsSet(false);
+      setUser({...user, email, pinIsSet:false})
     }
   }
 
@@ -151,70 +121,73 @@ const EditProfileModalComp = ({ visible, onClose, user, onSave }) => {
 
             <Text style={styles.label}>Company Name</Text>
             <TextInput
-                style={[nameIsSet ? styles.TextInput : styles.errorTextInput]}
+                style={[user.nameIsSet ? styles.TextInput : styles.errorTextInput]}
                 placeholderTextColor="grey"
-                placeholder={name}
-                value={name}
+                placeholder={user.name}
+                value={user.name}
                 onChangeText={(name) => {
                   handleNameChange(name)
                 }}
             />
             <Text style={styles.label}>Email</Text>
             <TextInput
-              style={[emailIsSet ? styles.TextInput : styles.errorTextInput]}
+              style={[user.emailIsSet ? styles.TextInput : styles.errorTextInput]}
               placeholderTextColor="grey"
-              placeholder={email}
-              value={email}
+              placeholder={user.email}
+              value={user.email}
               onChangeText={(email) => handleEmailChange(email)}
             />
             <Text style={styles.label}>Address House No/Street No/Area</Text>
             <TextInput
-              style={[addressIsSet ? styles.TextInput : styles.errorTextInput]}
+              style={[user.addressIsSet ? styles.TextInput : styles.errorTextInput]}
               placeholderTextColor="grey"
-              placeholder={address}
-              value={address}
+              placeholder={user.address}
+              value={user.address}
               onChangeText={(address) => handleAddressChange(address)}
             />
             <Text style={styles.label}>State</Text>
             <TextInput
-                style={[stateIsSet ? styles.TextInput : styles.errorTextInput]}
+                style={[user.stateIsSet ? styles.TextInput : styles.errorTextInput]}
                 placeholderTextColor="grey"
-                placeholder={state}
-                value={state}
+                placeholder={user.state}
+                value={user.state}
                 onChangeText={(state) => handleStateChange(state)}
             />
             <Text style={styles.label}>City</Text>
             <TextInput
-                style={[cityIsSet ? styles.TextInput : styles.errorTextInput]}
+                style={[user.cityIsSet ? styles.TextInput : styles.errorTextInput]}
                 placeholderTextColor="grey"
-                placeholder={city}
-                value={city}
+                placeholder={user.city}
+                value={user.city}
                 onChangeText={(city) => handleCityChange(city)}
             />
             <Text style={styles.label}>Pincode</Text>
             <TextInput
-                style={[pinIsSet ? styles.TextInput : styles.errorTextInput]}
+                style={[user.pinIsSet ? styles.TextInput : styles.errorTextInput]}
                 placeholderTextColor="grey"
-                placeholder={pincode}
-                value={pincode}
+                placeholder={user.pincode}
+                value={user.pincode}
                 onChangeText={(pincode) => handlePinChange(pincode)}
                 keyboardType='numeric'
                 maxLength={6}
             />
             <Text style={styles.label}>Website</Text>
             <TextInput
-                style={[websiteIsSet ? styles.TextInput : styles.errorTextInput]}
+                style={[user.websiteIsSet ? styles.TextInput : styles.errorTextInput]}
                 placeholderTextColor="grey"
-                placeholder={website}
-                value={website}
+                placeholder={user.website}
+                value={user.website}
                 onChangeText={(website) => handleWebsiteChange(website)}
             />
             <Text style={styles.label}>About</Text>
             <TextInput
-                style={[aboutIsSet ? styles.TextInput : styles.errorTextInput]}
+                style={[user.aboutIsSet ? styles.TextInput : styles.errorTextInput, {height:160, textAlignVertical: 'top',}]}
                 placeholderTextColor="grey"
-                placeholder={about}
-                value={about}
+                placeholder={user.about}
+                value={user.about}
+                multiline
+                numberOfLines={8}
+                maxLength={1000}
                 onChangeText={(about) => handleAboutChange(about)}
             />
 
@@ -224,9 +197,9 @@ const EditProfileModalComp = ({ visible, onClose, user, onSave }) => {
                 <TextInput
                     editable={false}    
                     placeholderTextColor="grey"
-                    placeholder='Founded In'   
-                    value={date}
-                    style={[dateIsSet ? { color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', padding: 5, borderColor: 'grey', marginRight: 20, marginBottom: 15 } : { color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', padding: 5, borderColor: 'red', marginRight: 20, marginBottom: 15 }]}    
+                    placeholder={user.foundedin}   
+                    value={user.foundedin}
+                    style={[user.dateIsSet ? { width:140,color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', padding: 5, borderColor: 'grey', marginRight: 20, marginBottom: 15 } : { color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', padding: 5, borderColor: 'red', marginRight: 20, marginBottom: 15 }]}    
                 />
                 
                 {open? <TouchableOpacity onPress={handleButtonOpen} style={{padding:0}}><Text style={styles.btn}>Select</Text></TouchableOpacity> : 
@@ -241,20 +214,19 @@ const EditProfileModalComp = ({ visible, onClose, user, onSave }) => {
 
             <View style={{marginBottom:20, width:300}}>
               <Text style={styles.label}>Number of Employees</Text>
-              <MultipleSelectList
-                placeholder={num}
-                notFoundText='Num People not found'
+              <SelectList
+                placeholder={user.numPeople}
                 setSelected={(val) => {
-                  setNum(val)
-                  setNumIsSet(true)
+                  if(val != '') {
+                    setUser({...user, numPeople:val, numIsSet:false})
+                  }else {
+                    setUser({...user, numPeople:val, numIsSet:true})
+                  }  
                 }}
                 data={numPeople}
                 save="value"
-                onSelect={() => {
-                  // setDrones(droneSelect)
-                  console.log(numPeople);
-                }}
-                boxStyles={[numIsSet ? null : { borderColor: "red" }, { backgroundColor: "white" }]}
+                search={false}
+                boxStyles={[user.numIsSet ? null : { borderColor: "red" }, { backgroundColor: "white" }]}
                 label="NumPeople"
               />
             </View>
@@ -262,18 +234,16 @@ const EditProfileModalComp = ({ visible, onClose, user, onSave }) => {
             <Text style={styles.label}>Categories</Text>
               <MultipleSelectList
                 setSelected={(val) => {
-                  setInterests(val)
-                  setInterestIsSet(true)
-                  if(interests == []) setInterestIsSet(false)
+                  if(val.length == 0) {
+                    setUser({...user, category:val, categoryIsSet:false})
+                  }else {
+                    setUser({...user, category:val, categoryIsSet:true})
+                  } 
                 }}
                 data={category}
                 save="value"
-                onSelect={() => {
-                  // setDrones(droneSelect)
-                  console.log(interests);
-                }}
                 label="Categories"
-                boxStyles={[interestIsSet ? null : { borderColor: "red" }, { backgroundColor: "white" }]}
+                boxStyles={[user.categoryIsSet ? null : { borderColor: "red" }, { backgroundColor: "white" }]}
               />
             </View>
           </View>
@@ -339,7 +309,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth:1,
     borderColor:'grey',
-    width: 280,
+    width: 300,
     height: 45,
     marginBottom: 20,
     alignItems: "flex-start",
@@ -353,7 +323,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: 'red',
-    width: 280,
+    width: 300,
     height: 45,
     marginBottom: 20,
     alignItems: "flex-start",

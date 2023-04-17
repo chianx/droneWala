@@ -19,7 +19,7 @@ export default function HomeTab({navigation}) {
   } 
   
   return (
-    <NavigationContainer independent={true}>
+    // <NavigationContainer independent={true}>
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
@@ -103,6 +103,6 @@ export default function HomeTab({navigation}) {
         >{props => <Account {...props} isClicked={isClicked} setIsClicked={setIsClicked}/>}
         </Tab.Screen>
       </Tab.Navigator>
-      </NavigationContainer>
+      //</NavigationContainer>
   );
 }

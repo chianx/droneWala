@@ -17,8 +17,6 @@ export default function Account({isClicked, setIsClicked, navigation }) {
       const val = JSON.parse(userdata)
       setUser(val);
       setCategory(val.category);
-      console.log(val);
-
     }
     useEffect(() => {
       mount();

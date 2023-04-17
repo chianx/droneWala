@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import Images from '../images/index';
 import { Ionicons } from '@expo/vector-icons';
@@ -132,10 +132,10 @@ export default function Account({isClicked, setIsClicked, navigation}) {
         </View>
 
         <EditProfileModal
-        visible={isClicked}
-        onSave={handleSaveProfile}
-        onClose={handleCancelEdit}
-        user={user}
+          visible={isClicked}
+          onSave={handleSaveProfile}
+          onClose={handleCancelEdit}
+          user={user}
       />
         </ScrollView>
     )

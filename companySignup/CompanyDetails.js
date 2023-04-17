@@ -1,4 +1,4 @@
-import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity, Button } from 'react-native'
+import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SelectList } from 'react-native-dropdown-select-list'
 import * as ImagePicker from 'expo-image-picker'
@@ -104,7 +104,6 @@ export default function PersonalDetails({ formData, setFormData }) {
   }
   return (
     <View>
-
       <View style={{ width: '100%', marginBottom:20, alignItems:'center'}}>
         <TouchableOpacity onPress={() => pickImage()} style={[styles.logobtn]}><Text style={{ color: 'grey', fontSize: 17 }}>Select Logo (Click Here)</Text></TouchableOpacity>
         {image && <Image source={{ uri: image }} style={{ width: 180, height: 180, marginBottom: 15, borderRadius:10}} />}
@@ -124,7 +123,9 @@ export default function PersonalDetails({ formData, setFormData }) {
           style={[formData.aboutIsSet ? styles.TextInput : styles.errorTextInput]}
           placeholderTextColor="grey"
           placeholder='About *'
-          multiline={true}
+          multiline
+          numberOfLines={8}
+          maxLength={1000}
           value={formData.about}
           onChangeText={(about) => handleAboutChange(about)}
         />
@@ -134,7 +135,7 @@ export default function PersonalDetails({ formData, setFormData }) {
           setSelected={(val) => {
             setSelectedNumPeople(val)
             setpeopleIsSet(true)
-            setFormData({ ...formData, numPeople: selectedNumPeople });
+            setFormData({ ...formData, numPeople: val });
             console.log(formData)
 
           }}

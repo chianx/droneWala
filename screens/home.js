@@ -5,21 +5,28 @@ import Images from '../images';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {db} from '../firebase/databaseConfig'
+import {  
+  ref,
+  onValue,
+  query,
+  orderByChild,
+  limitToLast,
+  limitToFirst
+} from 'firebase/database';
 
 export default function Home({navigation}) {
   const [suggestions, setSuggestions] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
   const [userType, setUserType] = useState("");
-  const mount = async () => {
-    let type = await AsyncStorage.getItem("userType");
-    setUserType(type);
+  const [user, setUser] = useState({});
+
+  const mount = async() => {
+    const userdata = await AsyncStorage.getItem("userData");
+    const val = JSON.parse(userdata)
+    setUser(val);
+    setUserType(val.userType)
   }
-  useEffect(() => {
-    mount();
-    
-  }, []);
-  
-  console.log("userType = " + userType);
   
   const { width } = Dimensions.get('window');
   const cardWidth = width - 32; 
@@ -30,26 +37,47 @@ export default function Home({navigation}) {
     const index = event.nativeEvent.contentOffset.x / slideSize;
     setActiveIndex(Math.round(index));
   };
-  const jobs = [{key:1, jobTitle:'Job Title-2 Drone Service ', profileImage: Images.profile, company:'Garud Survey', salary: '10,000-15,000/month', type:'Full Time', Location:'Jaipur', companyIcon:Images.droneIcon},
-  {key:2, jobTitle:'Job Title-2', profileImage: Images.profile, company:'Garud Survey', salary: '10,000-15,000/month', type:'Full Time', Location:'Jaipur', companyIcon:Images.droneIcon},
-  {key:3, jobTitle:'Job Title-3', profileImage: Images.profile, company:'DronePilots Network', salary: '30,000-35,000/month', type:'Part Time', Location:'Jaipur', companyIcon:Images.droneIcon},
-  {key:4, jobTitle:'Drone Survey Job', profileImage: Images.profile, company:'Fire Drone', type:'Full Time', salary:'20000/month', Location:'Jaipur', companyIcon:Images.droneIcon}];
+
+  const [getJobs, setJobs] = useState([]);
+
+  useEffect (() => {
+    const starCountRef = query(ref(db, 'jobs/'), orderByChild('numOpen'), limitToFirst(4));
+    onValue(starCountRef, (snapshot) => {
+      const data = snapshot.val();
+      const job = Object.keys(data).map(key => ({
+        key: key,
+        ...data[key]
+      }))
+      console.log(job);
+      setJobs(job);
+      mount();
+    });
+    
+  }, [])
+
+
+  // const jobs = [{key:1, jobTitle:'Job Title-2 Drone Service ', profileImage: Images.profile, company:'Garud Survey', salary: '10,000-15,000/month', type:'Full Time', Location:'Jaipur', companyIcon:Images.droneIcon},
+  // {key:2, jobTitle:'Job Title-2', profileImage: Images.profile, company:'Garud Survey', salary: '10,000-15,000/month', type:'Full Time', Location:'Jaipur', companyIcon:Images.droneIcon},
+  // {key:3, jobTitle:'Job Title-3', profileImage: Images.profile, company:'DronePilots Network', salary: '30,000-35,000/month', type:'Part Time', Location:'Jaipur', companyIcon:Images.droneIcon},
+  // {key:4, jobTitle:'Drone Survey Job', profileImage: Images.profile, company:'Fire Drone', type:'Full Time', salary:'20000/month', Location:'Jaipur', companyIcon:Images.droneIcon}];
   
   const Card = ({ item }) => (
+    <TouchableOpacity onPress={() => navigation.navigate('JobDetails', {job: item})}>
     <View style={styles.card} key={item.key}>
       <View style={{flexDirection:'row'}}>
-        <Image source={item.profileImage} style={styles.cardImage} />
+        <Image source={{uri: item.logo}} style={styles.cardImage} />
         <View style={styles.cardContent}>
           <Text style={styles.cardTitle}>{item.jobTitle}</Text>
-          <Text style={styles.cardDescription}>{item.company}</Text>
+          <Text style={styles.cardDescription}>{item.companyName}</Text>
         </View>
       </View>
       <View style={{marginLeft:5, marginTop:10}}>
         <Text style={{color:'#808080'}}><Ionicons name="location-outline" size={14} color="#808080" />{item.Location}</Text>
-        <Text style={{color:'#808080'}}><Ionicons name="ios-cash-outline" size={14} color="#808080" />{' ₹' + item.salary}</Text>
-        <Text style={{color:'#808080'}}><AntDesign name="calendar" size={14} color="#808080" />{' '+item.type}</Text>
+        <Text style={{color:'#808080'}}><Ionicons name="ios-cash-outline" size={14} color="#808080" />{' ₹' + item.salRange}</Text>
+        <Text style={{color:'#808080'}}><AntDesign name="calendar" size={14} color="#808080" />{' '+item.date}</Text>
       </View>   
     </View>
+    </TouchableOpacity>
   );
 
   const renderDot = (_, index) => (
@@ -98,7 +126,7 @@ export default function Home({navigation}) {
           <View style={{width:'90%', marginVertical:25}}>
             <Text style={{width:'100%', textAlign:'left', fontSize:20, color:'#696969', fontWeight:'bold', marginBottom:10, marginLeft:5}}>Trending Job Opportunities</Text>
             <FlatList
-              data={jobs}
+              data={getJobs}
               renderItem={({ item }) => <Card item={item} />}
               keyExtractor={(item) => item.key}
               horizontal
@@ -108,7 +136,7 @@ export default function Home({navigation}) {
               contentContainerStyle={styles.carouselContainer}
             />
             <View style={styles.dotContainer}>
-              {jobs.map((_, index) => renderDot(_, index))}
+              {getJobs.map((_, index) => renderDot(_, index))}
             </View>
           </View>
 

@@ -16,10 +16,10 @@ export default function App() {
   // AsyncStorage.setItem("userType", "pilot")
   if (login)
   return (
-    <CourseDetailsPage />
-    // <NavigationContainer>
-    //   <HomeDrawer />
-    // </NavigationContainer>
+    // <CourseDetailsPage />
+    <NavigationContainer>
+      <HomeDrawer />
+    </NavigationContainer>
     // <View style={styles.container}>
     // <JobForm />
     // </View> 
