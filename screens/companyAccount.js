@@ -7,6 +7,11 @@ import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import EditProfileModalComp from './editProfileComp';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {db} from '../firebase/databaseConfig'
+import {  
+  ref,
+  onValue,
+} from 'firebase/database';
 
 export default function Account({isClicked, setIsClicked, navigation }) {
 
@@ -31,11 +36,21 @@ export default function Account({isClicked, setIsClicked, navigation }) {
     };
 
 
-    const jobs = [{ key: 2, jobTitle: 'Lorem Ipsum dolor ebel candle jameesrirf', company: 'Garud Survey', salary: '10,000-15,000/month', type: 'Full Time', Location: 'Jaipur' },
-        { key: 3, jobTitle: 'Job Title-2', company: 'Garud Survey', salary: '10,000-15,000/month', type: 'Full Time', Location: 'Jaipur' },];
-    const freelance = [{ key: 4, jobTitle: 'Job Title-2', company: 'Garud Survey', salary: '10,000-15,000/month', type: 'Full Time', Location: 'Jaipur' },
-        { key: 5, jobTitle: 'Job Title-3', company: 'DronePilots Network', salary: '30,000-35,000/month', type: 'Part Time', Location: 'Jaipur' },
-        { key: 6, jobTitle: 'Drone Survey Job', company: 'Fire Drone', type: 'Full Time', salary: '20000/month', Location: 'Jaipur' }];
+    const [jobs, setJobs] = useState([]);
+    const [freelance, setFreelance] = useState([]);
+    useEffect (() => {
+        // isLoading = true;
+        const jobRef = ref(db, 'jobs/');
+        onValue(jobRef, (snapshot) => {
+          const data = snapshot.val();
+          var app = Object.keys(data).map(key => ({
+            id: key,
+            ...data[key]
+          }));
+          
+          setJobs(app);
+        });
+      }, [])
 
     const [active, setActive] = useState('Jobs');
     const [dataList, setDataList] = useState([...jobs]);

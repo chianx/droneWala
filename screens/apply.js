@@ -9,6 +9,8 @@ import * as OpenAnything from 'react-native-openanything'
 import {storage} from '../firebase/firebase'
 import { ref, getDownloadURL, uploadBytesResumable, uploadBytes } from 'firebase/storage';
 import Images from '../images/index'
+import {set, ref as dbRefs, push, runTransaction, get, child} from 'firebase/database';
+import {db} from '../firebase/databaseConfig'
 
 export default function Apply({route, navigation}) {
     const job = route.params.job;
@@ -85,6 +87,28 @@ export default function Apply({route, navigation}) {
               console.log('File available at', downloadURL);
               if(downloadURL != null) {
                 setUrl(downloadURL);
+                // Add the answer to the firebase database.
+                var refs = push(dbRefs(db, "applications/"));
+                var final =  {
+                  id: refs.key,
+                  answer: answer,
+                  resume: url,
+                  jobId: job.jobId,
+                  status: "applied" // rejected, review.
+                }
+                set(refs, final);
+                console.log("application summited.")
+
+                // Link application to job post. 
+                var jobRef = dbRefs(db, `jobs/${job.jobId}`)
+                runTransaction(jobRef, (job) => {
+                  if(job) {
+                    var arr = Array.from(job.applied);
+                    arr.push(refs.key);
+                  }
+                  return job
+                });
+
                 setIsLoading(false);
               }
             });

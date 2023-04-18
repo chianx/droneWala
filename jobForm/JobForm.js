@@ -30,6 +30,7 @@ export default function JobForm({navigation}) {
             location:"",
             locationIsSet:false,
             logo: "",
+            applied: [],
             
 
             // LongDetails

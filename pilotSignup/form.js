@@ -30,6 +30,7 @@ export default function PilotForm({navigation}) {
             dateIsSet:false,
             emailIsSet:false,
             useType:"pilot",
+            phone: "",
 
             // PersonalDetails
             address: "",
@@ -84,6 +85,7 @@ export default function PilotForm({navigation}) {
                 setErrorMessage("");
                 var final =  { name: formData.name, email: formData.email, dob: formData.dob, address: formData.address, city: formData.city, state: formData.state, pincode: formData.pincode, aadhar: formData.aadhar, dcgaCert: formData.dcgaCert, certNum: formData.certNum, droneSelect: formData.droneSelect, experience: formData.experience, interests: formData.interests}
                 var uid = auth.currentUser.uid
+                // TODO: Phone is missing.
                 setFormData({ ...final, uid, isPilot: true, type: "pilot"})
                 set(ref(db, 'users/' + uid), formData).then(() => {
                     // Add loading icon.
