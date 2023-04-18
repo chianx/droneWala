@@ -85,7 +85,7 @@ export default function Account({isClicked, setIsClicked, navigation }) {
                             <Text style={{color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>{item}</Text>
                             </View>
                         )
-                    }) }
+                    })}
                     </View>
                 </View>
             </View>
