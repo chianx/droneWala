@@ -1,47 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, ScrollView, Pressable } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { SelectList } from 'react-native-dropdown-select-list'
 import DatePicker from 'react-native-modern-datepicker';
 import { MultipleSelectList } from 'react-native-dropdown-select-list'
 import { configureProps } from 'react-native-reanimated/lib/reanimated2/core';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const EditProfileModal = ({ visible, onClose, user, onSave }) => {
-  const [name, setName] = useState("Chintan Grover");
-  const [address, setAddress] = useState("203, Midas Heights");
-  const [state, setState] = useState("Rajasthan");
-  const [city, setCity] = useState("Jaipur");
-  const [pincode, setPincode] = useState("302017");
-  const [date, setDate] = useState('07/06/2002');
-  const [experience, setExperience] = useState("1-2 Years");
-  const [drones, setDrones] = useState(["Tropogo"]);
-  const [interests, setInterests] = useState([]);
+const EditProfileModal = ({ visible, onClose, onSave }) => {
 
+  const [user, setUser] = useState({});
+    const mount = async() => {
+      const userdata = await AsyncStorage.getItem("userData");
+      const val = JSON.parse(userdata)
+      setUser(val);
+    }
+    useEffect(() => {
+      mount();
+    }, []);
+  
 
   const [open, setOpen] = useState(false)
-  const [isCertified, setIsCertified] = useState(false);
+    const [date, setDate] = useState();
 
-
-  const [nameIsSet, setNameIsSet] = useState(true);
-  const [dateIsSet, setDateIsSet] = useState(true);
-  const [addressIsSet, setAddressIsSet] = useState(true);
-  const [stateIsSet, setStateIsSet] = useState(true);
-  const [cityIsSet, setCityIsSet] = useState(true);
-  const [pinIsSet, setPinIsSet] = useState(true);
-  const [experienceIsSet, setExperienceIsSet] = useState(true);
-  const [droneIsSet, setDroneIsSet] = useState(true);
-  const [interestIsSet, setInterestIsSet] = useState(true);
   const handleSave = () => {
-    if(nameIsSet && dateIsSet && addressIsSet && stateIsSet && cityIsSet && pinIsSet && experienceIsSet && droneIsSet && interestIsSet) {
-      onSave({name, address, state, city, pincode, date, experience, drones, interests,});
-      console.log({name, address, state, city, pincode, date, experience, drones, interests,})
+    if(user.nameIsSet && user.dateIsSet && user.addressIsSet && user.stateIsSet && user.cityIsSet && user.pinIsSet) {
+      // onSave({name, address, state, city, pincode, date, experience, drones, interests,});
+      console.log(user.name, user.address, user.state, user.city, user.pincode, user.dob, user.experience, user.droneSelect, user.interests,)
       onClose();
     }
   };
   const handleButtonOpen =() => {
     setOpen(!open);
-    setDate(date);
-    setDateIsSet(true)
+    setUser({...user, dob:date, dateIsSet:true})
   }
   const exp = [
     { key: '1', value: '0-1 Years'},
@@ -67,47 +58,37 @@ const EditProfileModal = ({ visible, onClose, user, onSave }) => {
   const [shouldShow, setshouldShow] = useState(false)
   const handleNameChange = (name) => {
     if (name.trim().length > 2) {
-        setName(name)
-        setNameIsSet(true);
+      setUser({...user, name, nameIsSet:true})
     } else {
-      setName(name)
-      setNameIsSet(false);
+      setUser({...user, name, nameIsSet:false})
     }
   }
   const handleAddressChange = (address) => {
     if (address.trim().length >= 4) {
-      setAddress(address)
-      setAddressIsSet(true);
+      setUser({...user, address, addressIsSet:true})
     } else {
-      setAddress(address)
-      setAddressIsSet(false);
+      setUser({...user, address, addressIsSet:false})
     }
   }
   const handleCityChange = (city) => {
     if (city.trim().length >= 3) {
-      setCity(city)
-      setCityIsSet(true);
+      setUser({...user, city, cityIsSet:true})
     } else {
-      setCity(city)
-      setCityIsSet(false);
+      setUser({...user, city, cityIsSet:false})
     }
   }
   const handleStateChange = (state) => {
     if (state.trim().length >= 5) {
-      setState(state)
-      setStateIsSet(true);
+      setUser({...user, state, stateIsSet:true})
     } else {
-      setState(state)
-      setStateIsSet(false);
+      setUser({...user, state, stateIsSet:false})
     }
   }
   const handlePinChange = (pincode) => {
     if (pincode.trim().length === 6) {
-      setPincode(pincode)
-      setPinIsSet(true);
+      setUser({...user, pincode, pinIsSet:true})
     } else {
-      setPincode(pincode)
-      setPinIsSet(false);
+      setUser({...user, pincode, pinIsSet:false})
     }
   }
 
@@ -125,44 +106,44 @@ const EditProfileModal = ({ visible, onClose, user, onSave }) => {
 
             <Text style={styles.label}>Full Name</Text>
             <TextInput
-                style={[nameIsSet ? styles.TextInput : styles.errorTextInput]}
+                style={[user.nameIsSet ? styles.TextInput : styles.errorTextInput]}
                 placeholderTextColor="grey"
-                placeholder={name}
-                value={name}
+                placeholder={user.name}
+                value={user.name}
                 onChangeText={(name) => {
                   handleNameChange(name)
                 }}
             />
             <Text style={styles.label}>Address House No/Street No/Area</Text>
             <TextInput
-              style={[addressIsSet ? styles.TextInput : styles.errorTextInput]}
+              style={[user.addressIsSet ? styles.TextInput : styles.errorTextInput]}
               placeholderTextColor="grey"
-              placeholder={address}
-              value={address}
+              placeholder={user.address}
+              value={user.address}
               onChangeText={(address) => handleAddressChange(address)}
             />
             <Text style={styles.label}>State</Text>
             <TextInput
-                style={[stateIsSet ? styles.TextInput : styles.errorTextInput]}
+                style={[user.stateIsSet ? styles.TextInput : styles.errorTextInput]}
                 placeholderTextColor="grey"
-                placeholder={state}
-                value={state}
+                placeholder={user.state}
+                value={user.state}
                 onChangeText={(state) => handleStateChange(state)}
             />
             <Text style={styles.label}>City</Text>
             <TextInput
-                style={[cityIsSet ? styles.TextInput : styles.errorTextInput]}
+                style={[user.cityIsSet ? styles.TextInput : styles.errorTextInput]}
                 placeholderTextColor="grey"
-                placeholder={city}
-                value={city}
+                placeholder={user.city}
+                value={user.city}
                 onChangeText={(city) => handleCityChange(city)}
             />
             <Text style={styles.label}>Pincode</Text>
             <TextInput
-                style={[pinIsSet ? styles.TextInput : styles.errorTextInput]}
+                style={[user.pinIsSet ? styles.TextInput : styles.errorTextInput]}
                 placeholderTextColor="grey"
-                placeholder={pincode}
-                value={pincode}
+                placeholder={user.pincode}
+                value={user.pincode}
                 onChangeText={(pincode) => handlePinChange(pincode)}
                 keyboardType='numeric'
                 maxLength={6}
@@ -174,9 +155,9 @@ const EditProfileModal = ({ visible, onClose, user, onSave }) => {
                 <TextInput
                     editable={false}    
                     placeholderTextColor="grey"
-                    placeholder='Last date to Apply'   
-                    value={date}
-                    style={[dateIsSet ? { color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', padding: 5, borderColor: 'grey', marginRight: 20, marginBottom: 15 } : { color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', padding: 5, borderColor: 'red', marginRight: 20, marginBottom: 15 }]}    
+                    placeholder= {user.dob}   
+                    value={user.dob}
+                    style={[user.dateIsSet ? { width:140, color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', padding: 5, borderColor: 'grey', marginRight: 20, marginBottom: 15 } : {width:140,  color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', padding: 5, borderColor: 'red', marginRight: 20, marginBottom: 15 }]}    
                 />
                 
                 {open? <TouchableOpacity onPress={handleButtonOpen} style={{padding:0}}><Text style={styles.btn}>Select</Text></TouchableOpacity> : 
@@ -192,16 +173,18 @@ const EditProfileModal = ({ visible, onClose, user, onSave }) => {
             <View style={{marginBottom:20, width:300}}>
               <Text style={styles.label}>Experience</Text>
               <SelectList
-                placeholder={experience}
+                placeholder={user.experience}
                 search={false}
                 setSelected={(val) => {
-                  setExperience(val)
-                  setExperienceIsSet(true)
+                  if(val === '') {
+                    setUser({...user, experience:val, experienceIsSet:false})
+                  }else {
+                    setUser({...user, experience:val, experienceIsSet:true})
+                  }
                 }}
                 data={exp}
                 save="value"
-                onSelect={(exp) => setExperience(exp)}
-                boxStyles={[experienceIsSet ? null : { borderColor: "red" }, { backgroundColor: "white" }]}
+                boxStyles={[user.experienceIsSet ? {} : { borderColor: "red", backgroundColor: "white" }]}
                 label="Experience"
               />
             </View>
@@ -212,16 +195,15 @@ const EditProfileModal = ({ visible, onClose, user, onSave }) => {
                 // placeholder='Select Drones'
                 notFoundText='Drone not found'
                 setSelected={(val) => {
-                  setDrones(val)
-                  setDroneIsSet(true)
+                  if(val.length === 0) {
+                    setUser({...user, droneSelect:val, selectedDroneIsSet:false})
+                  }else {
+                    setUser({...user, droneSelect:val, selectedDroneIsSet:true})
+                  }
                 }}
                 data={dronesList}
                 save="value"
-                onSelect={() => {
-                  // setDrones(droneSelect)
-                  console.log(drones);
-                }}
-                boxStyles={[droneIsSet ? null : { borderColor: "red" }, { backgroundColor: "white" }]}
+                boxStyles={[user.selectedDroneIsSet ? null : { borderColor: "red" }, { backgroundColor: "white" }]}
                 label="Drones"
               />
             </View>
@@ -230,18 +212,14 @@ const EditProfileModal = ({ visible, onClose, user, onSave }) => {
             <Text style={styles.label}>Interests</Text>
               <MultipleSelectList
                 setSelected={(val) => {
-                  setInterests(val)
-                  setInterestIsSet(true)
-                  if(interests == []) setInterestIsSet(false)
+                  if(val === []) {
+                    setUser({...user })
+                  }
                 }}
                 data={category}
                 save="value"
-                onSelect={() => {
-                  // setDrones(droneSelect)
-                  console.log(interests);
-                }}
                 label="Categories"
-                boxStyles={[interestIsSet ? null : { borderColor: "red" }, { backgroundColor: "white" }]}
+                boxStyles={[user.interestIsSet ? null : { borderColor: "red" }, { backgroundColor: "white" }]}
               />
             </View>
 
@@ -322,7 +300,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: 'red',
-    width: 280,
+    width: 300,
     height: 45,
     marginBottom: 20,
     alignItems: "flex-start",

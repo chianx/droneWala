@@ -8,8 +8,11 @@ export default function PilotDetails({ formData, setFormData }) {
   const [shouldShow, setshouldShow] = useState(false)
   const [selectedDrone, setSelectedDrone] = React.useState([]);
   const [selectedExperience, setSelectedExperience] = React.useState("");
+  const [selectedInterest, setSelectedInterest] = useState([]);
+
   const [t, setT] = useState(false);
   const [te, setTe] = useState(false);
+  const [tee, setTee] = useState(false);
 
   const drone = [
     { key: '1', value: 'Tropogo' },
@@ -27,6 +30,13 @@ export default function PilotDetails({ formData, setFormData }) {
     { key: '5', value: '5+ Years'},
   ]
 
+  const interests = [
+    { key: '1', value: 'Agriculture' },
+    { key: '2', value: 'Delivery' },
+    { key: '3', value: 'Survey Mapping' },
+    { key: '4', value: 'Events' },
+  ]
+
   const handleCERTNumberChange = (certNum) => {
     if(certNum.trim().length === 10) {
       setFormData({ ...formData, certNum:certNum, dcgaCertIsSet: true });
@@ -35,7 +45,7 @@ export default function PilotDetails({ formData, setFormData }) {
     }
   }
   return (
-    
+   
     <View style={styles.container}>
       <View style={shouldShow ? styles.inputViewPP : styles.inputView}>
         {
@@ -79,8 +89,7 @@ export default function PilotDetails({ formData, setFormData }) {
           placeholder='Select Drones *'
           setSelected={(val) => {
             setSelectedDrone(val)
-            setT(false)
-            if(selectedDrone !== []) setT(true);
+            setT(true)
           }}
           search={false}
           data={drone}
@@ -99,8 +108,7 @@ export default function PilotDetails({ formData, setFormData }) {
           search={false}
           setSelected={(val) => {
             setSelectedExperience(val);
-            setTe(false)
-            if(selectedExperience !== '') setTe(true);
+            setTe(true)
           }}
           data={experience}
           save="value"
@@ -112,7 +120,24 @@ export default function PilotDetails({ formData, setFormData }) {
           label="Experience"
         />
       </View>
-    </View > 
+      <View style={{marginBottom: 20, width:280}}>
+        <MultipleSelectList
+          setSelected={(val) => {
+            setSelectedInterest(val)
+            setTee(true)
+          }}
+          data={interests}
+          placeholder='Select Interests *'
+          search={false}
+          save="value"
+          boxStyles={[formData.interestsIsSet ? null : {borderColor : "red"}, {backgroundColor: "white", padding:16}]}
+          label="Interest"
+          onSelect={() => {
+            setFormData({ ...formData, interests:selectedInterest, interestsIsSet: tee});
+          }}
+        />
+      </View>
+    </View>
   )
 }
 
@@ -150,7 +175,7 @@ const styles = StyleSheet.create({
 },
   passwordContainer: {
     position: 'absolute',
-    right: 15, 
+    right: 15,
     top:13
   },
   button_inp: {

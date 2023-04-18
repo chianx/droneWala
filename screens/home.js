@@ -12,23 +12,23 @@ import {
   query,
   orderByChild,
   limitToLast,
-  limitToFirst
+  limitToFirst,
+  push,
+  set
 } from 'firebase/database';
 
 export default function Home({navigation}) {
-  const [suggestions, setSuggestions] = useState("");
+  const [sugestions, setSugestions] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
   const [userType, setUserType] = useState("");
-  const mount = async () => {
-    let type = await AsyncStorage.getItem("userType");  
-    setUserType(type);
+  const [user, setUser] = useState({});
+
+  const mount = async() => {
+    const userdata = await AsyncStorage.getItem("userData");
+    const val = JSON.parse(userdata)
+    setUser(val);
+    setUserType(val.userType)
   }
-  useEffect(() => {
-    mount();
-    
-  }, []);
-  
-  console.log("userType = " + userType);
   
   const { width } = Dimensions.get('window');
   const cardWidth = width - 32; 
@@ -47,27 +47,30 @@ export default function Home({navigation}) {
     onValue(starCountRef, (snapshot) => {
       const data = snapshot.val();
       const job = Object.keys(data).map(key => ({
-        id: key,
+        key: key,
         ...data[key]
       }))
       console.log(job);
       setJobs(job);
+      mount();
     });
+    
   }, [])
 
 
-  const jobs = [{key:1, jobTitle:'Job Title-2 Drone Service ', profileImage: Images.profile, company:'Garud Survey', salary: '10,000-15,000/month', type:'Full Time', Location:'Jaipur', companyIcon:Images.droneIcon},
-  {key:2, jobTitle:'Job Title-2', profileImage: Images.profile, company:'Garud Survey', salary: '10,000-15,000/month', type:'Full Time', Location:'Jaipur', companyIcon:Images.droneIcon},
-  {key:3, jobTitle:'Job Title-3', profileImage: Images.profile, company:'DronePilots Network', salary: '30,000-35,000/month', type:'Part Time', Location:'Jaipur', companyIcon:Images.droneIcon},
-  {key:4, jobTitle:'Drone Survey Job', profileImage: Images.profile, company:'Fire Drone', type:'Full Time', salary:'20000/month', Location:'Jaipur', companyIcon:Images.droneIcon}];
+  // const jobs = [{key:1, jobTitle:'Job Title-2 Drone Service ', profileImage: Images.profile, company:'Garud Survey', salary: '10,000-15,000/month', type:'Full Time', Location:'Jaipur', companyIcon:Images.droneIcon},
+  // {key:2, jobTitle:'Job Title-2', profileImage: Images.profile, company:'Garud Survey', salary: '10,000-15,000/month', type:'Full Time', Location:'Jaipur', companyIcon:Images.droneIcon},
+  // {key:3, jobTitle:'Job Title-3', profileImage: Images.profile, company:'DronePilots Network', salary: '30,000-35,000/month', type:'Part Time', Location:'Jaipur', companyIcon:Images.droneIcon},
+  // {key:4, jobTitle:'Drone Survey Job', profileImage: Images.profile, company:'Fire Drone', type:'Full Time', salary:'20000/month', Location:'Jaipur', companyIcon:Images.droneIcon}];
   
   const Card = ({ item }) => (
+    <TouchableOpacity onPress={() => navigation.navigate('JobDetails', {job: item})}>
     <View style={styles.card} key={item.key}>
       <View style={{flexDirection:'row'}}>
         <Image source={{uri: item.logo}} style={styles.cardImage} />
         <View style={styles.cardContent}>
           <Text style={styles.cardTitle}>{item.jobTitle}</Text>
-          <Text style={styles.cardDescription}>{item.company}</Text>
+          <Text style={styles.cardDescription}>{item.companyName}</Text>
         </View>
       </View>
       <View style={{marginLeft:5, marginTop:10}}>
@@ -76,6 +79,7 @@ export default function Home({navigation}) {
         <Text style={{color:'#808080'}}><AntDesign name="calendar" size={14} color="#808080" />{' '+item.date}</Text>
       </View>   
     </View>
+    </TouchableOpacity>
   );
 
   const renderDot = (_, index) => (
@@ -86,6 +90,14 @@ export default function Home({navigation}) {
       ]}
     />
   );
+
+  const handleSubmission =() => {
+    console.log("here in sugestion")
+    var refs = push(ref(db, "suggestions/" + user.name));
+    var final =  {name:user.name, city:user.city, state:user.state, email:user.email, feedback:sugestions }
+    setSugestions("");
+    set(refs, final);
+  }
 
   return (
         <ScrollView>
@@ -134,7 +146,7 @@ export default function Home({navigation}) {
               contentContainerStyle={styles.carouselContainer}
             />
             <View style={styles.dotContainer}>
-              {jobs.map((_, index) => renderDot(_, index))}
+              {getJobs.map((_, index) => renderDot(_, index))}
             </View>
           </View>
 
@@ -152,11 +164,11 @@ export default function Home({navigation}) {
                 placeholder='Your suggestion'
                 multiline
                 numberOfLines={8}
-                onChangeText={(text) => setSuggestions(text)}
-                value={suggestions}  
+                onChangeText={(text) => setSugestions(text)}
+                value={sugestions}  
                 style={styles.textArea}
               />
-              <TouchableOpacity style={styles.submitBtn} onPress={()=> console.log(suggestions)}><Text style={{color:'white', fontSize:17}}>Submit</Text></TouchableOpacity>
+              <TouchableOpacity style={styles.submitBtn} onPress={handleSubmission}><Text style={{color:'white', fontSize:17}}>Submit</Text></TouchableOpacity>
             </View>
           </View>
 

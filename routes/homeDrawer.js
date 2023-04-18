@@ -48,10 +48,6 @@ export default function HomeDrawer({navigation}) {
             options={{drawerIcon: ({color}) => 
               <Ionicons name="home-outline" size={22} color={color}/>}}
             />
-          {/* <Drawer.Screen name="Settings" component={Settings} 
-            options={{drawerIcon: ({color}) => 
-              <Ionicons name="settings-outline" size={22} color={color}/>}}  
-          /> */}
           <Drawer.Screen name="About" component={About} 
             options={{drawerIcon: ({color}) => 
               <Ionicons name="information-circle-outline" size={22} color={color}/>}}

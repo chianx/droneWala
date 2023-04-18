@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert, Button, Image, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert, Button, Image, ScrollView, ActivityIndicator } from 'react-native';
 import {FirebaseAuthApplicationVerifier, FirebaseRecaptcha, FirebaseRecaptchaVerifierModal} from 'expo-firebase-recaptcha';
 import {firebaseConfig} from '../firebase/firebase'
 import firebase from 'firebase/compat/app';
@@ -12,7 +12,6 @@ import { db } from '../firebase/databaseConfig'
 import { ref, child, get } from 'firebase/database'
 
 export default function Login( {navigation} ) {
-  const [userType, setUserType] = useState('company');
   const phoneInput = useRef(null);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [code, setCode] = useState('');
@@ -21,8 +20,11 @@ export default function Login( {navigation} ) {
   const recaptchaVerifier = useRef(null);
   const [allowSend, setAllowSend] = useState(false);
   const otpRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false)
+
 
   const sendVerification = async() => {
+    
     if(allowSend) {
     const phoneProvider = new firebase.auth.PhoneAuthProvider();
     
@@ -52,6 +54,7 @@ export default function Login( {navigation} ) {
   }
 
   const confirmCode =() => {
+    setIsLoading(true);
     const credential = firebase.auth.PhoneAuthProvider.credential(
       verificationId,
       code
@@ -62,15 +65,18 @@ export default function Login( {navigation} ) {
       const isNewUser = res.additionalUserInfo.isNewUser;
       const userId = res.user.uid;
       if(isNewUser) { 
+        setIsLoading(false);
         navigation.navigate("SignupStack");
       }else {
         getUserData(userId)
+        setIsLoading(false);
       }
     })
     .catch((error) => {
       console.log("ERROR!!!: " + error);
       setCode('');
       Alert.alert("Invalid Verification Code", "Please try again or choose a different phone number", [{text:'Ok'}]);
+      setIsLoading(false);
       return;
     })
   }
@@ -110,7 +116,8 @@ export default function Login( {navigation} ) {
           <Text style={styles.dividerText}>Login or Sign up</Text>
           <View style={[styles.dividerView, {marginRight:20, marginLeft:20}]}></View>
         </View>
-        {!showOTP ? <View style={{width:'100%', alignItems:'center'}}> 
+        {!showOTP ? 
+        <View style={{width:'100%', alignItems:'center'}}> 
         <PhoneInput
           ref={phoneInput}
           defaultValue={phoneNumber}
@@ -132,6 +139,7 @@ export default function Login( {navigation} ) {
           </Text>
         </TouchableOpacity>
         </View> : 
+        isLoading? <View style={{position:'absolute', width:'100%', height:'100%', top:0, backgroundColor: '#e0e0e0aa', flex:1, justifyContent:'center', }}><ActivityIndicator size="large" color="coral" /></View> :
         <View style={{width:'100%', alignItems:'center', marginTop:15}}>
           <OTPTextView
             handleTextChange={setCode}
@@ -147,7 +155,8 @@ export default function Login( {navigation} ) {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setShowOTP(false)}><Text style={{color:'grey'}}>Chnage Phone Number</Text></TouchableOpacity>
-        </View> }
+        </View> 
+        }
         
     </View>
   )

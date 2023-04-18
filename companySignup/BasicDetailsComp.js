@@ -20,7 +20,7 @@ export default function PersonalDetails({ formData, setFormData }) {
     const [cinIsSet, setCINIsSet] = useState(false);
     const [gstIsSet, setGSTIsSet] = useState(false);
     const [categoryIsSet, setcategoryIsSet] = useState(false)
-  
+ 
     const handleAddressChange = (address) => {
       if (address.trim().length >= 4) {
           setFormData({ ...formData, address:address, addressIsSet: true});
@@ -65,7 +65,7 @@ export default function PersonalDetails({ formData, setFormData }) {
     }
     return (
         <View>
-            
+           
             <View style={styles.inputView}>
                 <TextInput
                     style={[formData.cinIsSet ? styles.TextInput : styles.errorTextInput]}
@@ -92,8 +92,10 @@ export default function PersonalDetails({ formData, setFormData }) {
                 <MultipleSelectList
                     setSelected={(val) => {
                         setSelectedCategory(val)
+                        formData.categoryIsSet = true
                     }}
                     data={category}
+                    search={false}
                     placeholder='Select Category *'
                     save="value"
                     boxStyles={[formData.categoryIsSet ? null : {borderColor : "red"}, {backgroundColor: "white", padding:16}]}

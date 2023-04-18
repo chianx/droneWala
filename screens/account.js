@@ -1,20 +1,28 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import Images from '../images/index';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import EditProfileModal from './editProfile';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Account({isClicked, setIsClicked, navigation}) {
   
-  const [user, setUser] = useState({
-    firstName: 'John Doe',
-    lastName: 'johndoe@example.com',
-    headline: 'I love React Native!',
-    summary: 'I love React Native!'
-  });
+  const [user, setUser] = useState({});
+    const [drones, setDrones] = useState([]);
+    const mount = async() => {
+      const userdata = await AsyncStorage.getItem("userData");
+      const val = JSON.parse(userdata)
+      setUser(val);
+      setDrones(val.droneSelect);
+      console.log(val)
+      // setCategory(val.category);
+    }
+    useEffect(() => {
+      mount();
+    }, []);
 
   const handleSaveProfile =() => {
     setIsClicked(!isClicked);
@@ -45,9 +53,9 @@ export default function Account({isClicked, setIsClicked, navigation}) {
               <Image source={Images.profile} style={styles.avatar}/>
                 <View style={{flex:1, justifyContent:'center', paddingLeft: 15}}> 
                   
-                  <Text style={{fontSize:20, color:'white'}}>Chintan Grover</Text>
-                  <Text style={{color: 'white'}}><Ionicons name='location-outline' size={16} color= 'white'/> Jaipur, Rajasthan</Text>
-                  <Text style={{color: 'white'}}><Ionicons name='ios-call-outline' size={16} color= 'white'/> +91 7340322282</Text>
+                  <Text style={{fontSize:20, color:'white'}}>{user.name}</Text>
+                  <Text style={{color: 'white'}}><Ionicons name='location-outline' size={16} color= 'white'/> {user.city +", " + user.state}</Text>
+                  <Text style={{color: 'white'}}><Ionicons name='ios-call-outline' size={16} color= 'white'/> {user.email}</Text>
                 </View>
             </View>
             </View>
@@ -57,15 +65,15 @@ export default function Account({isClicked, setIsClicked, navigation}) {
             <View style={{flex:1, flexDirection:'row' ,justifyContent:'center'}}>
               <View style={styles.experience}>
                 <Image source={Images.droneIcon} style={styles.icons}/>
-                <Text style={{textAlign:'center', color:'grey', paddingBottom:0, fontSize:17}}>2</Text>
+                <Text style={{textAlign:'center', color:'grey', paddingBottom:0, fontSize:17}}>{drones.length}</Text>
               </View>
               <View style={styles.experience}>
                 <Image source={Images.experience} style={styles.icons}/>
-                <Text style={{textAlign:'center', color:'grey', paddingBottom:3, fontSize:17}}>1-2 Years</Text>
+                <Text style={{textAlign:'center', color:'grey', paddingBottom:3, fontSize:17}}>{user.experience}</Text>
               </View>
               <View style={styles.experience}>
                 <Image source={Images.certified} style={styles.icons}/>
-                <Text style={{textAlign:'center', color:'grey', paddingBottom:3, fontSize:17}}>Yes</Text>
+                <Text style={{textAlign:'center', color:'grey', paddingBottom:3, fontSize:17}}>{user.dcgaCertIsSet ? "Yes" : "No"}</Text>
               </View>
             </View>
           </View>
@@ -85,10 +93,14 @@ export default function Account({isClicked, setIsClicked, navigation}) {
           <View style={styles.drones}>
             <Text style={{ fontSize: 17, color: '#303030', paddingBottom: 5, width:'100%', paddingLeft:10, paddingTop:10}}>My Drones</Text>
             <View style={{flexDirection:'row', width:'100%', flex:1, flexWrap:'wrap'}}>
-              <Text style={{ color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>FarmEasy-10A</Text>
-              <Text style={{color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>Ultra Max Hover</Text>
-              <Text style={{color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>Fine Tube A50</Text>
-              <Text style={{color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>SurveyDast</Text>
+            { drones.map((item, index) => {
+              return (
+                <View key = {index}>
+                <Text style={{color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>{item}</Text>
+                </View>
+              )
+            }) 
+            }
             </View>
           </View>
           
@@ -132,10 +144,10 @@ export default function Account({isClicked, setIsClicked, navigation}) {
         </View>
 
         <EditProfileModal
-        visible={isClicked}
-        onSave={handleSaveProfile}
-        onClose={handleCancelEdit}
-        user={user}
+          visible={isClicked}
+          onSave={handleSaveProfile}
+          onClose={handleCancelEdit}
+          user={user}
       />
         </ScrollView>
     )

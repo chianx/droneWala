@@ -11,21 +11,17 @@ import EditProfileModalComp from '../screens/editProfileComp';
 
 const CustomDrawer = ({prop, navigation}) => {
     const [userType, setUserType] = useState("");
+    const [user, setUser] = useState({});
     const mount = async() => {
       const userdata = await AsyncStorage.getItem("userData");
       const val = JSON.parse(userdata)
       setUserType(val.userType);
+      setUser(val);
     }
     useEffect(() => {
       mount();
-    }, [userType]);
+    }, []);
 
-    const [user, setUser] = useState({
-        firstName: 'John Doe',
-        lastName: 'johndoe@example.com',
-        headline: 'I love React Native!',
-        summary: 'I love React Native!'
-    });
     const [launch , setLaunch] = useState(false)
     const signout =() => {
         AsyncStorage.setItem("login", ""+false);
@@ -66,7 +62,7 @@ const CustomDrawer = ({prop, navigation}) => {
             <DrawerContentScrollView contentContainerStyle={{backgroundColor:'coral'}}>
                 <ImageBackground source={Images.background} style={{padding:20}}>
                     <Image source = {Images.profile} style={{height:80, width:80, borderRadius:40, marginBottom:10}} />
-                    <Text style={{color:'white', fontSize:18, paddingBottom:5}}>Chintan Grover</Text>
+                    <Text style={{color:'white', fontSize:18, paddingBottom:5}}>{user.name}</Text>
                     
                         <View> 
                         <TouchableOpacity style={{flex:1, flexDirection:'row'}} onPress={launchEditProfile}>

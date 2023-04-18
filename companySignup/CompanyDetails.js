@@ -69,7 +69,7 @@ export default function PersonalDetails({ formData, setFormData }) {
         () => {
           // Upload completed successfully, now we can get the download URL
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setFormData({ ...formData, logo: downloadURL })
+            setFormData({ ...formData, logo: downloadURL, logoIsSet: true })
             console.log('File available at', downloadURL);
           });
         });
@@ -88,6 +88,14 @@ export default function PersonalDetails({ formData, setFormData }) {
     { key: '3', value: '20 - 50' },
     { key: '4', value: '50+' },
   ]
+
+  const handleNameChange = (companyName) => {
+    if (companyName.trim().length > 2) {
+      setFormData({ ...formData, companyName:companyName, companyIsSet: true});
+    } else {
+      setFormData({ ...formData, companyName:companyName, companyIsSet: false});
+    }
+  }
   const handleWebsiteChange = (website) => {
     if (validator.isURL(website)) {
       setFormData({ ...formData, website: website, websiteIsSet: true });
@@ -106,8 +114,18 @@ export default function PersonalDetails({ formData, setFormData }) {
     <View>
 
       <View style={{ width: '100%', marginBottom:20, alignItems:'center'}}>
-        <TouchableOpacity onPress={() => pickImage()} style={[styles.logobtn]}><Text style={{ color: 'grey', fontSize: 17 }}>Select Logo (Click Here)</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => pickImage()} style={[styles.logobtn, formData.logoIsSet ? null : {borderColor: "red"}]}><Text style={{ color: 'grey', fontSize: 17 }}>Select Logo * (Click Here)</Text></TouchableOpacity>
         {image && <Image source={{ uri: image }} style={{ width: 180, height: 180, marginBottom: 15, borderRadius:10}} />}
+      </View>
+
+      <View style={styles.inputView}>
+        <TextInput
+          style={[formData.companyIsSet ? styles.TextInput : styles.errorTextInput]}
+          placeholderTextColor="grey"
+          placeholder='Company Name *'
+          value={formData.companyName}
+          onChangeText={(companyName) => handleNameChange(companyName)}
+        />
       </View>
 
       <View style={styles.inputView}>
@@ -119,12 +137,13 @@ export default function PersonalDetails({ formData, setFormData }) {
           onChangeText={(website) => handleWebsiteChange(website)}
         />
       </View>
-      <View style={styles.inputView}>
+      <View>
         <TextInput
-          style={[formData.aboutIsSet ? styles.TextInput : styles.errorTextInput]}
+          style={[formData.aboutIsSet ? styles.TextInput : styles.errorTextInput, {height:170, textAlignVertical:'top'}]}
           placeholderTextColor="grey"
           placeholder='About *'
           multiline={true}
+          numberOfLines={10}
           value={formData.about}
           onChangeText={(about) => handleAboutChange(about)}
         />

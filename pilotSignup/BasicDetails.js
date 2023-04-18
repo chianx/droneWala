@@ -1,8 +1,82 @@
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import * as ImagePicker from 'expo-image-picker'
+import validator from 'validator'
+import {storage} from '../firebase/firebase'
+import { ref, getDownloadURL,uploadBytesResumable, uploadBytes} from 'firebase/storage';
 import DatePicker from 'react-native-modern-datepicker';
 
 export default function BasicDetails({ formData, setFormData }) {
+    const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
+    const [image, setImage] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      setHasGalleryPermission(galleryStatus.status === 'granted');
+    })();
+  }, []);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 4],
+      quality: 1
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+      console.log("Hello", image);
+      // Save image code starts from here
+      const metadata = {
+        contentType: 'image/jpeg'
+      };
+      const storageRef = ref(storage, 'profiles/' + Date.now())
+      const blobImage = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+          resolve(xhr.response);
+        };
+        xhr.onerror = function () {
+          reject(new TypeError("Network request failed"));
+        };
+        xhr.responseType = "blob";
+        xhr.open("GET", result.assets[0].uri, true);
+        xhr.send(null);
+      })
+      const uploadTask = uploadBytesResumable(storageRef, blobImage, metadata);
+      uploadTask.on('state_changed',
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+          switch (snapshot.state) {
+            case 'paused':
+              console.log('Upload is paused');
+              break;
+            case 'running':
+              console.log('Upload is running');
+              break;
+          }
+        },
+        (error) => {
+          console.log(error)
+        },
+        () => {
+          // Upload completed successfully, now we can get the download URL
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setFormData({ ...formData, profile: downloadURL, profileIsSet: true })
+            console.log('File available at', downloadURL);
+          });
+        });
+      // Save image code ends from here
+    }
+
+  };
+
+  if (hasGalleryPermission === false) {
+    return <Text>No access to gallery</Text>
+  }
     const [date, setDate] = useState('');
     const handleButtonOpen = () => {
         setOpen(!open);
@@ -34,6 +108,10 @@ export default function BasicDetails({ formData, setFormData }) {
 
     return (
         <>
+        <View style={{ width: '100%', marginBottom:20, alignItems:'center'}}>
+        <TouchableOpacity onPress={() => pickImage()} style={[styles.logobtn, formData.profileIsSet ? null : {borderColor: "red"}]}><Text style={{ color: 'grey', fontSize: 17 }}>Select Profile (Click Here)</Text></TouchableOpacity>
+        {image && <Image source={{ uri: image }} style={{ width: 180, height: 180, marginBottom: 15, borderRadius:10}} />}
+      </View>
             <View style={styles.inputView}>
                 <TextInput
                     style={[formData.nameIsSet ? styles.TextInput : styles.errorTextInput]}
@@ -120,5 +198,31 @@ const styles = StyleSheet.create({
         padding: 15,
         width: 135,
         color: 'white'
-    }
+    },
+    logobtn: {
+        backgroundColor: "white",
+        borderColor: "black",
+        borderRadius: 8,
+        width: 280,
+        height: 55,
+        marginBottom: 10,
+        // alignItems:'center',
+        borderWidth:1,
+        borderColor:'grey',
+        paddingHorizontal: 15,
+        justifyContent: 'center'
+      },
+      errorlogobtn: {
+          backgroundColor: "white",
+          borderColor: "red",
+          borderRadius: 8,
+          width: 280,
+          height: 55,
+          marginBottom: 10,
+          // alignItems:'center',
+          borderWidth:1,
+          borderColor:'grey',
+          paddingHorizontal: 15,
+          justifyContent: 'center'
+        }
 })

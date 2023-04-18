@@ -16,10 +16,9 @@ const Tab = createBottomTabNavigator();
 
 export default function CompanyHomeTab({navigation}) {
   const [isClicked, setIsClicked] = useState(false);
-  const handleClick = () => {
-    setIsClicked(true)
-  }
-  
+    const handleClick = () => {
+        setIsClicked(true)
+    }
   return (
     // <NavigationContainer independent={true}>
       <Tab.Navigator
@@ -37,7 +36,7 @@ export default function CompanyHomeTab({navigation}) {
              else if (route.name === 'JobsStack') {
               iconName = focused ? 'ios-briefcase-sharp' : 'ios-briefcase-outline';
             }
-             else if (route.name === 'My Account') {
+             else if (route.name === 'CompanyAccountStack') {
               iconName = focused ? 'person-circle' : 'person-circle-outline';
             }
 
@@ -96,7 +95,7 @@ export default function CompanyHomeTab({navigation}) {
           )
           }}
         />
-        <Tab.Screen name="My Account" 
+        {/* <Tab.Screen name="CompanyAccountStack" 
           options={{
             headerShown:true,
             headerRight: () => (
@@ -115,8 +114,10 @@ export default function CompanyHomeTab({navigation}) {
             </TouchableOpacity>
           )
           }} 
-        >{props => <CompanyAccount {...props} isClicked={isClicked} setIsClicked={setIsClicked}/>}
-        </Tab.Screen>
+        >{props => <CompanyAccountStack {...props} isClicked={isClicked} setIsClicked={setIsClicked}/>}
+        </Tab.Screen> */}
+        <Tab.Screen name="CompanyAccountStack" component={CompanyAccountStack} />
+        
       </Tab.Navigator>
       //</NavigationContainer>
   );
