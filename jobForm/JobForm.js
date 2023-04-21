@@ -7,6 +7,7 @@ import {set, ref, push} from 'firebase/database';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function JobForm({navigation}) {
+    const [alwaysTrue, setAlwaysTrue] = useState(true);
     const [screen, setScreen] = useState(0)
     const FormTitle = [
         "Precise Details",
@@ -18,12 +19,14 @@ export default function JobForm({navigation}) {
             // ShortDetails
             jobId: "",
             jobTitle: "",
-            salRange: "",
+            salRangeFrom: "",
+            salRangeTo: "",
             ftORpt: "",
             numOpen: "",
             date: "",
             jobTitleIsSet: false,
-            salRangeIsSet: false,
+            salRangeFromIsSet: false,
+            salRangeToIsSet: false,
             ftORptIsSet: false,
             numOpenIsSet: false,
             dateIsSet: false,
@@ -70,7 +73,8 @@ export default function JobForm({navigation}) {
                     
                     var userJson = JSON.parse(result);
                     var refs = push(ref(db, "jobs/"));
-                    var final =  {aboutCompany: userJson.about, logo: userJson.logo, companyName: userJson.name, jobId: refs.key, jobTitle: formData.jobTitle, location:formData.location ,salRange: formData.salRange,ftORpt: formData.ftORpt,numOpen: formData.numOpen,date: formData.date,aboutJob: formData.aboutJob,whoApply: formData.whoApply, }
+                    const salRange = formData.salRangeFrom+' - '+formData.salRangeTo;
+                    var final =  {aboutCompany: userJson.about, logo: userJson.logo, companyName: userJson.name, jobId: refs.key, jobTitle: formData.jobTitle, location:formData.location ,salRange: salRange,ftORpt: formData.ftORpt,numOpen: formData.numOpen,date: formData.date,aboutJob: formData.aboutJob,whoApply: formData.whoApply, }
                     // setFormData({...final , logo: userJson.logo, });
                     set(refs, final);
                 })
@@ -94,9 +98,10 @@ export default function JobForm({navigation}) {
             if(!formData.jobTitleIsSet)  {
                 errMsg = "Invalid Job Title"
                 formData.jobTitleIsSet = false
-            }else if(!formData.salRangeIsSet) {
-                errMsg = "Invalid Salary Range"
-                formData.salRangeIsSet = false
+            }else if(!formData.salRangeFromIsSet && !formData.salRangeToIsSet) {
+                errMsg = "Check Salary Range"
+                formData.salRangeFromIsSet = false
+                formData.salRangeToIsSet = false
             }else if (!formData.ftORptIsSet) {
                 errMsg = "Set Job Type FT/PT"
                 formData.ftORptIsSet = false
@@ -108,7 +113,7 @@ export default function JobForm({navigation}) {
                 formData.dateIsSet = false
             }else validate = true;
             
-            if(validate && formData.jobTitleIsSet && formData.salRangeIsSet && formData.ftORptIsSet && formData.numOpenIsSet && formData.dateIsSet) {
+            if(validate && formData.jobTitleIsSet && formData.salRangeFromIsSet && formData.salRangeToIsSet && formData.ftORptIsSet && formData.numOpenIsSet && formData.dateIsSet) {
                 setScreen((currScreen) => currScreen + 1);
                 setErrorMessage("");
             }
@@ -118,7 +123,8 @@ export default function JobForm({navigation}) {
         }                
     }
     return (
-        <Modal visible={true} animationType="slide">
+        // <Modal vi[sible={alwaysTrue} animationType="slide">
+        <View style={{flex:1}}>
             <View style={styles.wrapper}>
                 <Text style={styles.title}>{FormTitle[screen]}</Text>
             </View>
@@ -133,10 +139,11 @@ export default function JobForm({navigation}) {
 
             <View style={styles.apply}>
                 <TouchableOpacity
+                    // disabled={screen === 0}
                     style={[styles.prevButton]}
                     onPress={() => {
                         if(screen === 0) {
-                            navigation.goBack();
+                            navigation.navigate("Home");
                         }else {
                             setScreen((currScreen) => currScreen - 1)
                         }
@@ -154,7 +161,8 @@ export default function JobForm({navigation}) {
                 </TouchableOpacity>
                 }
             </View>
-        </Modal>
+            </View>
+        // </Modal>
     )
 }
 
@@ -193,9 +201,10 @@ const styles = StyleSheet.create({
         elevation:5
     },
     apply: {
-        paddingVertical: 15,
+        // paddingVertical: 15,
         alignItems:'center',
         width:'100%',
+        height:85,
         borderTopWidth:1, borderTopColor:'grey',
         paddingHorizontal: 10,
         flexDirection:'row',

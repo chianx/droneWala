@@ -83,13 +83,14 @@ export default function PilotForm({navigation}) {
             if(validate && formData.experienceIsSet && (!formData.dcgaCert || (formData.dcgaCert && formData.dcgaCertIsSet))) {
                 navigation.navigate("LoginStack")
                 setErrorMessage("");
-                var final =  { name: formData.name, email: formData.email, dob: formData.dob, address: formData.address, city: formData.city, state: formData.state, pincode: formData.pincode, aadhar: formData.aadhar, dcgaCert: formData.dcgaCert, certNum: formData.certNum, droneSelect: formData.droneSelect, experience: formData.experience, interests: formData.interests}
+                
                 var uid = auth.currentUser.uid
+                var final =  {...formData, userType: "pilot", userId:uid}
                 // TODO: Phone is missing.
-                setFormData({ ...final, uid, isPilot: true, type: "pilot"})
+                // setFormData({ ...final, uid, isPilot: true, type: "pilot"})
                 set(ref(db, 'users/' + uid), formData).then(() => {
                     // Add loading icon.
-                    AsyncStorage.setItem("userData", JSON.stringify(formData));  
+                    AsyncStorage.setItem("userData", JSON.stringify(final));  
                     navigation.navigate("LoginStack")
                 }).catch((error) => {
                     // Correct this.

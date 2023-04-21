@@ -86,16 +86,12 @@ export default function Form({navigation}) {
            
             if(validate && formData.logoIsSet && formData.companyIsSet && formData.websiteIsSet && formData.aboutIsSet) {
                 setErrorMessage("");
-                var final =  {name:formData.name, email:formData.email, foundedin :formData.foundedin, CINno:formData.CINno,
-                GSTno:formData.GSTno, category:formData.category, address:formData.address, city:formData.city, state:formData.state,
-                pincode:formData.pincode, logo:formData.logo, compName: formData.companyName , website:formData.website, about:formData.about, numPeople:formData.numPeople }
-               
                 // Final
                 var uid = auth.currentUser.uid
                 console.log(uid);
+                var final =  {...formData, userId: uid}
                 // setFormData({})
-                setFormData({ ...final, userId:uid, type:"company"})
-                set(ref(db, 'users/' + uid), formData).then(async() => {
+                set(ref(db, 'users/' + uid), final).then(async() => {
                     // Add loading icon.
                     navigation.navigate("LoginStack")
                 }).catch((error) => {
@@ -144,27 +140,28 @@ export default function Form({navigation}) {
             var validate = false;
            
             // validate name
-            if(!formData.cinIsSet) {
-                errMsg = "Invalid CIN Number"
-                formData.cinIsSet = false
-            }else if(!formData.gstIsSet) {
-                errMsg = "Invalid GST Number"
-                formData.gstIsSet = false
-            }else if(!formData.addressIsSet)  {
-                errMsg = "Invalid Address"
-                formData.addressIsSet = false
-            }else if (!formData.cityIsSet) {
-                errMsg = "Invalid City"
-                formData.cityIsSet = false
-            }else if(!formData.stateIsSet) {
-                errMsg = "Invalid State"
-                formData.stateIsSet = false
-            }else if(!formData.pinIsSet) {
-                errMsg = "Invalid PIN Code"
-                formData.pinIsSet = false
-            }else validate = true;
+            // if(!formData.cinIsSet) {
+            //     errMsg = "Invalid CIN Number"
+            //     formData.cinIsSet = false
+            // }else if(!formData.gstIsSet) {
+            //     errMsg = "Invalid GST Number"
+            //     formData.gstIsSet = false
+            // }else if(!formData.addressIsSet)  {
+            //     errMsg = "Invalid Address"
+            //     formData.addressIsSet = false
+            // }else if (!formData.cityIsSet) {
+            //     errMsg = "Invalid City"
+            //     formData.cityIsSet = false
+            // }else if(!formData.stateIsSet) {
+            //     errMsg = "Invalid State"
+            //     formData.stateIsSet = false
+            // }else if(!formData.pinIsSet) {
+            //     errMsg = "Invalid PIN Code"
+            //     formData.pinIsSet = false
+            // }else 
+            validate = true;
            
-            if(validate && formData.cinIsSet && formData.gstIsSet && formData.addressIsSet && formData.cityIsSet && formData.stateIsSet && formData.pinIsSet) {
+            if(validate || (formData.cinIsSet && formData.gstIsSet && formData.addressIsSet && formData.cityIsSet && formData.stateIsSet && formData.pinIsSet)) {
                 setScreen((currScreen) => currScreen + 1);
                 setErrorMessage("");
             }

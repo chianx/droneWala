@@ -34,12 +34,20 @@ export default function Precise({ formData, setFormData }) {
             setFormData({ ...formData, jobTitle:jobTitle, jobTitleIsSet: false });
         }
     }
-    const handlesalRange = (salRange) => {
-        var r = /^[0-9]*\s-\s[0-9]*$/;
-        if(formData.salRange.match(r)) {
-            setFormData({ ...formData, salRange:salRange, salRangeIsSet: true });
+    const handlesalRangeFrom = (salRangeFrom) => {
+       
+        if(formData.salRangeFrom.trim().length >= 2) {
+            setFormData({ ...formData, salRangeFrom:salRangeFrom, salRangeFromIsSet: true });
         }else {
-            setFormData({ ...formData, salRange:salRange, salRangeIsSet: false });
+            setFormData({ ...formData, salRangeFrom:salRangeFrom, salRangeFromIsSet: false });
+        }
+    }
+    const handlesalRangeTo = (salRangeTo) => {
+       
+        if(formData.salRangeTo.trim().length >= 2) {
+            setFormData({ ...formData, salRangeTo:salRangeTo, salRangeToIsSet: true });
+        }else {
+            setFormData({ ...formData, salRangeTo:salRangeTo, salRangeToIsSet: false });
         }
     }
     const handlenumOpen = (numOpen) => {
@@ -79,11 +87,18 @@ export default function Precise({ formData, setFormData }) {
             </View>
             <View style={styles.inputView}>
                 <TextInput
-                    style={[formData.salRangeIsSet ? styles.TextInput : styles.errorTextInput]}
+                    style={[formData.salRangeFromIsSet ? styles.TextInput : styles.errorTextInput]}
                     placeholderTextColor="grey"
-                    placeholder='Salary Range Eg : (from - to)/month *'
-                    value={formData.salRange}
-                    onChangeText={(salRange) => handlesalRange(salRange)}
+                    placeholder='Salary Range From/Month *'
+                    value={formData.salRangeFrom}
+                    onChangeText={(salRangeFrom) => handlesalRangeFrom(salRangeFrom)}
+                />
+                <TextInput
+                    style={[formData.salRangeToIsSet ? styles.TextInput : styles.errorTextInput]}
+                    placeholderTextColor="grey"
+                    placeholder='Salary Range To/Month *'
+                    value={formData.salRangeTo}
+                    onChangeText={(salRangeTo) => handlesalRangeTo(salRangeTo)}
                 />
             </View>
             <View style={{ marginBottom: 20 }}>
