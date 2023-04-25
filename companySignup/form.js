@@ -5,10 +5,12 @@ import PersonalDetails from './PersonalDetailsComp';
 import CompanyDetails from './CompanyDetails';
 import { db, auth } from '../firebase/databaseConfig'
 import {ref, set} from 'firebase/database'
+import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Form({navigation}) {
-    const [screen, setScreen] = useState(0)
+    const [screen, setScreen] = useState(0);
+    const [loading, setLoading] = useState(false);
     const FormTitle = [
         "Personal Details",
         "Basic Details",
@@ -70,39 +72,68 @@ export default function Form({navigation}) {
             var validate = false;
            
             // validate name
-            if (!formData.logoIsSet) {
-                errMsg = "Select Logo"
-                formData.logoIsSet = false
-            }else if(!formData.companyIsSet) {
-                errMsg = "Invalid Company Name"
-                formData.companyIsSet = false
-            }else if(!formData.websiteIsSet)  {
-                errMsg = "Invalid Website, Try including https"
-                formData.websiteIsSet = false
-            }else if (!formData.aboutIsSet) {
-                errMsg = "Invalid About"
-                formData.aboutIsSet = false
+            if(!formData.cinIsSet) {
+                errMsg = "Invalid CIN Number"
+                formData.cinIsSet = false
+            }else if(!formData.gstIsSet) {
+                errMsg = "Invalid GST Number"
+                formData.gstIsSet = false
+            }else if(!formData.addressIsSet)  {
+                errMsg = "Invalid Address"
+                formData.addressIsSet = false
+            }else if (!formData.cityIsSet) {
+                errMsg = "Invalid City"
+                formData.cityIsSet = false
+            }else if(!formData.stateIsSet) {
+                errMsg = "Invalid State"
+                formData.stateIsSet = false
+            }else if(!formData.pinIsSet) {
+                errMsg = "Invalid PIN Code"
+                formData.pinIsSet = false
             }else validate = true;
            
-            if(validate && formData.logoIsSet && formData.companyIsSet && formData.websiteIsSet && formData.aboutIsSet) {
+            if(validate && formData.cinIsSet && formData.gstIsSet && formData.addressIsSet && formData.cityIsSet && formData.stateIsSet && formData.pinIsSet) {
                 setErrorMessage("");
                 // Final
                 var uid = auth.currentUser.uid
-                console.log(uid);
-                var final =  {...formData, userId: uid}
+                var fcmToken;
+                const authStatus = await messaging().requestPermission();
+                const enabled = 
+                    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+                    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+                setLoading(true);
+                if(enabled) {
+                    messaging().getToken().then(token => {
+                        console.log(token);
+                        fcmToken = token;
+                        var tokenPush = { fcmToken: token, category: formData.category, name:formData.companyName, city:formData.city, state:formData.state, userId:uid};
+                        set(ref(db, 'companyTokens/' + uid), tokenPush).then(async() => {
+                            console.log("Token Push Successful", tokenPush);
+                        }).catch((error) => {
+                            setErrorMessage("Something went wrong, Please try again.");
+                            setLoading(false);
+                        })
 
-                set(ref(db, 'users/' + uid), final).then(async() => {
-                    // Add loading icon.
-                    navigation.navigate("LoginStack")
-                }).catch((error) => {
-                    // Correct this.
-                    setErrorMessage(error.toString);
-                })
-            }
-            else {
+                        var final =  {...formData, userId: uid, fcmToken:fcmToken};
+                        set(ref(db, 'users/' + uid), final).then(async() => {
+                            // Add loading icon.
+                            setLoading(false);
+                            navigation.navigate("LoginStack")
+                        }).catch((error) => {
+                            // Correct this.
+                            setErrorMessage(error.toString);
+                            setLoading(false);
+                        })
+                        console.log(final)
+                    })
+                }else {
+                    console.log("Failed token generation");
+                    setLoading(false);
+                }
+            }else {
                 setErrorMessage(errMsg);
             }
-            console.log(final)
+            
         }
         // set(ref(db, 'users/'), {formData})
         // Screen 2 Vadilaton
@@ -140,27 +171,21 @@ export default function Form({navigation}) {
             var validate = false;
            
             // validate name
-            if(!formData.cinIsSet) {
-                errMsg = "Invalid CIN Number"
-                formData.cinIsSet = false
-            }else if(!formData.gstIsSet) {
-                errMsg = "Invalid GST Number"
-                formData.gstIsSet = false
-            }else if(!formData.addressIsSet)  {
-                errMsg = "Invalid Address"
-                formData.addressIsSet = false
-            }else if (!formData.cityIsSet) {
-                errMsg = "Invalid City"
-                formData.cityIsSet = false
-            }else if(!formData.stateIsSet) {
-                errMsg = "Invalid State"
-                formData.stateIsSet = false
-            }else if(!formData.pinIsSet) {
-                errMsg = "Invalid PIN Code"
-                formData.pinIsSet = false
+            if (!formData.logoIsSet) {
+                errMsg = "Select Logo"
+                formData.logoIsSet = false
+            }else if(!formData.companyIsSet) {
+                errMsg = "Invalid Company Name"
+                formData.companyIsSet = false
+            }else if(!formData.websiteIsSet)  {
+                errMsg = "Invalid Website, Try including https"
+                formData.websiteIsSet = false
+            }else if (!formData.aboutIsSet) {
+                errMsg = "Invalid About"
+                formData.aboutIsSet = false
             }else validate = true;
            
-            if(validate && formData.cinIsSet && formData.gstIsSet && formData.addressIsSet && formData.cityIsSet && formData.stateIsSet && formData.pinIsSet) {
+            if(validate && formData.logoIsSet && formData.companyIsSet && formData.websiteIsSet && formData.aboutIsSet) {
                 setScreen((currScreen) => currScreen + 1);
                 setErrorMessage("");
             }

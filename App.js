@@ -27,7 +27,7 @@ export default function App() {
     }
   }
 
-  requestUserPermission();
+  // requestUserPermission();
   const [login, setLogin] = useState(false);
   // AsyncStorage.setItem("login", ""+login)
   // AsyncStorage.setItem("userType", "pilot")
