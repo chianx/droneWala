@@ -68,7 +68,7 @@ export default function CompanyHomeTab({navigation}) {
           )
           }}
         />
-        <Tab.Screen name="JobsStack" component={JobStack} 
+        <Tab.Screen name="JobsStack"
           // options={{
           //   headerRight: () => (
           //   <TouchableOpacity onPress={() => {
@@ -81,7 +81,7 @@ export default function CompanyHomeTab({navigation}) {
           //   </TouchableOpacity>
           // )
           // }} 
-        />
+        >{props => <JobStack {...props} />}</Tab.Screen>
         <Tab.Screen name="Create Post" component={JobForm} 
           options ={{
             headerShown:true,

@@ -1,25 +1,24 @@
-import React from 'react'; 
-import Jobs from '../screens/jobs';
+import React from 'react';
 import { Text, View, TouchableOpacity, Image } from 'react-native';
-import JobDetails from '../screens/jobDetails'
-import Apply from '../screens/apply';
+import CourseDetails from '../screens/courseDetails';
+import Learning from '../screens/learning'
 import { NavigationContainer } from '@react-navigation/native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Applicants from '../screens/applicants'
 import Images from '../images/index'
 
 const Stack = createNativeStackNavigator();
 
-export default function JobStack({navigation}) {
+export default function CourseStack({navigation}) {
     return (
         // <NavigationContainer independent={true}>
         <Stack.Navigator
-            
+            screenOptions={{
+                headerShown: true
+            }}
         >
             <Stack.Screen 
-                name="Jobs" 
-                component={Jobs}  
+                name="Courses" 
+                component={Learning}
                 options = {{
                     headerLeft: () => (
                     <TouchableOpacity onPress={() => navigation.openDrawer()}>
@@ -32,19 +31,10 @@ export default function JobStack({navigation}) {
                 }}
             />
             <Stack.Screen 
-                name="JobDetails" 
-                component={JobDetails}
+                name="Course Details" 
+                component={CourseDetails}
             />
-            <Stack.Screen 
-                name="Apply" 
-                component={Apply}
-            />
-            <Stack.Screen 
-                name="Applicants" 
-                component={Applicants}
-            />
-            
         </Stack.Navigator>
-        //</NavigationContainer>
+        // </NavigationContainer>
     );
 }

@@ -86,16 +86,12 @@ export default function Form({navigation}) {
            
             if(validate && formData.logoIsSet && formData.companyIsSet && formData.websiteIsSet && formData.aboutIsSet) {
                 setErrorMessage("");
-                var final =  {name:formData.name, email:formData.email, foundedin :formData.foundedin, CINno:formData.CINno,
-                GSTno:formData.GSTno, category:formData.category, address:formData.address, city:formData.city, state:formData.state,
-                pincode:formData.pincode, logo:formData.logo, compName: formData.companyName , website:formData.website, about:formData.about, numPeople:formData.numPeople }
-               
                 // Final
                 var uid = auth.currentUser.uid
                 console.log(uid);
-                // setFormData({})
-                setFormData({ ...final, userId:uid, type:"company"})
-                set(ref(db, 'users/' + uid), formData).then(async() => {
+                var final =  {...formData, userId: uid}
+
+                set(ref(db, 'users/' + uid), final).then(async() => {
                     // Add loading icon.
                     navigation.navigate("LoginStack")
                 }).catch((error) => {

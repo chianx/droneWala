@@ -4,36 +4,45 @@ import { AntDesign } from '@expo/vector-icons';
 import { SelectList } from 'react-native-dropdown-select-list'
 import DatePicker from 'react-native-modern-datepicker';
 import { MultipleSelectList } from 'react-native-dropdown-select-list'
+import { db, auth } from '../firebase/databaseConfig'
+import { ref, update} from 'firebase/database'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const EditProfileModalComp = ({ visible, onClose, onSave }) => {
 
   const [user, setUser] = useState({});
-    const mount = async() => {
-      const userdata = await AsyncStorage.getItem("userData");
-      const val = JSON.parse(userdata)
-      setUser(val);
-    }
-    useEffect(() => {
-      mount();
-    }, []);
-  
+  const mount = async () => {
+    const userdata = await AsyncStorage.getItem("userData");
+    const val = JSON.parse(userdata)
+    setUser(val);
+  }
+  useEffect(() => {
+    mount();
+  }, []);
+
 
   const [open, setOpen] = useState(false)
-    const [date, setDate] = useState();
+  const [date, setDate] = useState();
 
   const handleSave = () => {
-    if(user.nameIsSet && user.dateIsSet && user.emailIsSet && user.addressIsSet && user.stateIsSet && user.cityIsSet && user.pinIsSet && user.categoryIsSet && user.websiteIsSet && user.aboutIsSet) {
-      // write code here to save this on firebase and locally
-      console.log(user.name, user.foundedin, user.email, user.address, user.state, user.city, user.pincode, user.about, user.website, user.numPeople, user.category);
+    if (user.nameIsSet && user.dateIsSet && user.emailIsSet && user.addressIsSet && user.stateIsSet && user.cityIsSet && user.pinIsSet && user.categoryIsSet && user.websiteIsSet && user.aboutIsSet) {
+
+      update(ref(db, 'users/' + 'suFsqbl4lEMA3ognIgDAZLD1vnr1'), user).then(() => {
+        // Add loading icon.
+        AsyncStorage.setItem("userData", JSON.stringify(user));
+        console.log(user)
+      }).catch((error) => {
+        // Correct this.
+        setErrorMessage(error.toString);
+      })
       onClose();
     }
   };
-  
-  
-  const handleButtonOpen =() => {
+
+  const [cat, setCat] = useState([])
+  const handleButtonOpen = () => {
     setOpen(!open);
-    setUser({...user, foundedin:date, dateIsSet:true})
+    setUser({ ...user, foundedin: date, dateIsSet: true })
   }
   const category = [
     { key: '1', value: 'Agriculture' },
@@ -51,83 +60,83 @@ const EditProfileModalComp = ({ visible, onClose, onSave }) => {
   ]
   const handleWebsiteChange = (website) => {
     if (validator.isURL(website)) {
-      setUser({...user, website, websiteIsSet:true})
+      setUser({ ...user, website, websiteIsSet: true })
     } else {
-      setUser({...user, website, websiteIsSet:true})
+      setUser({ ...user, website, websiteIsSet: true })
     }
   }
   const handleAboutChange = (about) => {
     if (about.trim().length >= 50) {
-      setUser({...user, about, aboutIsSet:true})
+      setUser({ ...user, about, aboutIsSet: true })
     } else {
-      setUser({...user, email, aboutIsSet:false})
+      setUser({ ...user, email, aboutIsSet: false })
     }
   }
   const handleNameChange = (name) => {
     if (name.trim().length > 2) {
-        setUser({...user, name, nameIsSet:true})
+      setUser({ ...user, name, nameIsSet: true })
     } else {
-      setUser({...user, name, nameIsSet:false})
+      setUser({ ...user, name, nameIsSet: false })
     }
   }
   const handleAddressChange = (address) => {
     if (address.trim().length >= 4) {
-      setUser({...user, address, addressIsSet:true})
+      setUser({ ...user, address, addressIsSet: true })
     } else {
-      setUser({...user, address, addressIsSet:false})
+      setUser({ ...user, address, addressIsSet: false })
     }
   }
   const handleEmailChange = (email) => {
     var validRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (email.match(validRegex)) {
-      setUser({...user, email, emailIsSet:true})
+      setUser({ ...user, email, emailIsSet: true })
     } else {
-      setUser({...user, email, emailIsSet:false})
+      setUser({ ...user, email, emailIsSet: false })
     }
   }
   const handleCityChange = (city) => {
     if (city.trim().length >= 3) {
-      setUser({...user, city, cityIsSet:true})
+      setUser({ ...user, city, cityIsSet: true })
     } else {
-      setUser({...user, city, cityIsSet:false})
+      setUser({ ...user, city, cityIsSet: false })
     }
   }
   const handleStateChange = (state) => {
     if (state.trim().length >= 5) {
-      setUser({...user, state, stateIsSet:true})
+      setUser({ ...user, state, stateIsSet: true })
     } else {
-      setUser({...user, state, stateIsSet:false})
+      setUser({ ...user, state, stateIsSet: false })
     }
   }
   const handlePinChange = (pincode) => {
     if (pincode.trim().length === 6) {
-      setUser({...user, pincode, pinIsSet:true})
+      setUser({ ...user, pincode, pinIsSet: true })
     } else {
-      setUser({...user, email, pinIsSet:false})
+      setUser({ ...user, email, pinIsSet: false })
     }
   }
 
   return (
     <Modal visible={visible} animationType="slide">
-    <View style={{ alignItems:'center', padding:15, backgroundColor:'coral', elevation:15}}>
-      <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-        <AntDesign name="close" size={28} color="white" />
-      </TouchableOpacity>
-      <Text style={styles.heading}>Edit Company Profile</Text>
-    </View>
-    <ScrollView>
+      <View style={{ alignItems: 'center', padding: 15, backgroundColor: 'coral', elevation: 15 }}>
+        <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+          <AntDesign name="close" size={28} color="white" />
+        </TouchableOpacity>
+        <Text style={styles.heading}>Edit Company Profile</Text>
+      </View>
+      <ScrollView>
         <View style={styles.modalContainer}>
           <View style={styles.formContainer}>
 
             <Text style={styles.label}>Company Name</Text>
             <TextInput
-                style={[user.nameIsSet ? styles.TextInput : styles.errorTextInput]}
-                placeholderTextColor="grey"
-                placeholder={user.name}
-                value={user.name}
-                onChangeText={(name) => {
-                  handleNameChange(name)
-                }}
+              style={[user.nameIsSet ? styles.TextInput : styles.errorTextInput]}
+              placeholderTextColor="grey"
+              placeholder={user.name}
+              value={user.name}
+              onChangeText={(name) => {
+                handleNameChange(name)
+              }}
             />
             <Text style={styles.label}>Email</Text>
             <TextInput
@@ -147,81 +156,78 @@ const EditProfileModalComp = ({ visible, onClose, onSave }) => {
             />
             <Text style={styles.label}>State</Text>
             <TextInput
-                style={[user.stateIsSet ? styles.TextInput : styles.errorTextInput]}
-                placeholderTextColor="grey"
-                placeholder={user.state}
-                value={user.state}
-                onChangeText={(state) => handleStateChange(state)}
+              style={[user.stateIsSet ? styles.TextInput : styles.errorTextInput]}
+              placeholderTextColor="grey"
+              placeholder={user.state}
+              value={user.state}
+              onChangeText={(state) => handleStateChange(state)}
             />
             <Text style={styles.label}>City</Text>
             <TextInput
-                style={[user.cityIsSet ? styles.TextInput : styles.errorTextInput]}
-                placeholderTextColor="grey"
-                placeholder={user.city}
-                value={user.city}
-                onChangeText={(city) => handleCityChange(city)}
+              style={[user.cityIsSet ? styles.TextInput : styles.errorTextInput]}
+              placeholderTextColor="grey"
+              placeholder={user.city}
+              value={user.city}
+              onChangeText={(city) => handleCityChange(city)}
             />
             <Text style={styles.label}>Pincode</Text>
             <TextInput
-                style={[user.pinIsSet ? styles.TextInput : styles.errorTextInput]}
-                placeholderTextColor="grey"
-                placeholder={user.pincode}
-                value={user.pincode}
-                onChangeText={(pincode) => handlePinChange(pincode)}
-                keyboardType='numeric'
-                maxLength={6}
+              style={[user.pinIsSet ? styles.TextInput : styles.errorTextInput]}
+              placeholderTextColor="grey"
+              placeholder={user.pincode}
+              value={user.pincode}
+              onChangeText={(pincode) => handlePinChange(pincode)}
+              keyboardType='numeric'
+              maxLength={6}
             />
             <Text style={styles.label}>Website</Text>
             <TextInput
-                style={[user.websiteIsSet ? styles.TextInput : styles.errorTextInput]}
-                placeholderTextColor="grey"
-                placeholder={user.website}
-                value={user.website}
-                onChangeText={(website) => handleWebsiteChange(website)}
+              style={[user.websiteIsSet ? styles.TextInput : styles.errorTextInput]}
+              placeholderTextColor="grey"
+              placeholder={user.website}
+              value={user.website}
+              onChangeText={(website) => handleWebsiteChange(website)}
             />
             <Text style={styles.label}>About</Text>
             <TextInput
-                style={[user.aboutIsSet ? styles.TextInput : styles.errorTextInput, {height:160, textAlignVertical: 'top',}]}
-                placeholderTextColor="grey"
-                placeholder={user.about}
-                value={user.about}
-                multiline
-                numberOfLines={8}
-                maxLength={1000}
-                onChangeText={(about) => handleAboutChange(about)}
+              style={[user.aboutIsSet ? styles.TextInput : styles.errorTextInput, { height: 160, textAlignVertical: 'top', }]}
+              placeholderTextColor="grey"
+              placeholder={user.about}
+              value={user.about}
+              multiline
+              numberOfLines={8}
+              maxLength={1000}
+              onChangeText={(about) => handleAboutChange(about)}
             />
 
-            <View style={{marginBottom:10, width: 270}}>
-            <Text style={styles.label}>Founded In</Text>
-              <View style={{flexDirection:'row'}}>
+            <View style={{ marginBottom: 10, width: 270 }}>
+              <Text style={styles.label}>Founded In</Text>
+              <View style={{ flexDirection: 'row' }}>
                 <TextInput
-                    editable={false}    
-                    placeholderTextColor="grey"
-                    placeholder={user.foundedin}   
-                    value={user.foundedin}
-                    style={[user.dateIsSet ? { width:140,color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', padding: 5, borderColor: 'grey', marginRight: 20, marginBottom: 15 } : { color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', padding: 5, borderColor: 'red', marginRight: 20, marginBottom: 15 }]}    
+                  editable={false}
+                  placeholderTextColor="grey"
+                  placeholder={user.foundedin}
+                  value={user.foundedin}
+                  style={[user.dateIsSet ? { width: 140, color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', padding: 5, borderColor: 'grey', marginRight: 20, marginBottom: 15 } : { color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', padding: 5, borderColor: 'red', marginRight: 20, marginBottom: 15 }]}
                 />
-                
-                {open? <TouchableOpacity onPress={handleButtonOpen} style={{padding:0}}><Text style={styles.btn}>Select</Text></TouchableOpacity> : 
-                    <TouchableOpacity onPress={()=> {setOpen(!open)}} style={{padding:0}}><Text style={styles.btn}>Choose Date</Text></TouchableOpacity>
+
+                {open ? <TouchableOpacity onPress={handleButtonOpen} style={{ padding: 0 }}><Text style={styles.btn}>Select</Text></TouchableOpacity> :
+                  <TouchableOpacity onPress={() => { setOpen(!open) }} style={{ padding: 0 }}><Text style={styles.btn}>Choose Date</Text></TouchableOpacity>
                 }
               </View>
-              {open? <DatePicker
-                onSelectedChange={date => setDate( date )}
+              {open ? <DatePicker
+                onSelectedChange={date => setDate(date)}
                 mode="calendar"
               /> : <></>}
-            </View>   
+            </View>
 
-            <View style={{marginBottom:20, width:300}}>
+            <View style={{ marginBottom: 20, width: 300 }}>
               <Text style={styles.label}>Number of Employees</Text>
               <SelectList
                 placeholder={user.numPeople}
                 setSelected={(val) => {
-                  if(val != '') {
-                    setUser({...user, numPeople:val, numIsSet:false})
-                  }else {
-                    setUser({...user, numPeople:val, numIsSet:true})
-                  }  
+                  setUser({ ...user, numPeople: val, numIsSet: true })
+                  
                 }}
                 data={numPeople}
                 save="value"
@@ -230,31 +236,31 @@ const EditProfileModalComp = ({ visible, onClose, onSave }) => {
                 label="NumPeople"
               />
             </View>
-            <View style={{marginBottom:20, width:300}}>
-            <Text style={styles.label}>Categories</Text>
+            <View style={{ marginBottom: 20, width: 300 }}>
+              <Text style={styles.label}>Categories</Text>
               <MultipleSelectList
                 setSelected={(val) => {
-                  if(val.length == 0) {
-                    setUser({...user, category:val, categoryIsSet:false})
-                  }else {
-                    setUser({...user, category:val, categoryIsSet:true})
-                  } 
+                  setCat(val)
+                  
                 }}
                 data={category}
                 save="value"
                 label="Categories"
                 boxStyles={[user.categoryIsSet ? null : { borderColor: "red" }, { backgroundColor: "white" }]}
+                onSelect={() => {
+                  setUser({ ...user, category: cat, categoryIsSet: true })
+                }}
               />
             </View>
           </View>
-          </View>
-          </ScrollView>
+        </View>
+      </ScrollView>
 
-          <View style={{alignItems:'center', width:'100%', backgroundColor:'white',position:'absolute', bottom:0, borderTopWidth:1, borderTopColor:'grey', marginVertical:7}}>
-          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-            <Text style={styles.saveButtonText}>Save</Text>
-          </TouchableOpacity>
-          </View>
+      <View style={{ alignItems: 'center', width: '100%', backgroundColor: 'white', position: 'absolute', bottom: 0, borderTopWidth: 1, borderTopColor: 'grey', marginVertical: 7 }}>
+        <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+          <Text style={styles.saveButtonText}>Save</Text>
+        </TouchableOpacity>
+      </View>
     </Modal>
   );
 };
@@ -265,12 +271,12 @@ const styles = StyleSheet.create({
     padding: 20,
     width: '100%',
     alignItems: 'center',
-    marginBottom:60
+    marginBottom: 60
   },
   heading: {
     fontSize: 22,
     fontWeight: 500,
-    color:'white'
+    color: 'white'
   },
   closeButton: {
     position: 'absolute',
@@ -286,29 +292,29 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: 'bold',
     marginBottom: 7,
-    marginLeft:3,
+    marginLeft: 3,
     marginTop: 5,
   },
   saveButton: {
     backgroundColor: 'coral',
     paddingVertical: 10,
-    width:'90%',
+    width: '90%',
     paddingHorizontal: 20,
     borderRadius: 5,
     marginTop: 10,
-    alignItems:'center',
-    elevation:5
+    alignItems: 'center',
+    elevation: 5
   },
   saveButtonText: {
     color: '#fff',
     fontSize: 18,
-    fontWeight:500
+    fontWeight: 500
   },
   TextInput: {
     backgroundColor: "white",
     borderRadius: 8,
-    borderWidth:1,
-    borderColor:'grey',
+    borderWidth: 1,
+    borderColor: 'grey',
     width: 300,
     height: 45,
     marginBottom: 20,
@@ -332,15 +338,15 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: 'grey'
   },
-  btn : {
-    textAlign:'center',
-    justifyContent:'center',
-    backgroundColor:'#A9A9A9',
-    fontSize:15,
-    borderRadius:8,
-    padding:9,
-    width:135,
-    color:'white'
+  btn: {
+    textAlign: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#A9A9A9',
+    fontSize: 15,
+    borderRadius: 8,
+    padding: 9,
+    width: 135,
+    color: 'white'
   }
 });
 

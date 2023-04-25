@@ -12,6 +12,8 @@ export default function PersonalDetails({ formData, setFormData }) {
         { key: '3', value: 'Survey Mapping' },
         { key: '4', value: 'Events' },
     ]
+
+    const [te, setTe] = useState(false);
     const [secureEntry, setSecureEntry] = useState(true)
     const [addressIsSet, setAddressIsSet] = useState(false);
     const [cityIsSet, setCityIsSet] = useState(false);
@@ -91,8 +93,8 @@ export default function PersonalDetails({ formData, setFormData }) {
             <View style={{marginBottom: 20, width:280}}>
                 <MultipleSelectList
                     setSelected={(val) => {
-                        setSelectedCategory(val)
-                        formData.categoryIsSet = true
+                        setSelectedCategory(val);
+                        setTe(true);
                     }}
                     data={category}
                     search={false}
@@ -101,7 +103,7 @@ export default function PersonalDetails({ formData, setFormData }) {
                     boxStyles={[formData.categoryIsSet ? null : {borderColor : "red"}, {backgroundColor: "white", padding:16}]}
                     label="Category"
                     onSelect={() => {
-                        setFormData({ ...formData, category:selectedCategory});
+                        setFormData({ ...formData, category:selectedCategory, categoryIsSet:te});
                     }}
                 />
             </View>

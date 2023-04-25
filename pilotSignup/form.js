@@ -3,10 +3,11 @@ import React, { useState } from 'react'
 import BasicDetails from './BasicDetails';
 import PersonalDetails from './PersonalDetails';
 import PilotDetails from './PilotDetails';
-// import firestore from '@react-native-firebase/firestore';
+import messaging from '@react-native-firebase/messaging';
 import { db, auth } from '../firebase/databaseConfig'
 import { ref, set } from 'firebase/database'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default function PilotForm({navigation}) {
     const [screen, setScreen] = useState(0)
@@ -29,7 +30,7 @@ export default function PilotForm({navigation}) {
             nameIsSet:false,
             dateIsSet:false,
             emailIsSet:false,
-            useType:"pilot",
+            userType:"pilot",
 
             // PersonalDetails
             address: "",
@@ -65,6 +66,21 @@ export default function PilotForm({navigation}) {
             return <PilotDetails formData={formData} setFormData={setFormData}/>
         }
     }
+
+    const requestUserPermission = async () => {
+        const authStatus = await messaging().requestPermission();
+        const enabled = 
+            authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+            authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+        if(enabled) {
+            console.log('AUthorization Status: ', authStatus);
+            messaging().getToken().then(token => {
+                console.log(token);
+            })
+        }else {
+            console.log("Failed token generation");
+        }
+    }
     const createUserInFirebase = () => {
         if(screen === 2) {
             var errMsg = "";
@@ -82,16 +98,17 @@ export default function PilotForm({navigation}) {
             if(validate && formData.experienceIsSet && (!formData.dcgaCert || (formData.dcgaCert && formData.dcgaCertIsSet))) {
                 navigation.navigate("LoginStack")
                 setErrorMessage("");
-                var final =  { name: formData.name, email: formData.email, dob: formData.dob, address: formData.address, city: formData.city, state: formData.state, pincode: formData.pincode, aadhar: formData.aadhar, dcgaCert: formData.dcgaCert, certNum: formData.certNum, droneSelect: formData.droneSelect, experience: formData.experience, interests: formData.interests}
                 var uid = auth.currentUser.uid
-                setFormData({ ...final, uid, isPilot: true, type: "pilot"})
-                set(ref(db, 'users/' + uid), formData).then(() => {
+                var final =  {...formData, userType: "pilot", userId:uid}
+
+                set(ref(db, 'users/' + uid), final).then(async () => {
                     // Add loading icon.
-                    AsyncStorage.setItem("userData", JSON.stringify(formData));  
+                    await AsyncStorage.setItem("userData", JSON.stringify(final)); 
+                    requestUserPermission();
                     navigation.navigate("LoginStack")
                 }).catch((error) => {
-                    // Correct this.
-                    setErrorMessage(error.toString);
+                    console.log(error);
+                    setErrorMessage("Something went wrong, Please try again.");
                 })
                 console.log(final)
             }
