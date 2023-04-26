@@ -6,13 +6,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import JobDetails from './jobDetails';
 import {db} from '../firebase/databaseConfig'
-import {  
-  ref,
-  onValue,
-  push,
-  update,
-  remove
-} from 'firebase/database';
+import { ref,onValue,push,update,remove } from 'firebase/database';
 
 export default function Jobs({navigation}) {
 

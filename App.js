@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import WalkthroughStack from './routes/walkthroughStack'
 import { NavigationContainer } from '@react-navigation/native';
@@ -11,6 +11,24 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // import 'react-native-gesture-handler';
 
 export default function App() {
+  const [login, setLogin] = useState(true);
+  useEffect( () => {
+    messaging().onNotificationOpenedApp( async (remoteMessage) => {
+      console.log('Notification recieved', remoteMessage.notification);
+    })
+
+    messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+      console.log('Message Handles in th background!', remoteMessage);
+    })
+    const getData = async() => {
+      const loginStatus = await AsyncStorage.getItem("login");
+      console.log("here",loginStatus);
+      if(loginStatus === "true") {
+        setLogin(true);
+      }
+    }
+    getData();
+  }, []);
 
   const requestUserPermission = async () => {
     const authStatus = await messaging().requestPermission();
@@ -28,7 +46,7 @@ export default function App() {
   }
 
   // requestUserPermission();
-  const [login, setLogin] = useState(false);
+  
   // AsyncStorage.setItem("login", ""+login)
   // AsyncStorage.setItem("userType", "pilot")
   if (login)
