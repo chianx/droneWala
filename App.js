@@ -31,7 +31,7 @@ export default function App() {
   const [login, setLogin] = useState(false);
   // AsyncStorage.setItem("login", ""+login)
   // AsyncStorage.setItem("userType", "pilot")
-  if (login)
+  if (login) 
   return (
     <NavigationContainer>
       <HomeDrawer />
@@ -39,12 +39,12 @@ export default function App() {
     // <View style={styles.container}>
     // <JobForm />
     // </View> 
-
   );
   else return (
     <NavigationContainer>
       <WalkthroughStack />
       {/* <SignupStack /> */}
+
       {/* <LoginStack /> */}
     </NavigationContainer>
   )
