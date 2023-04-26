@@ -3,7 +3,7 @@ import { Text, View, TouchableOpacity, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../screens/home'
-import Learning from '../screens/learning'
+import CourseStack from './courseStack';
 import JobStack from '../routes/jobStack'
 import Account from '../screens/account';
 import Images from '../images/index';
@@ -19,7 +19,7 @@ export default function HomeTab({navigation}) {
   } 
   
   return (
-    // <NavigationContainer independent={true}>
+    //<NavigationContainer independent={true}>
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
@@ -67,10 +67,11 @@ export default function HomeTab({navigation}) {
           )
           }}
         />
-        <Tab.Screen name="Jobs" component={JobStack}/>
-        <Tab.Screen name="Learnings" component={Learning} 
+        <Tab.Screen name="Jobs" component={JobStack} />
+
+        <Tab.Screen name="Learnings" component={CourseStack} 
           options ={{
-            headerShown:true,
+            headerShown:false,
             headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.openDrawer()}>
               <Image
@@ -103,6 +104,6 @@ export default function HomeTab({navigation}) {
         >{props => <Account {...props} isClicked={isClicked} setIsClicked={setIsClicked}/>}
         </Tab.Screen>
       </Tab.Navigator>
-      //</NavigationContainer>
+      // </NavigationContainer>
   );
 }

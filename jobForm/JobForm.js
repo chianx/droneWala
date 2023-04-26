@@ -73,9 +73,9 @@ export default function JobForm({navigation}) {
                     
                     var userJson = JSON.parse(result);
                     var refs = push(ref(db, "jobs/"));
-                    const salRange = formData.salRangeFrom+' - '+formData.salRangeTo;
+                    const salRange = formData.salRangeFrom+' - '+formData.salRangeTo ;
+
                     var final =  {aboutCompany: userJson.about, logo: userJson.logo, companyName: userJson.name, jobId: refs.key, jobTitle: formData.jobTitle, location:formData.location ,salRange: salRange,ftORpt: formData.ftORpt,numOpen: formData.numOpen,date: formData.date,aboutJob: formData.aboutJob,whoApply: formData.whoApply, }
-                    // setFormData({...final , logo: userJson.logo, });
                     set(refs, final);
                 })
 
@@ -116,8 +116,7 @@ export default function JobForm({navigation}) {
             if(validate && formData.jobTitleIsSet && formData.salRangeFromIsSet && formData.salRangeToIsSet && formData.ftORptIsSet && formData.numOpenIsSet && formData.dateIsSet) {
                 setScreen((currScreen) => currScreen + 1);
                 setErrorMessage("");
-            }
-            else {
+            }else {
                 setErrorMessage(errMsg);
             }
         }                
@@ -161,8 +160,7 @@ export default function JobForm({navigation}) {
                 </TouchableOpacity>
                 }
             </View>
-            </View>
-        // </Modal>
+        </View>
     )
 }
 
@@ -210,6 +208,7 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         position:'absolute',
         bottom:0,
+        height:85,
         backgroundColor:'#f0f0f0'
     },
 })

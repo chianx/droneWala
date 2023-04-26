@@ -5,53 +5,56 @@ import Images from '../images/index'
 
 export default function Learning({navigation}) {
 
-  const course = [
-    {id:1, courseTitle: "Drone Pilots course from basic to advance", mode:"Offline", timeDuration:"3 Months", thumbnail:Images.droneBanner, aboutCourse:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Enim eu turpis egestas pretium aenean pharetra magna. Quis auctor elit sed vulputate mi sit. Nullam ac tortor vitae purus. Facilisis sed odio morbi quis commodo odio. Tincidunt tortor aliquam nulla facilisi cras fermentum odio. Nulla pharetra diam sit amet nisl suscipit adipiscing. Nunc congue nisi vitae suscipit. At lectus urna duis convallis convallis tellus. Gravida rutrum quisque non tellus orci ac auctor augue mauris. Cras adipiscing enim eu turpis egestas pretium aenean pharetra. Dignissim diam quis enim lobortis scelerisque fermentum dui faucibus in. Morbi quis commodo odio aenean sed.', institutionName:'Drone Pilots Networks', city:'Jaipur', state:'Rajasthan', prerequisutes:'Person should have keen interest in learinig how to fly drone.', fees:'15000', level:'Beginer'},
-    {id:2, courseTitle: "Flying Agriculture Drones and Learning the control", mode:"Offline", timeDuration:"3 Months", thumbnail:Images.droneBanner, aboutCourse:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Enim eu turpis egestas pretium aenean pharetra magna. Quis auctor elit sed vulputate mi sit. Nullam ac tortor vitae purus. Facilisis sed odio morbi quis commodo odio. Tincidunt tortor aliquam nulla facilisi cras fermentum odio. Nulla pharetra diam sit amet nisl suscipit adipiscing. Nunc congue nisi vitae suscipit. At lectus urna duis convallis convallis tellus. Gravida rutrum quisque non tellus orci ac auctor augue mauris. Cras adipiscing enim eu turpis egestas pretium aenean pharetra. Dignissim diam quis enim lobortis scelerisque fermentum dui faucibus in. Morbi quis commodo odio aenean sed.', institutionName:'Drone Pilots Networks', city:'Mumbai', state:'Maharashtra', prerequisutes:'Person should have keen interest in learinig how to fly drone.', fees:'21000', level:'Intermediate'},
-    {id:3, courseTitle: "The Bootcamp for learnign Remote Sensing Drones", mode:"Offline", timeDuration:"3 Months", thumbnail:Images.droneBanner, aboutCourse:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Enim eu turpis egestas pretium aenean pharetra magna. Quis auctor elit sed vulputate mi sit. Nullam ac tortor vitae purus. Facilisis sed odio morbi quis commodo odio. Tincidunt tortor aliquam nulla facilisi cras fermentum odio. Nulla pharetra diam sit amet nisl suscipit adipiscing. Nunc congue nisi vitae suscipit. At lectus urna duis convallis convallis tellus. Gravida rutrum quisque non tellus orci ac auctor augue mauris. Cras adipiscing enim eu turpis egestas pretium aenean pharetra. Dignissim diam quis enim lobortis scelerisque fermentum dui faucibus in. Morbi quis commodo odio aenean sed.', institutionName:'DarudSurvey', city:'Noida', state:'Uttar Pradesh', prerequisutes:'Person should have keen interest in learinig how to fly a drone. \n Should have a drone of his own', fees:'18000', level:'Advance'},
-  ]
-
   const courses = [
     {
       id: 1,
       title: 'Introduction to Drone Flying',
       institution:'National Institute of Drone Flying',
+      description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac ipsum eu metus congue consequat. Fusce auctor, diam id malesuada pharetra, velit nibh pulvinar odio, vitae faucibus massa dolor eu mi. Sed blandit volutpat risus, ac eleifend nisl pretium quis. Integer ut magna sed nisl vestibulum fringilla eget eu lectus. Sed pharetra, quam vel faucibus ullamcorper, nibh tellus bibendum velit, ut placerat lacus ipsum ac quam.',
       instructor: 'John Doe',
       price: 9999,
       duration: '30 Days',
       level: 'Beginner',
       image: Images.droneBanner,
       city:"Jaipur",
-      state:'Rajasthan'
+      state:'Rajasthan',
+      language: 'English',
+      phone : '7340322282'
     },
     {
       id: 2,
       title: 'Advanced Drone Flying Techniques',
       institution:'National Institute of Drone Flying',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac ipsum eu metus congue consequat. Fusce auctor, diam id malesuada pharetra, velit nibh pulvinar odio, vitae faucibus massa dolor eu mi. Sed blandit volutpat risus, ac eleifend nisl pretium quis. Integer ut magna sed nisl vestibulum fringilla eget eu lectus. Sed pharetra, quam vel faucibus ullamcorper, nibh tellus bibendum velit, ut placerat lacus ipsum ac quam.',
       instructor: 'Jane Smith',
       price: 14999,
       duration: '45 Days',
       level: 'Intermediate',
       image: Images.droneBanner,
       city:"Mumbai",
-      state:'Maharashtra'
+      state:'Maharashtra',
+      language: 'English, Hindi',
+      phone: '8112267173'
     },
     {
       id: 3,
       title: 'Drone Photography and Videography',
       institution:'National Institute of Drone Flying',
       instructor: 'David Brown',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac ipsum eu metus congue consequat. Fusce auctor, diam id malesuada pharetra, velit nibh pulvinar odio, vitae faucibus massa dolor eu mi. Sed blandit volutpat risus, ac eleifend nisl pretium quis. Integer ut magna sed nisl vestibulum fringilla eget eu lectus. Sed pharetra, quam vel faucibus ullamcorper, nibh tellus bibendum velit, ut placerat lacus ipsum ac quam.',
       price: 19999,
       duration: '92 days',
       level: 'Advanced',
       image: Images.droneBanner,
       city:"Noida",
-      state:'Uttar Pradesh'
+      state:'Uttar Pradesh',
+      language :'English',
+      phone:'8385052405'
     },
   ];
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.courseContainer}>
+    <TouchableOpacity style={styles.courseContainer} onPress={() => navigation.navigate("Course Details", {course: item})}>
     <View style={{flexDirection:'row', padding:12,}}>
       <Image source={item.image} style={styles.courseImage} />
       <View style={{marginLeft:10, flex:1}}>

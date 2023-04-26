@@ -3,12 +3,14 @@ import React, { useState } from 'react'
 import BasicDetails from './BasicDetails';
 import PersonalDetails from './PersonalDetails';
 import PilotDetails from './PilotDetails';
-// import firestore from '@react-native-firebase/firestore';
+import messaging from '@react-native-firebase/messaging';
 import { db, auth } from '../firebase/databaseConfig'
 import { ref, set } from 'firebase/database'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
 export default function PilotForm({navigation}) {
+    const [loading, setLoading] = useState(false);
     const [screen, setScreen] = useState(0)
     const FormTitle = [
         "Basic Details",
@@ -29,8 +31,7 @@ export default function PilotForm({navigation}) {
             nameIsSet:false,
             dateIsSet:false,
             emailIsSet:false,
-            useType:"pilot",
-            phone: "",
+            userType:"pilot",
 
             // PersonalDetails
             address: "",
@@ -66,7 +67,8 @@ export default function PilotForm({navigation}) {
             return <PilotDetails formData={formData} setFormData={setFormData}/>
         }
     }
-    const createUserInFirebase = () => {
+
+    const createUserInFirebase = async() => {
         if(screen === 2) {
             var errMsg = "";
             var validate = false;
@@ -81,22 +83,47 @@ export default function PilotForm({navigation}) {
             }else validate = true;
            
             if(validate && formData.experienceIsSet && (!formData.dcgaCert || (formData.dcgaCert && formData.dcgaCertIsSet))) {
-                navigation.navigate("LoginStack")
+
                 setErrorMessage("");
-                
-                var uid = auth.currentUser.uid
-                var final =  {...formData, userType: "pilot", userId:uid}
-                // TODO: Phone is missing.
-                // setFormData({ ...final, uid, isPilot: true, type: "pilot"})
-                set(ref(db, 'users/' + uid), formData).then(() => {
-                    // Add loading icon.
-                    AsyncStorage.setItem("userData", JSON.stringify(final));  
-                    navigation.navigate("LoginStack")
-                }).catch((error) => {
-                    // Correct this.
-                    setErrorMessage(error.toString);
-                })
-                console.log(final)
+                var uid = auth.currentUser.uid;
+                var fcmToken;
+                const authStatus = await messaging().requestPermission();
+                const enabled = 
+                    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+                    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+                setLoading(true);
+                if(enabled) {
+                    console.log('AUthorization Status: ', authStatus);
+                    messaging().getToken().then(token => {
+                        console.log(token);
+                        fcmToken = token;
+                        var tokenPush = { fcmToken: token, interests: formData.interests, name:formData.name, city:formData.city, state:formData.state, userId:uid};
+                        console.log(tokenPush);
+                        set(ref(db, 'pilotTokens/' + uid), tokenPush).then(async() => {
+                            console.log(tokenPush);
+                        }).catch((error) => {
+                            setErrorMessage("Something went wrong, Please try again.");
+                            setLoading(false);
+                        })
+
+                        var final = {...formData, userId: uid, fcmToken: fcmToken}
+
+                        set(ref(db, 'users/' + uid), final).then(async () => {
+                            // Add loading icon.
+                            await AsyncStorage.setItem("userData", JSON.stringify(final)); 
+                            setLoading(false);
+                            navigation.navigate("LoginStack")
+                        }).catch((error) => {
+                            console.log(error);
+                            setErrorMessage("Something went wrong, Please try again.");
+                            setLoading(false);
+                        })
+                        console.log(final)
+                        })
+                }else {
+                    console.log("Failed token generation");
+                    setLoading(false);
+                }
             }
             else {
                 setErrorMessage(errMsg);
@@ -216,8 +243,7 @@ const styles = StyleSheet.create({
         fontSize: 32,
         color: "coral",
         fontWeight: "bold",
-        marginVertical: 30
-        // fontFamily:
+        marginVertical: 30,
     },
     prevButton: {
         backgroundColor:'white',

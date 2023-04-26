@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "612143726406",
+    "firebase_url": "https://droneswala-bce4b-default-rtdb.firebaseio.com",
+    "project_id": "droneswala-bce4b",
+    "storage_bucket": "droneswala-bce4b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:612143726406:android:e4ab28e33b13135d45ef47",
+        "android_client_info": {
+          "package_name": "com.chianx.DronesWala"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "612143726406-4c3ga78evf73vcbo9a5bls5i6jhmo4vh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.chianx.DronesWala",
+            "certificate_hash": "aa21c8bc9f52807eda04a36b6ccdc5bf7674ff36"
+          }
+        },
+        {
+          "client_id": "612143726406-lf0ovmet57p45fr9pgj74acv64rkv1a3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.chianx.DronesWala",
+            "certificate_hash": "46110da810a3fb58f6d57316b5f0b113881055cb"
+          }
+        },
+        {
+          "client_id": "612143726406-fb8l2t8rtp7sbo9t658h8ej8n8ve67ei.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAquXbtwjXEaPmEYaw3_wMdu0ppNszeJHs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "612143726406-fb8l2t8rtp7sbo9t658h8ej8n8ve67ei.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
