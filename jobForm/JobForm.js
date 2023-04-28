@@ -37,6 +37,7 @@ export default function JobForm({navigation}) {
             location:"",
             locationIsSet:false,
             logo: "",
+            applied: [],
             
             // LongDetails
             aboutJob: "",
@@ -206,6 +207,7 @@ export default function JobForm({navigation}) {
 
             <View style={styles.apply}>
                 <TouchableOpacity
+                    // disabled={screen === 0}
                     style={[styles.prevButton]}
                     onPress={() => {
                         if(screen === 0) {
@@ -265,9 +267,10 @@ const styles = StyleSheet.create({
         elevation:5
     },
     apply: {
-        paddingVertical: 15,
+        // paddingVertical: 15,
         alignItems:'center',
         width:'100%',
+        height:85,
         borderTopWidth:1, borderTopColor:'grey',
         paddingHorizontal: 10,
         flexDirection:'row',

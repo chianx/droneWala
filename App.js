@@ -57,12 +57,12 @@ export default function App() {
     // <View style={styles.container}>
     // <JobForm />
     // </View> 
-
   );
   else return (
     <NavigationContainer>
       <WalkthroughStack />
       {/* <SignupStack /> */}
+
       {/* <LoginStack /> */}
     </NavigationContainer>
   )

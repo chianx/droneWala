@@ -5,8 +5,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../screens/home'
 import JobStack from '../routes/jobStack'
 import Images from '../images/index';
-// import CreatePost from '../screens/createPost'
-import JobForm from '../jobForm/jobForm'
+import CreatePost from '../screens/createPost'
+import JobForm from '../jobForm/JobForm'
 import CompanyAccountStack from './myAccountStack'
 import CompanyAccount from '../screens/companyAccount'
 import Ionicons from 'react-native-vector-icons/Ionicons';
