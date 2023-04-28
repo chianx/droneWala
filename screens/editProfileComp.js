@@ -25,7 +25,7 @@ const EditProfileModalComp = ({ visible, onClose, onSave }) => {
   const [date, setDate] = useState();
 
   const handleSave = () => {
-    if (user.nameIsSet && user.dateIsSet && user.emailIsSet && user.addressIsSet && user.stateIsSet && user.cityIsSet && user.pinIsSet && user.categoryIsSet && user.websiteIsSet && user.aboutIsSet) {
+    if (user.dateIsSet && user.emailIsSet && user.addressIsSet && user.stateIsSet && user.cityIsSet && user.pinIsSet && user.categoryIsSet && user.websiteIsSet && user.aboutIsSet) {
 
       update(ref(db, 'users/' + 'suFsqbl4lEMA3ognIgDAZLD1vnr1'), user).then(() => {
         // Add loading icon.
@@ -72,13 +72,7 @@ const EditProfileModalComp = ({ visible, onClose, onSave }) => {
       setUser({ ...user, email, aboutIsSet: false })
     }
   }
-  const handleNameChange = (name) => {
-    if (name.trim().length > 2) {
-      setUser({ ...user, name, nameIsSet: true })
-    } else {
-      setUser({ ...user, name, nameIsSet: false })
-    }
-  }
+  
   const handleAddressChange = (address) => {
     if (address.trim().length >= 4) {
       setUser({ ...user, address, addressIsSet: true })
@@ -128,16 +122,7 @@ const EditProfileModalComp = ({ visible, onClose, onSave }) => {
         <View style={styles.modalContainer}>
           <View style={styles.formContainer}>
 
-            <Text style={styles.label}>Company Name</Text>
-            <TextInput
-              style={[user.nameIsSet ? styles.TextInput : styles.errorTextInput]}
-              placeholderTextColor="grey"
-              placeholder={user.name}
-              value={user.name}
-              onChangeText={(name) => {
-                handleNameChange(name)
-              }}
-            />
+            
             <Text style={styles.label}>Email</Text>
             <TextInput
               style={[user.emailIsSet ? styles.TextInput : styles.errorTextInput]}

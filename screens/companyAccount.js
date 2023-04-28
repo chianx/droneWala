@@ -47,8 +47,26 @@ export default function Account({isClicked, setIsClicked, navigation }) {
             id: key,
             ...data[key]
           }));
-          
-          setJobs(app);
+          console.log(app)
+          var tempJob = [];
+          var tempFree = [];
+          for(var element in app) {
+            console.log(app[element]);
+            console.log("");
+            console.log("");
+            if(app[element].ftORpt != "Freelance") {
+                tempJob.push(app[element])
+            }else {
+                tempFree.push(app[element]);
+            }
+          }
+
+          console.log("");
+          console.log("");
+          setJobs(tempJob);
+          console.log("");
+          console.log("");
+          setFreelance(tempFree);
         });
       }, [])
 
@@ -119,7 +137,7 @@ export default function Account({isClicked, setIsClicked, navigation }) {
                 {dataList.map((item, index) => {
                 return (
                   <View key={item.key} style={styles.jobContainer}>
-                  <TouchableOpacity onPress= {() => navigation.navigate("Applicants")}>
+                  <TouchableOpacity onPress= {() => navigation.navigate("Applicants", {})}>
                     <View style={{flexDirection:'row'}}>
                       <View style={{paddingRight:20}}>
                         <Image source={Images.profile} style={styles.profilePic}/>
