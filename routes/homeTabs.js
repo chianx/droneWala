@@ -9,6 +9,8 @@ import Account from '../screens/account';
 import Images from '../images/index';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { FontAwesome5 } from '@expo/vector-icons';
+import CourseDetails from '../screens/courseDetails';
+import JobDetails from '../screens/jobDetails';
 
 const Tab = createBottomTabNavigator();
 
@@ -103,6 +105,31 @@ export default function HomeTab({navigation}) {
           }} 
         >{props => <Account {...props} isClicked={isClicked} setIsClicked={setIsClicked}/>}
         </Tab.Screen>
+        <Tab.Screen name="Course Details" component={CourseDetails} 
+          options={{
+            headerShown:true,
+            tabBarButton: () => null,
+            tabBarVisible: false,
+            headerLeft: () => (
+            <TouchableOpacity style={{paddingLeft:15, paddingRight:15}} onPress={() => navigation.goBack()}>
+              <Ionicons name="arrow-back" size={26} color="black" />
+            </TouchableOpacity>
+          )
+          }}
+        />
+        
+        <Tab.Screen name="Job Details" component={JobDetails} 
+          options={{
+            headerShown:true,
+            tabBarButton: () => null,
+            tabBarVisible: false,
+            headerLeft: () => (
+            <TouchableOpacity style={{paddingLeft:15, paddingRight:15}} onPress={() => navigation.goBack()}>
+              <Ionicons name="arrow-back" size={26} color="black" />
+            </TouchableOpacity>
+          )
+          }}
+        />
       </Tab.Navigator>
       // </NavigationContainer>
   );

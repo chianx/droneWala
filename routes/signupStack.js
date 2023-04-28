@@ -2,7 +2,7 @@ import react from 'react';
 import Pilot from '../screens/dronePilot';
 import PilotForm from '../pilotSignup/form'; 
 import Signup from '../screens/signup'
-import Institute from '../screens/institutes'; 
+import InstitutionForm from '../institutionForm/form';
 import CompanyForm from '../companySignup/form';
 import LoginStack from './loginStack';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
@@ -34,7 +34,7 @@ export default function SignupStack({loginNav, navigation}) {
             />
             <Stack.Screen 
                 name="Institute" 
-                component={Institute}
+                component={InstitutionForm}
             />
             <Stack.Screen 
                 name="LoginStack" 

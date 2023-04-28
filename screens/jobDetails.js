@@ -1,11 +1,39 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-root-toast';
 
 export default function JobDetails({route, navigation}) {
-    const job = route.params.job;
+  const [userType, setUserType] = useState("");
+  const [user, setUser] = useState({});
+
+  const mount = async () => {
+    const userdata = await AsyncStorage.getItem("userData");
+    const val = JSON.parse(userdata)
+    setUser(val);
+    setUserType(val.userType)
+  }
+  useEffect(() => {
+    mount();
+  }, [])
+  const job = route.params.job;
+
+  const displayToast = () => {
+    Toast.show('Only Pilots can apply to a job', {
+      backgroundColor:'black',
+      duration: Toast.durations.LONG,
+      position: -150,
+      shadow: true,
+      borderRadius: 100, 
+      opacity:1,
+      animation: true,
+      hideOnPress: false,
+      delay: 0,
+  });
+  }
   return (
     <ScrollView>
         <View style={styles.container}>
@@ -45,9 +73,14 @@ export default function JobDetails({route, navigation}) {
             </Text>
           </View>
           <View style={styles.apply}>
-          <TouchableOpacity onPress={() => navigation.navigate("Apply", {job:job})} style={{backgroundColor:'coral', paddingVertical:9, borderRadius:10}}>
+          {userType === "pilot"? <TouchableOpacity onPress={() => navigation.navigate("Apply", {job:job})} style={{backgroundColor:'coral', paddingVertical:9, borderRadius:10}}>
             <Text style={{color:'white', fontSize:17, textAlign:'center'}}>Apply Now</Text>
           </TouchableOpacity>
+          :
+          <TouchableOpacity onPress={displayToast} style={{backgroundColor:'coral', paddingVertical:9, borderRadius:10, opacity:0.6}}>
+            <Text style={{color:'white', fontSize:17, textAlign:'center'}}>Apply Now</Text>
+          </TouchableOpacity>
+          }
           </View>
         </View>
 
@@ -77,8 +110,8 @@ const styles = StyleSheet.create({
     color:'#505050'
   },
   profilePic: {
-    width:60,
-    height:60,
+    width:80,
+    height:80,
     borderRadius:70,
     borderWidth:1,
     borderColor:'#ffe5d3',

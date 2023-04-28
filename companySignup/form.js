@@ -238,7 +238,6 @@ export default function Form({navigation}) {
 
 const styles = StyleSheet.create({
     wrapper: {
-        marginTop:50,
         alignItems: "center",
     },
     title: {

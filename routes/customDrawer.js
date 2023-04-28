@@ -5,7 +5,6 @@ import Images from '../images/index';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StackActions } from '@react-navigation/native';
 import EditProfileModal from '../screens/editProfile';
 import EditProfileModalComp from '../screens/editProfileComp';
 
@@ -14,9 +13,10 @@ const CustomDrawer = ({prop, navigation}) => {
     const [user, setUser] = useState({});
     const mount = async() => {
       const userdata = await AsyncStorage.getItem("userData");
-      const val = JSON.parse(userdata)
-      setUserType(val.userType);
+      const val = JSON.parse(userdata);
       setUser(val);
+      setUserType(val.userType);
+      
     }
     useEffect(() => {
       mount();
@@ -32,7 +32,6 @@ const CustomDrawer = ({prop, navigation}) => {
         prop.navigation.navigate("Login")
     }
     const myCustomShare = async () => {
-    
         try {
             const result = await Share.share({
             message:
@@ -61,7 +60,7 @@ const CustomDrawer = ({prop, navigation}) => {
         <View style={{flex:1}}>
             <DrawerContentScrollView contentContainerStyle={{backgroundColor:'coral'}}>
                 <ImageBackground source={Images.background} style={{padding:20}}>
-                    <Image source = {{uri: user.profile}} style={{height:80, width:80, borderRadius:40, marginBottom:10}} />
+                    <Image source = {{uri: user.userType === 'pilot'? user.profile : user.logo}} style={{height:80, width:80, borderRadius:40, marginBottom:10}} />
                     <Text style={{color:'white', fontSize:18, paddingBottom:5}}>{user.name}</Text>
                     
                         <View> 

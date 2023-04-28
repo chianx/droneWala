@@ -1,13 +1,17 @@
-import { View, Text, Button, TextInput, Modal, StyleSheet, Pressable, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Text, ActivityIndicator, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import Precise from './Precise';
 import Description from './Description';
 import {db} from '../firebase/databaseConfig'
-import {set, ref, push} from 'firebase/database';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { set, ref, onValue, push, update, remove} from 'firebase/database';
+import axios from 'axios';
+import Toast from 'react-native-root-toast';
 
 export default function JobForm({navigation}) {
+    const [loading, setLoading] = useState(false);
     const [alwaysTrue, setAlwaysTrue] = useState(true);
+    const [tokens, setTokens] = useState([]);
     const [screen, setScreen] = useState(0)
     const FormTitle = [
         "Precise Details",
@@ -35,7 +39,6 @@ export default function JobForm({navigation}) {
             logo: "",
             applied: [],
             
-
             // LongDetails
             aboutJob: "",
             whoApply: "",
@@ -43,6 +46,36 @@ export default function JobForm({navigation}) {
             whoApplyIsSet: false,
         }
     )
+
+    const sendNotifications = async token => {
+        console.log(token);
+        var data = JSON.stringify({
+            data: {}, 
+            notification : {
+                body: 'New job has been posted by XYZ company',
+                title: 'New Job Post'
+            },
+            to: token
+        });
+
+        var config = {
+            method:'post',
+            url: 'https://fcm.googleapis.com/fcm/send',
+            headers: {
+                Authorization: 
+                    'key=AAAAjoab_0Y:APA91bEsHKY-W-hT0iIH3NycyckJay3rdc8VAAUSYsDgrM3-5D-cHPlOWiNWXWkqAv8QEmfRS9QHc2_A9wC6X-p9na-wGQ4hNJrMyCJ3QYlmIsNaOcb8tC_pVP1Lc5XHWIlHqxFRKzos',
+                    'Content-Type': 'application/json',
+            },
+            data : data
+        };
+
+        axios(config).then(function (response) {
+            console.log(JSON.stringify(response.data));
+        }).catch(function (error) {
+            console.log(error);
+        });
+    }
+
     const ScreenDisplay = () => {
         if (screen === 0) {
             return <Precise formData={formData} setFormData={setFormData}/>
@@ -50,7 +83,7 @@ export default function JobForm({navigation}) {
             return <Description formData={formData} setFormData={setFormData}/>
         }
     }
-    const createUserInFirebase = () => {
+    const createUserInFirebase = async() => {
         if(screen === 1) {
             var errMsg = "";
             var validate = false;
@@ -65,25 +98,53 @@ export default function JobForm({navigation}) {
             }else validate = true;
             
             if(validate && formData.aboutJobIsSet && formData.whoApplyIsSet) {
+                setLoading(true);
                 // navigation.navigate("Login")
                 setErrorMessage("");
                 
-                AsyncStorage.getItem("userData", (error, result) => {
+                await AsyncStorage.getItem("userData", (error, result) => {
                     console.log(result);
                     
                     var userJson = JSON.parse(result);
                     var refs = push(ref(db, "jobs/"));
                     const salRange = formData.salRangeFrom+' - '+formData.salRangeTo ;
 
-                    var final =  {aboutCompany: userJson.about, logo: userJson.logo, companyName: userJson.name, jobId: refs.key, jobTitle: formData.jobTitle, location:formData.location ,salRange: salRange,ftORpt: formData.ftORpt,numOpen: formData.numOpen,date: formData.date,aboutJob: formData.aboutJob,whoApply: formData.whoApply, }
-                    set(refs, final);
-                })
+                    var final =  {companyId: userJson.userId, aboutCompany: userJson.about, logo: userJson.logo, companyName: userJson.name, jobId: refs.key, jobTitle: formData.jobTitle, location:formData.location ,salRange: salRange,ftORpt: formData.ftORpt,numOpen: formData.numOpen,date: formData.date,aboutJob: formData.aboutJob,whoApply: formData.whoApply, }
+                    set(refs, final).then(async() => {
+                        console.log("Job Form Posted Successfully!");
+                    });
 
-                setFormData({});
-                setScreen(0);
-                navigation.navigate("Home");
-            }
-            else {
+                    const starCountRef = ref(db, 'pilotTokens/');
+                    onValue(starCountRef, (snapshot) => {
+                        const data = snapshot.val();
+                        const fcmTokens = Object.keys(data).map(key => ({
+                            id: key,
+                            ...data[key]
+                        }))
+                        setTokens(fcmTokens);
+                        for(var i=0; i<fcmTokens.length; i++) {
+                            console.log(fcmTokens[i].fcmToken);
+                            sendNotifications(fcmTokens[i].fcmToken);
+                        }
+                        setFormData({});
+                        setScreen(0);
+                        Toast.show('Job Posted Successfully!', {
+                            backgroundColor:'#fda172',
+                            duration: Toast.durations.LONG,
+                            position: -100,
+                            shadow: true,
+                            borderRadius: 100, 
+                            animation: true,
+                            opacity:1,
+                            hideOnPress: false,
+                            delay: 1000,
+                        });
+                        setLoading(false);
+                        navigation.navigate("Home");
+                    })
+                    
+                });
+            }else {
                 setErrorMessage(errMsg);
             }
         }
@@ -121,10 +182,18 @@ export default function JobForm({navigation}) {
             }
         }                
     }
+    if(loading) {
+        return 
+        
+    }else 
     return (
-        // <Modal vi[sible={alwaysTrue} animationType="slide">
-        <View style={{flex:1}}>
-            <View style={styles.wrapper}>
+        <View style={{flex:1, opacity: loading ? 0.5 : 1, zIndex: loading ?0:1}}>
+        {loading? <View>
+            <View style={{backgroundColor:"#d3d3d3aa", position: "absolute", flex: 1, zIndex: 2, width:'100%', height:630, justifyContent:'center'}}>
+                <ActivityIndicator size="large" color="coral" />
+            </View>
+        </View> : <></>}
+            <View style={[styles.wrapper]}>
                 <Text style={styles.title}>{FormTitle[screen]}</Text>
             </View>
 
@@ -166,7 +235,6 @@ export default function JobForm({navigation}) {
 
 const styles = StyleSheet.create({
     wrapper: {
-        marginTop:50,
         alignItems: "center",
     },
     title: {
