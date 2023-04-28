@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image } from "react-native";
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ActivityIndicator } from "react-native";
 import { db } from "../firebase/databaseConfig";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
@@ -11,7 +11,7 @@ import { storage } from "../firebase/firebase";
 import axios from 'axios';
 import * as fireBaseDatabase from 'firebase/database';
 import {ref, getDownloadURL, uploadBytesResumable, uploadBytes } from "firebase/storage";
-import Images from "../images/index";
+import Toast from "react-native-root-toast";
 
 export default function Apply({ route, navigation }) {
   const job = route.params.job;
@@ -83,54 +83,64 @@ export default function Apply({ route, navigation }) {
       const metadata = {
         contentType: "application/pdf",
       };
-      // const storageRef = ref(storage, "resume/" + Date.now());
-      // const blobImage = await new Promise((resolve, reject) => {
-      //   const xhr = new XMLHttpRequest();
-      //   xhr.onload = function () {
-      //     resolve(xhr.response);
-      //   };
-      //   xhr.onerror = function () {
-      //     reject(new TypeError("Network request failed"));
-      //   };
-      //   xhr.responseType = "blob";
-      //   xhr.open("GET", file, true);
-      //   xhr.send(null);
-      // });
-      // const uploadTask = uploadBytesResumable(storageRef, blobImage, metadata);
-      // uploadTask.on(
-      //   "state_changed",
-      //   (snapshot) => {
-      //     const progress =
-      //       (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      //     console.log("Upload is " + progress + "% done");
-      //     switch (snapshot.state) {
-      //       case "paused":
-      //         console.log("Upload is paused");
-      //         break;
-      //       case "running":
-      //         console.log("Upload is running");
-      //         break;
-      //     }
-      //   },
-      //   (error) => {
-      //     console.log(error);
-      //   },
-      //   () => {
-      //     // Upload completed successfully, now we can get the download URL
-      //     getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-      //       console.log("File available at", downloadURL);
-      //       if (downloadURL != null) {
-      //         setUrl(downloadURL);
-      //         setIsLoading(false);
-      //       }
-      //     });
-      //   }
-      // );
-      console.log("Here")
+      const storageRef = ref(storage, "resume/" + Date.now());
+      const blobImage = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+          resolve(xhr.response);
+        };
+        xhr.onerror = function () {
+          reject(new TypeError("Network request failed"));
+        };
+        xhr.responseType = "blob";
+        xhr.open("GET", file, true);
+        xhr.send(null);
+      });
+      const uploadTask = uploadBytesResumable(storageRef, blobImage, metadata);
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
+          switch (snapshot.state) {
+            case "paused":
+              console.log("Upload is paused");
+              break;
+            case "running":
+              console.log("Upload is running");
+              break;
+          }
+        },
+        (error) => {
+          console.log(error);
+        },
+        () => {
+          // Upload completed successfully, now we can get the download URL
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            console.log("File available at", downloadURL);
+            if (downloadURL != null) {
+              setUrl(downloadURL);
+              setIsLoading(false);
+            }
+          });
+        }
+      );
       const starCountRef = fireBaseDatabase.ref(db, 'companyTokens/' + job.companyId);
       fireBaseDatabase.onValue(starCountRef, (snapshot) => {
           const data = snapshot.val();
           sendNotifications(data.fcmToken);
+          Toast.show('Application Submitted.', {
+            backgroundColor:'#a0a0a0',
+            duration: Toast.durations.LONG,
+            position: -100,
+            shadow: true,
+            borderRadius: 100, 
+            animation: true,
+            opacity:1,
+            hideOnPress: false,
+            delay: 1000,
+        });
 
       })
       navigation.navigate("Jobs");
@@ -138,14 +148,11 @@ export default function Apply({ route, navigation }) {
   };
   return (
     <View style={styles.container}>
-      {isLoading ? (
-        <Image
-          source={Images.loading}
-          style={{ position: "absolute", top: 100, flex: 1, zIndex: 2 }}
-        />
-      ) : (
-        <></>
-      )}
+      {isLoading? <View>
+            <View style={{backgroundColor:"#d3d3d3aa", position: "absolute", flex: 1, zIndex: 3, width:'100%', height:630, justifyContent:'center'}}>
+                <ActivityIndicator size="large" color="coral" />
+            </View>
+        </View> : <></>}
       <View
         style={[
           {

@@ -85,18 +85,22 @@ export default function Precise({ formData, setFormData }) {
                     onChangeText={(jobLocation) => handleJobLoaction(jobLocation)}
                 />
             </View>
-            <View style={styles.inputView}>
+            <View style={{flexDirection:'row'}}>
                 <TextInput
-                    style={[formData.salRangeFromIsSet ? styles.TextInput : styles.errorTextInput]}
+                    // style={[formData.salRangeFromIsSet ? styles.TextInput : styles.errorTextInput]}
+                    style={{backgroundColor: "white", borderRadius: 8, borderWidth: 1, marginRight: 40, borderColor: formData.salRangeFromIsSet?'grey':'red', width: 130, height: 55, marginBottom: 20, alignItems: "flex-start", justifyContent: "center", padding: 10, fontSize: 17, color: 'grey'}}
                     placeholderTextColor="grey"
-                    placeholder='Salary Range From/Month *'
+                    placeholder='Salary From*'
+                    keyboardType='numeric'
                     value={formData.salRangeFrom}
                     onChangeText={(salRangeFrom) => handlesalRangeFrom(salRangeFrom)}
                 />
                 <TextInput
-                    style={[formData.salRangeToIsSet ? styles.TextInput : styles.errorTextInput]}
+                    // style={[formData.salRangeToIsSet ? styles.TextInput : styles.errorTextInput]}
+                    style={{backgroundColor: "white", borderRadius: 8, borderWidth: 1, borderColor: formData.salRangeToIsSet?'grey':'red', width: 130, height: 55, marginBottom: 20, alignItems: "flex-start", justifyContent: "center", padding: 10, fontSize: 17, color: 'grey'}}
                     placeholderTextColor="grey"
-                    placeholder='Salary Range To/Month *'
+                    placeholder='Salary To*'
+                    keyboardType='numeric'
                     value={formData.salRangeTo}
                     onChangeText={(salRangeTo) => handlesalRangeTo(salRangeTo)}
                 />

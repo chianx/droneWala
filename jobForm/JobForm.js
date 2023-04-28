@@ -1,13 +1,15 @@
-import { View, Text, Button, TextInput, Modal, StyleSheet, Pressable, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Text, ActivityIndicator, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import Precise from './Precise';
 import Description from './Description';
 import {db} from '../firebase/databaseConfig'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { set, ref, onValue, push, update, remove} from 'firebase/database';
-import axios from 'axios'
+import axios from 'axios';
+import Toast from 'react-native-root-toast';
 
 export default function JobForm({navigation}) {
+    const [loading, setLoading] = useState(false);
     const [alwaysTrue, setAlwaysTrue] = useState(true);
     const [tokens, setTokens] = useState([]);
     const [screen, setScreen] = useState(0)
@@ -95,6 +97,7 @@ export default function JobForm({navigation}) {
             }else validate = true;
             
             if(validate && formData.aboutJobIsSet && formData.whoApplyIsSet) {
+                setLoading(true);
                 // navigation.navigate("Login")
                 setErrorMessage("");
                 
@@ -106,26 +109,40 @@ export default function JobForm({navigation}) {
                     const salRange = formData.salRangeFrom+' - '+formData.salRangeTo ;
 
                     var final =  {companyId: userJson.userId, aboutCompany: userJson.about, logo: userJson.logo, companyName: userJson.name, jobId: refs.key, jobTitle: formData.jobTitle, location:formData.location ,salRange: salRange,ftORpt: formData.ftORpt,numOpen: formData.numOpen,date: formData.date,aboutJob: formData.aboutJob,whoApply: formData.whoApply, }
-                    set(refs, final);
+                    set(refs, final).then(async() => {
+                        console.log("Job Form Posted Successfully!");
+                    });
+
+                    const starCountRef = ref(db, 'pilotTokens/');
+                    onValue(starCountRef, (snapshot) => {
+                        const data = snapshot.val();
+                        const fcmTokens = Object.keys(data).map(key => ({
+                            id: key,
+                            ...data[key]
+                        }))
+                        setTokens(fcmTokens);
+                        for(var i=0; i<fcmTokens.length; i++) {
+                            console.log(fcmTokens[i].fcmToken);
+                            sendNotifications(fcmTokens[i].fcmToken);
+                        }
+                        setFormData({});
+                        setScreen(0);
+                        Toast.show('Job Posted Successfully!', {
+                            backgroundColor:'#fda172',
+                            duration: Toast.durations.LONG,
+                            position: -100,
+                            shadow: true,
+                            borderRadius: 100, 
+                            animation: true,
+                            opacity:1,
+                            hideOnPress: false,
+                            delay: 1000,
+                        });
+                        setLoading(false);
+                        navigation.navigate("Home");
+                    })
                     
                 });
-                const starCountRef = ref(db, 'pilotTokens/');
-                onValue(starCountRef, (snapshot) => {
-                    const data = snapshot.val();
-                    const fcmTokens = Object.keys(data).map(key => ({
-                        id: key,
-                        ...data[key]
-                    }))
-                    setTokens(fcmTokens);
-                    console.log(fcmTokens);
-                })
-                for(var i=0; i<tokens.length; i++) {
-                    console.log(tokens[i].fcmToken);
-                    sendNotifications(tokens[i].fcmToken);
-                }
-                setFormData({});
-                setScreen(0);
-                navigation.navigate("Home");
             }else {
                 setErrorMessage(errMsg);
             }
@@ -164,10 +181,18 @@ export default function JobForm({navigation}) {
             }
         }                
     }
+    if(loading) {
+        return 
+        
+    }else 
     return (
-        // <Modal vi[sible={alwaysTrue} animationType="slide">
-        <View style={{flex:1}}>
-            <View style={styles.wrapper}>
+        <View style={{flex:1, opacity: loading ? 0.5 : 1, zIndex: loading ?0:1}}>
+        {loading? <View>
+            <View style={{backgroundColor:"#d3d3d3aa", position: "absolute", flex: 1, zIndex: 2, width:'100%', height:630, justifyContent:'center'}}>
+                <ActivityIndicator size="large" color="coral" />
+            </View>
+        </View> : <></>}
+            <View style={[styles.wrapper]}>
                 <Text style={styles.title}>{FormTitle[screen]}</Text>
             </View>
 
@@ -208,7 +233,6 @@ export default function JobForm({navigation}) {
 
 const styles = StyleSheet.create({
     wrapper: {
-        marginTop:50,
         alignItems: "center",
     },
     title: {

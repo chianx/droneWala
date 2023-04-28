@@ -11,6 +11,8 @@ import CompanyAccountStack from './myAccountStack'
 import CompanyAccount from '../screens/companyAccount'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { FontAwesome5 } from '@expo/vector-icons';
+import JobDetails from '../screens/jobDetails';
+import CourseDetails from '../screens/courseDetails';
 
 const Tab = createBottomTabNavigator();
 
@@ -45,14 +47,6 @@ export default function CompanyHomeTab({navigation}) {
           },
           tabBarActiveTintColor: '#ed7117',
           tabBarInactiveTintColor: 'gray',
-          // headerLeft: () => (
-          //   <TouchableOpacity onPress={() => navigation.openDrawer()}>
-          //     <Image
-          //       source={Images.profile}
-          //       style={{ height: 40, width: 40, borderRadius:40, marginLeft:10, borderWidth:1, borderColor:'black'}}
-          //     />
-          //   </TouchableOpacity>
-          // )
         })}
       >
         <Tab.Screen name="Home" component={Home}
@@ -69,18 +63,6 @@ export default function CompanyHomeTab({navigation}) {
           }}
         />
         <Tab.Screen name="JobsStack"
-          // options={{
-          //   headerRight: () => (
-          //   <TouchableOpacity onPress={() => {
-          //     navigation.navigate("JobsPage");
-          //     console.log(navigation.getParent());
-          //   }}
-          //     style={{paddingRight:'11%'}}
-          //   >
-          //     <Ionicons name="arrow-back" size={24} color="black" />
-          //   </TouchableOpacity>
-          // )
-          // }} 
         >{props => <JobStack {...props} />}</Tab.Screen>
         <Tab.Screen name="Create Post" component={JobForm} 
           options ={{
@@ -95,28 +77,32 @@ export default function CompanyHomeTab({navigation}) {
           )
           }}
         />
-        {/* <Tab.Screen name="CompanyAccountStack" 
+        <Tab.Screen name="CompanyAccountStack" component={CompanyAccountStack} />
+        
+        <Tab.Screen name="Job Details" component={JobDetails} 
           options={{
             headerShown:true,
-            headerRight: () => (
-            <TouchableOpacity onPress={handleClick}
-              style={{paddingRight:'11%'}}
-            >
-              <FontAwesome5 name="user-edit" size={19} color="black" />
-            </TouchableOpacity>
-          ),
-          headerLeft: () => (
-            <TouchableOpacity onPress={() => navigation.openDrawer()}>
-              <Image
-                source={Images.profile}
-                style={{ height: 40, width: 40, borderRadius:40, marginLeft:10, borderWidth:1, borderColor:'black'}}
-              />
+            tabBarButton: () => null,
+            tabBarVisible: false,
+            headerLeft: () => (
+            <TouchableOpacity style={{paddingLeft:15, paddingRight:15}} onPress={() => navigation.goBack()}>
+              <Ionicons name="arrow-back" size={26} color="black" />
             </TouchableOpacity>
           )
-          }} 
-        >{props => <CompanyAccountStack {...props} isClicked={isClicked} setIsClicked={setIsClicked}/>}
-        </Tab.Screen> */}
-        <Tab.Screen name="CompanyAccountStack" component={CompanyAccountStack} />
+          }}
+        />
+        <Tab.Screen name="Course Details" component={CourseDetails} 
+          options={{
+            headerShown:true,
+            tabBarButton: () => null,
+            tabBarVisible: false,
+            headerLeft: () => (
+            <TouchableOpacity style={{paddingLeft:15, paddingRight:15}} onPress={() => navigation.goBack()}>
+              <Ionicons name="arrow-back" size={26} color="black" />
+            </TouchableOpacity>
+          )
+          }}
+        />
         
       </Tab.Navigator>
       //</NavigationContainer>

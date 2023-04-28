@@ -9,7 +9,8 @@ import PhoneInput from "react-native-phone-number-input";
 import Images from '../images';
 import { BackHandler } from 'react-native';
 import { db } from '../firebase/databaseConfig'
-import { ref, child, get } from 'firebase/database'
+import { ref, child, get } from 'firebase/database';
+import Toast from 'react-native-root-toast';
 
 export default function Login( {navigation} ) {
   const phoneInput = useRef(null);
@@ -43,7 +44,8 @@ export default function Login( {navigation} ) {
       if(userSnap.exists) {
         var user = userSnap.val()
         console.log(user);
-        await AsyncStorage.setItem("userData", JSON.stringify(user));  
+        await AsyncStorage.setItem("userData", JSON.stringify(user));
+        setIsLoading(false);  
         navigation.navigate("HomeDrawer");
       }else {
         console.log("No user found!!!");
@@ -60,16 +62,35 @@ export default function Login( {navigation} ) {
       code
     );
     firebase.auth().signInWithCredential(credential)
-    .then((res)=> {
+    .then( async(res)=> {
       console.log(res);
       const isNewUser = res.additionalUserInfo.isNewUser;
       const userId = res.user.uid;
       if(isNewUser) { 
         setIsLoading(false);
         navigation.navigate("SignupStack");
+        Toast.show('New User detected', {
+          duration: Toast.durations.LONG,
+          position: -100,
+          shadow: true,
+          animation: true,
+          opacity:1,
+          hideOnPress: false,
+          delay: 2000,
+        });
       }else {
         getUserData(userId)
-        setIsLoading(false);
+        Toast.show('Welcome to DronesWala', {
+          backgroundColor:'#fda172',
+          duration: Toast.durations.LONG,
+          position: -100,
+          shadow: true,
+          animation: true,
+          opacity:1,
+          hideOnPress: false,
+          delay: 3000,
+        });
+        await AsyncStorage.setItem("login", "true");
       }
     })
     .catch((error) => {

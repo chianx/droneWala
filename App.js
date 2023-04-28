@@ -7,11 +7,12 @@ import LoginStack from './routes/loginStack';
 import HomeDrawer from './routes/homeDrawer';
 import SignupStack from './routes/signupStack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-root-toast';
 // do not remove gesture handler (important)
 // import 'react-native-gesture-handler';
 
 export default function App() {
-  const [login, setLogin] = useState(true);
+  const [login, setLogin] = useState(false);
   useEffect( () => {
     messaging().onNotificationOpenedApp( async (remoteMessage) => {
       console.log('Notification recieved', remoteMessage.notification);
@@ -25,6 +26,8 @@ export default function App() {
       console.log("here",loginStatus);
       if(loginStatus === "true") {
         setLogin(true);
+      }else {
+        setLogin(false);
       }
     }
     getData();
@@ -46,9 +49,6 @@ export default function App() {
   }
 
   // requestUserPermission();
-  
-  // AsyncStorage.setItem("login", ""+login)
-  // AsyncStorage.setItem("userType", "pilot")
   if (login)
   return (
     <NavigationContainer>

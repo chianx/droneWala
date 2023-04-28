@@ -236,7 +236,6 @@ export default function PilotForm({navigation}) {
 
 const styles = StyleSheet.create({
     wrapper: {
-        marginTop:70,
         alignItems: "center",
     },
     title: {

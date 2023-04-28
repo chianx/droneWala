@@ -1,14 +1,11 @@
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import Images from '../images/index';
+import InstitutionForm from '../institutionForm/form';
 
 export default function Insitute({navigation}) {
   return (
-        <View style={styles.container}>
-            <Image source={Images.loading}  style={styles.gif} />
-            <Text style={{fontSize:34, color:'grey', fontWeight:700}}>Coming Soon...</Text>
-            <Text style={{fontSize:16, color:'grey'}}>Press back</Text>
-        </View>
+        <InstitutionForm />
     )
 }
 

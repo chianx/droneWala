@@ -19,7 +19,7 @@ export default function Applicants({navigation}) {
                         <Image source={Images.profile} style={styles.profilePic}/>
                       </View>
                       <View style={{paddingRight:20, width:200}}>
-                        <Text style={styles.title}>{item.userDetails.companyName}</Text>
+                        <Text style={styles.title}>{item.userDetails.name}</Text>
                         <Text style={{color:'#808080'}}><Ionicons name="location-outline" size={14} color="#808080" />{' ' +item.userDetails.city}</Text>
                         <Text style={{color:'#808080'}}>Experience:{' ' + item.userDetails.experience}</Text>
                         <Text style={{color:'#808080'}}>DGCA Certified:{item.userDetails.certified? ' YES' : ' NO'}</Text>
