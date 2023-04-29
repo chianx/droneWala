@@ -12,7 +12,7 @@ import Toast from 'react-native-root-toast';
 // import 'react-native-gesture-handler';
 
 export default function App() {
-  const [login, setLogin] = useState(false);
+  const [login, setLogin] = useState(true);
   useEffect( () => {
     messaging().onNotificationOpenedApp( async (remoteMessage) => {
       console.log('Notification recieved', remoteMessage.notification);

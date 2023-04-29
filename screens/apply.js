@@ -12,6 +12,8 @@ import axios from 'axios';
 import * as fireBaseDatabase from 'firebase/database';
 import {ref, getDownloadURL, uploadBytesResumable, uploadBytes } from "firebase/storage";
 import Toast from "react-native-root-toast";
+import {set, ref as dbRefs, push, runTransaction, get, child} from 'firebase/database';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Apply({ route, navigation }) {
   const job = route.params.job;
@@ -117,10 +119,41 @@ export default function Apply({ route, navigation }) {
         },
         () => {
           // Upload completed successfully, now we can get the download URL
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
             console.log("File available at", downloadURL);
+            setUrl(downloadURL);
             if (downloadURL != null) {
-              setUrl(downloadURL);
+              // Add the answer to the firebase database.
+              var refs = push(dbRefs(db, "applications/"));
+              const userdata = await AsyncStorage.getItem("userData");
+              var json = JSON.parse(userdata)
+              console.log("userdata " + userdata)
+              var final =  {
+                id: refs.key,
+                userId: json.userId,
+                answer: answer,
+                resume: downloadURL,
+                jobId: job.jobId,
+                status: "applied" // rejected, review.
+              }
+              set(refs, final);
+              console.log("application summited.")
+              
+              // Link application to job post. 
+              var jobRef = dbRefs(db, "jobs/" + job.jobId)
+              runTransaction(jobRef, (job) => {
+                if(job.applied) {
+                  var arr = Array.from(job.applied);
+                  arr.push(refs.key);
+                  job = {...job, applied: arr}
+                }else {
+                  var arr = []
+                  arr.push(refs.key);
+                  job = {...job, applied: arr}
+                }
+                return job
+              });
+              
               setIsLoading(false);
             }
           });
@@ -129,6 +162,7 @@ export default function Apply({ route, navigation }) {
       const starCountRef = fireBaseDatabase.ref(db, 'companyTokens/' + job.companyId);
       fireBaseDatabase.onValue(starCountRef, (snapshot) => {
           const data = snapshot.val();
+          console.log("fcmToken " + data)
           sendNotifications(data.fcmToken);
           Toast.show('Application Submitted.', {
             backgroundColor:'#a0a0a0',
