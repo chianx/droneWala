@@ -7,6 +7,7 @@ import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { db } from '../firebase/databaseConfig'
 import { ref, onValue, query, orderByChild, limitToLast, limitToFirst, push, set } from 'firebase/database';
+import axios from 'axios';
 
 export default function Home({ navigation }) {
   const [sugestions, setSugestions] = useState("");
@@ -38,20 +39,34 @@ export default function Home({ navigation }) {
   };
 
   const [getJobs, setJobs] = useState([]);
+  const [articles, setArticles] = useState([]);
   const [getCourses, setCourses] = useState([]);
 
   useEffect(() => {
     const starCountRefJobs = query(ref(db, 'jobs/'), orderByChild('numOpen'), limitToFirst(4));
-    // const starCountRefCourses = query(ref(db, 'courses/'), orderByChild('numOpen'), limitToFirst(4));
-    onValue(starCountRefJobs, (snapshot) => {
+    onValue(starCountRefJobs, async(snapshot) => {
       const data = snapshot.val();
       const job = Object.keys(data).map(key => ({
         key: key,
         ...data[key]
       }))
-      console.log(job);
       setJobs(job);
       mount();
+      const response = await axios.get(
+        'https://newsapi.org/v2/top-headlines?q=drone&apiKey=97a1084b34ba46468b6f46954dc06382'
+      );
+      var temp = response.data.articles;
+      for(let index in temp) {
+        // console.log("num = ",response.data.articles[index]);
+        let content = temp[index].content;
+        content = content.substring(0, 100);
+        content = content + "...";
+        temp[index].centent = content;
+
+      }
+      setArticles(response.data.articles);
+      console.log(response.data.articles[0]);
+      
     });
 
     // onValue(starCountRefCourses, (snapshot) => {
@@ -164,13 +179,20 @@ export default function Home({ navigation }) {
     />
   );
 
-  const handleSubmission = () => {
-    console.log("here in sugestion")
-    var refs = push(ref(db, "suggestions/" + user.name));
-    var final = { name: user.name, city: user.city, state: user.state, email: user.email, feedback: sugestions }
-    setSugestions("");
-    set(refs, final);
-  }
+  const CardNews = ( item, index) => (
+    <TouchableOpacity key={index} style={{marginBottom:6}} onPress={() => {}}>
+      <View style={{borderRadius: 15, flexDirection:'row', width:'100%', height:130, borderColor:'#a0a0a0', borderWidth:1.5, padding:10}}>
+        <View style={{width:'35%', justifyContent:'center', height:110}}>
+          <Image style={{height:110, width:100}} source={{uri: item.urlToImage}}/>
+        </View>
+        <View style={{width:'65%', height:110}}>
+          <Text style={{}}>{item.title}</Text>
+          <Text style={{}}>{item.content}</Text>
+          <Text>See more ...</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
 
   const renderDotCourse = (_, index) => (
     <View key={_.key}
@@ -254,7 +276,7 @@ export default function Home({ navigation }) {
         }
 
         {/* Suggestion Area */}
-        <View style={{ width: '90%', marginTop: 10, marginBottom: 50 }}>
+        {/* <View style={{ width: '90%', marginTop: 10, marginBottom: 50 }}>
           <Text style={{ width: '100%', textAlign: 'left', fontSize: 20, color: '#696969', fontWeight: 'bold', marginBottom: 10, marginLeft: 5 }}>Got any Suugestions for us ?</Text>
 
           <View style={styles.suggestion}>
@@ -268,6 +290,12 @@ export default function Home({ navigation }) {
             />
             <TouchableOpacity style={styles.submitBtn} onPress={handleSubmission}><Text style={{ color: 'white', fontSize: 17 }}>Submit</Text></TouchableOpacity>
           </View>
+        </View> */}
+
+        <View style={{ width: '90%', marginTop: 10, marginBottom: 50 }}>
+          <Text style={{ width: '100%', textAlign: 'left', fontSize: 20, color: '#696969', fontWeight: 'bold', marginBottom: 10, marginLeft: 5 }}>News</Text>
+          {articles.map((item, index) => CardNews(item, index))}
+
         </View>
 
       </View>
