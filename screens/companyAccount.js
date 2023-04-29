@@ -47,25 +47,19 @@ export default function Account({isClicked, setIsClicked, navigation }) {
             id: key,
             ...data[key]
           }));
-          console.log(app)
           var tempJob = [];
           var tempFree = [];
           for(var element in app) {
-            console.log(app[element]);
-            console.log("");
-            console.log("");
+            if(app[element].companyName != user.name) {
+                continue;
+            }
             if(app[element].ftORpt != "Freelance") {
                 tempJob.push(app[element])
             }else {
                 tempFree.push(app[element]);
             }
           }
-
-          console.log("");
-          console.log("");
           setJobs(tempJob);
-          console.log("");
-          console.log("");
           setFreelance(tempFree);
         });
       }, [])
@@ -136,11 +130,11 @@ export default function Account({isClicked, setIsClicked, navigation }) {
                 <View style={[styles.listing, {borderRadius: 10}]}>
                 {dataList.map((item, index) => {
                 return (
-                  <View key={item.key} style={styles.jobContainer}>
-                  <TouchableOpacity onPress= {() => navigation.navigate("Applicants", {})}>
+                  <View key={item.id} style={styles.jobContainer}>
+                  <TouchableOpacity onPress= {() => navigation.navigate("Applicants", {job: item})}>
                     <View style={{flexDirection:'row'}}>
                       <View style={{paddingRight:20}}>
-                        <Image source={Images.profile} style={styles.profilePic}/>
+                        <Image source={{uri : item.logo}} style={styles.profilePic}/>
                       </View>
                       <View style={{paddingRight:20, width:200}}>
                         <Text style={styles.title}>{item.jobTitle}</Text>

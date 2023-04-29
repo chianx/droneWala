@@ -8,20 +8,36 @@ import {
   onValue,
 } from 'firebase/database';
 
-export default function Applicants({navigation}) {
+export default function Applicants({route, navigation}) {
+  const job = route.params.job
   const [applied, setApplied] = useState([]);
+  const [xyz, setXyz] = useState([]);
   
   useEffect (() => {
     // isLoading = true;
-    const jobRef = ref(db, 'jobs/applied');
+    const jobRef = ref(db, `jobs/${job.jobId}/applied`);
     onValue(jobRef, (snapshot) => {
       const data = snapshot.val();
-      const job = Object.keys(data).map(key => ({
-        id: key,
-        ...data[key]
-      }))
-      console.log(job);
-      setApplied(job);
+      if(data == null) {
+        console.log("null");
+      }else {
+        console.log("data " + data);
+        for(var index in data) {
+          console.log(`applications/${data[index]}`);
+          const applicationRef = ref(db, `applications/${data[index]}`);
+          onValue(applicationRef, (snap) => {
+            const application = snap.val();
+            console.log(application);
+            console.log(`users/${application.userId}`)
+            const xRef = ref(db, `users/${application.userId}`);
+                onValue(xRef, (snaps) => {
+                  const x = snaps.val();
+                  console.log(x);
+                  setApplied([...applied, x]);
+            })
+          })
+        }
+      }
     });
   }, [])
 
@@ -29,17 +45,17 @@ export default function Applicants({navigation}) {
         <View style={styles.container}>
             {applied.map((item, index) => {
                 return (
-                    <TouchableOpacity onPress={() => navigation.navigate("Application", {pilot: item})}>
+                    <TouchableOpacity key={index} onPress={() => navigation.navigate("Application", {pilot: item})}>
                   <View key={item.key} style={styles.jobContainer}>
                     <View style={{flexDirection:'row'}}>
                       <View style={{paddingRight:20}}>
                         <Image source={Images.profile} style={styles.profilePic}/>
                       </View>
                       <View style={{paddingRight:20, width:200}}>
-                        <Text style={styles.title}>{item.userDetails.name}</Text>
-                        <Text style={{color:'#808080'}}><Ionicons name="location-outline" size={14} color="#808080" />{' ' +item.userDetails.city}</Text>
-                        <Text style={{color:'#808080'}}>Experience:{' ' + item.userDetails.experience}</Text>
-                        <Text style={{color:'#808080'}}>DGCA Certified:{item.userDetails.certified? ' YES' : ' NO'}</Text>
+                        <Text style={styles.title}>{item.name}</Text>
+                        <Text style={{color:'#808080'}}><Ionicons name="location-outline" size={14} color="#808080" />{' ' +item.city}</Text>
+                        <Text style={{color:'#808080'}}>Experience:{' ' + item.experience}</Text>
+                        <Text style={{color:'#808080'}}>DGCA Certified:{item.certified? ' YES' : ' NO'}</Text>
                       </View>
                     </View> 
                   </View>
