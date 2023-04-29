@@ -23,9 +23,6 @@ export default function Account({isClicked, setIsClicked, navigation }) {
       setUser(val);
       setCategory(val.category);
     }
-    useEffect(() => {
-      mount();
-    }, []);
     
     const handleSaveProfile =() => {
        setIsClicked(!isClicked);
@@ -35,37 +32,60 @@ export default function Account({isClicked, setIsClicked, navigation }) {
        setIsClicked(!isClicked);
     };
 
-
-    const [jobs, setJobs] = useState([]);
-    const [freelance, setFreelance] = useState([]);
+    const [allJobs, setAllJobs] = useState([]);
+    const [active, setActive] = useState('Jobs');
+    const [dataList, setDataList] = useState([]);
     useEffect (() => {
         // isLoading = true;
+        mount();
         const jobRef = ref(db, 'jobs/');
-        onValue(jobRef, (snapshot) => {
+        onValue(jobRef, async(snapshot) => {
           const data = snapshot.val();
           var app = Object.keys(data).map(key => ({
             id: key,
             ...data[key]
           }));
-          var tempJob = [];
-          var tempFree = [];
-          for(var element in app) {
-            if(app[element].companyName != user.name) {
-                continue;
-            }
-            if(app[element].ftORpt != "Freelance") {
-                tempJob.push(app[element])
-            }else {
-                tempFree.push(app[element]);
-            }
-          }
-          setJobs(tempJob);
-          setFreelance(tempFree);
+          setAllJobs(app);
+          setTimeout(() => {
+            handleJobPress();
+          }, 1000);
+
         });
       }, [])
+      const handleJobPress =() => {
+        setActive('Jobs')
+        var tempJob = [];
+        var tempFree = [];
+        for(var element in allJobs) {
+            if(allJobs[element].companyName != user.name) {
+                continue;
+            }
+            if(allJobs[element].ftORpt != "Freelance") {
+                tempJob.push(allJobs[element])
+            }else {
+                tempFree.push(allJobs[element]);
+            }
+        }
+        setDataList(tempJob);
 
-    const [active, setActive] = useState('Jobs');
-    const [dataList, setDataList] = useState([...jobs]);
+      }
+      const handleFreelancePress =() => {
+        setActive('Freelance')
+        var tempJob = [];
+        var tempFree = [];
+        for(var element in allJobs) {
+            if(allJobs[element].companyName != user.name) {
+                continue;
+            }
+            if(allJobs[element].ftORpt != "Freelance") {
+                tempJob.push(allJobs[element])
+            }else {
+                tempFree.push(allJobs[element]);
+            }
+        }
+        setDataList(tempFree);
+      }
+    
     return (
       <ScrollView contentContainerStyle={{ flexGrow: 1}}>
         <View style={styles.container}>
@@ -120,10 +140,12 @@ export default function Account({isClicked, setIsClicked, navigation }) {
             <View style={[styles.status]}>
                 <View style={{ flexDirection: 'row', paddingBottom: 15 }}>
                     <View style={[styles.tab, active === 'Jobs' && styles.btnActive, { borderBottomStartRadius: 30, borderTopLeftRadius: 30}]}>
-                        <TouchableOpacity onPress={() => (setActive('Jobs') & setDataList(jobs))} ><Text style={[active === 'Jobs' && { color: 'white' }]}>Jobs</Text></TouchableOpacity>
+                        {/* <TouchableOpacity onPress={() => (setActive('Jobs') & setDataList(jobs))} ><Text style={[active === 'Jobs' && { color: 'white' }]}>Jobs</Text></TouchableOpacity> */}
+                        <TouchableOpacity onPress={handleJobPress} ><Text style={[active === 'Jobs' && { color: 'white' }]}>Jobs</Text></TouchableOpacity>
                     </View>
                     <View style={[styles.tab, active === 'Freelance' && styles.btnActive, { borderBottomEndRadius: 30, borderTopRightRadius: 30}]}>
-                        <TouchableOpacity onPress={() => setActive('Freelance') & setDataList(freelance)} ><Text style={[active === 'Freelance' && { color: 'white' }]}>Freelance Projects</Text></TouchableOpacity>
+                        {/* <TouchableOpacity onPress={() => setActive('Freelance') & setDataList(freelance)} ><Text style={[active === 'Freelance' && { color: 'white' }]}>Freelance Projects</Text></TouchableOpacity> */}
+                        <TouchableOpacity onPress={handleFreelancePress} ><Text style={[active === 'Freelance' && { color: 'white' }]}>Freelance Projects</Text></TouchableOpacity>
                     </View>
                 </View>
 

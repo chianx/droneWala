@@ -52,6 +52,7 @@ export default function CompanyHomeTab({navigation}) {
         <Tab.Screen name="Home" component={Home}
           options ={{
             headerShown:true,
+            headerTitle: () => <Text style={{ fontSize: 26, color: 'grey', fontWeight: 'bold' }}>Drone<Text style={{ fontWeight: 'bold', fontSize: 26, color: 'coral' }}>Walas</Text></Text> ,
             headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.openDrawer()}>
               <Image

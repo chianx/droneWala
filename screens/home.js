@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, Image, ScrollView, TouchableOpacity, FlatList, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image, ScrollView, TouchableOpacity, FlatList, Dimensions, Linking } from 'react-native';
 import Images from '../images/index';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
@@ -65,12 +65,11 @@ export default function Home({ navigation }) {
         }
         
         let content = temp[index].description;
-        content = content.substring(0, 100);
-        content = content + "...";
+        content = content.substring(0, 80);
+        content = content + "  ...";
         temp[index].description = content;
       }
       setArticles(temp);
-      console.log(response.data.articles[0]);
       
     });
 
@@ -185,14 +184,14 @@ export default function Home({ navigation }) {
   );
 
   const CardNews = ( item, index) => (
-    <TouchableOpacity key={index} style={{marginBottom:6}} onPress={() => {}}>
-      <View style={{borderRadius: 15, flexDirection:'row', width:'100%', height:130, borderColor:'#a0a0a0', borderWidth:1.5, padding:10}}>
+    <TouchableOpacity key={index} style={{marginBottom:10,}} onPress={() => {Linking.openURL(item.url)}}>
+      <View style={{borderRadius: 15, flexDirection:'row', width:'100%', height:130, borderColor:'#a0a0a0', borderWidth:2, padding:10}}>
         <View style={{width:'35%', justifyContent:'center', height:110}}>
-          <Image style={{height:110, width:100}} source={{uri: item.urlToImage}}/>
+          <Image style={{height:110, width:100, paddingRight:10, borderRadius:15}} source={{uri: item.urlToImage}}/>
         </View>
-        <View style={{width:'65%', height:110}}>
-          <Text style={{fontSize:15, fontWeight:'bold', color:'#606060'}}>{item.title}</Text>
-          <Text style={{}}>{item.description} <Text>See more</Text></Text>
+        <View style={{width:'65%', height:110, paddingLeft:5}}>
+          <Text style={{fontSize:14.5, fontWeight:'bold', color:'#606060'}}>{item.title}</Text>
+          <Text style={{}}>{item.description}<Text style={{color:'coral'}}>See more</Text></Text>
           
         </View>
       </View>
@@ -212,13 +211,8 @@ export default function Home({ navigation }) {
     <ScrollView>
       <View style={styles.container}>
 
-        {/* Logo */}
-        <View style={{ marginVertical: 14 }}>
-          <Text style={{ fontSize: 26, color: 'grey', fontWeight: 'bold' }}>Drone<Text style={{ fontWeight: 'bold', fontSize: 26, color: 'coral' }}>Walas</Text></Text>
-        </View>
-
         {/* Icons */}
-        <View style={{ flexDirection: 'row', width: '90%', justifyContent: 'space-between' }}>
+        <View style={{ flexDirection: 'row', width: '90%', justifyContent: 'space-between', marginTop:20 }}>
           <View>
             <TouchableOpacity onPress={() => {userType === "pilot"? navigation.navigate("Jobs") : navigation.navigate("JobsStack") }}>
               <Image style={styles.icons} source={Images.searchJobs} />
