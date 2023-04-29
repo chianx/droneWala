@@ -55,8 +55,14 @@ export default function Home({ navigation }) {
       const response = await axios.get(
         'https://newsapi.org/v2/top-headlines?q=drone&apiKey=97a1084b34ba46468b6f46954dc06382'
       );
-      for(let index in response.data.articles) {
-        console.log("num = ",response.data.articles[index]);
+      var temp = response.data.articles;
+      for(let index in temp) {
+        // console.log("num = ",response.data.articles[index]);
+        let content = temp[index].content;
+        content = content.substring(0, 100);
+        content = content + "...";
+        temp[index].centent = content;
+
       }
       setArticles(response.data.articles);
       console.log(response.data.articles[0]);
