@@ -57,14 +57,19 @@ export default function Home({ navigation }) {
       );
       var temp = response.data.articles;
       for(let index in temp) {
-        // console.log("num = ",response.data.articles[index]);
-        let content = temp[index].content;
+        let title = temp[index].title;
+        if(title.length >= 47) {
+          title = title.substring(0, 47);
+          title = title + "...";
+          temp[index].title = title;
+        }
+        
+        let content = temp[index].description;
         content = content.substring(0, 100);
         content = content + "...";
-        temp[index].centent = content;
-
+        temp[index].description = content;
       }
-      setArticles(response.data.articles);
+      setArticles(temp);
       console.log(response.data.articles[0]);
       
     });
@@ -186,9 +191,9 @@ export default function Home({ navigation }) {
           <Image style={{height:110, width:100}} source={{uri: item.urlToImage}}/>
         </View>
         <View style={{width:'65%', height:110}}>
-          <Text style={{}}>{item.title}</Text>
-          <Text style={{}}>{item.content}</Text>
-          <Text>See more ...</Text>
+          <Text style={{fontSize:15, fontWeight:'bold', color:'#606060'}}>{item.title}</Text>
+          <Text style={{}}>{item.description} <Text>See more</Text></Text>
+          
         </View>
       </View>
     </TouchableOpacity>

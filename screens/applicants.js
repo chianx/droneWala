@@ -11,6 +11,7 @@ import {
 export default function Applicants({route, navigation}) {
   const job = route.params.job
   const [applied, setApplied] = useState([]);
+  const [application, setApplication] = useState();
   const [xyz, setXyz] = useState([]);
   
   useEffect (() => {
@@ -28,6 +29,7 @@ export default function Applicants({route, navigation}) {
           onValue(applicationRef, (snap) => {
             const application = snap.val();
             console.log(application);
+            setApplication(application);
             console.log(`users/${application.userId}`)
             const xRef = ref(db, `users/${application.userId}`);
                 onValue(xRef, (snaps) => {
@@ -45,7 +47,7 @@ export default function Applicants({route, navigation}) {
         <View style={styles.container}>
             {applied.map((item, index) => {
                 return (
-                    <TouchableOpacity key={index} onPress={() => navigation.navigate("Application", {pilot: item})}>
+                    <TouchableOpacity key={index} onPress={() => navigation.navigate("Application", {pilot: item, answer:application})}>
                   <View key={item.key} style={styles.jobContainer}>
                     <View style={{flexDirection:'row'}}>
                       <View style={{paddingRight:20}}>

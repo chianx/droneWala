@@ -7,29 +7,30 @@ import * as OpenAnything from 'react-native-openanything'
 
 export default function Application({route, navigation}) {
     const pilot = route.params.pilot;
+    const answer = route.params.answer;
   return (
     <ScrollView>
         <View style={styles.container}>
           <View style={styles.basic}>
             <View style={{width:'70%'}}>
-              <Text style={styles.title}>{pilot.userDetails.name}</Text>
-              <Text style={{color:'#808080', fontSize:16, paddingBottom:5}}><Ionicons name="location-outline" size={16} color="#808080" />{pilot.userDetails.city}</Text>
-              <Text style={{color:'#808080', fontSize:16, paddingBottom:5}}>Experience:{' ' + pilot.userDetails.experience}</Text>
-              <Text style={{color:'#808080', fontSize:16, paddingBottom:5}}><AntDesign name="calendar" size={16} color="#808080" />{' '+ '07/06/2001'}</Text>
+              <Text style={styles.title}>{pilot.name}</Text>
+              <Text style={{color:'#808080', fontSize:16, paddingBottom:5}}><Ionicons name="location-outline" size={16} color="#808080" />{pilot.city}</Text>
+              <Text style={{color:'#808080', fontSize:16, paddingBottom:5}}>Experience:{' ' + pilot.experience}</Text>
+              <Text style={{color:'#808080', fontSize:16, paddingBottom:5}}><AntDesign name="calendar" size={16} color="#808080" />{' '+ pilot.dob}</Text>
             </View>
             <Image source={Images.profile} style={styles.profilePic}/>
           </View>
           <View style={{paddingHorizontal:15, paddingTop:25}}>
             <Text style={styles.title}>Why does he think he is fit for the job ?</Text>
             <Text style={{paddingTop:7, fontSize:15, color:'#505050', lineHeight: 21}}>
-              {pilot.answer}     
+              {answer.answer}     
             </Text>
           </View>
           
           {/* <View style={{paddingTop:25, borderBottomWidth: 3, borderBottomColor:'#ffe5d3'}}></View> */}
           <View style={{paddingHorizontal:15, paddingTop:25}}>
-            <Text style={{width:'100%', fontWeight:'bold', fontSize:19, color:'#505050', paddingBottom:8}}>Resume of {pilot.userDetails.name}</Text>
-            <TouchableOpacity onPress={() => OpenAnything.Pdf(pilot.resumeLink)} style={styles.download}>
+            <Text style={{width:'100%', fontWeight:'bold', fontSize:19, color:'#505050', paddingBottom:8}}>Resume of {pilot.name}</Text>
+            <TouchableOpacity onPress={() => OpenAnything.Pdf(answer.resume)} style={styles.download}>
             <Text style={{color:'white', fontSize:15, textAlign:'center'}}>Download</Text>
             </TouchableOpacity>
           </View>
@@ -37,8 +38,8 @@ export default function Application({route, navigation}) {
           <View style={{paddingHorizontal:15, paddingTop:25, backgroundColor:'#F8F8F8'}}>
             <Text style={{width:'100%', fontWeight:'bold', fontSize:19, color:'#505050', paddingBottom:8}}>Interested to hire ?</Text>
 
-            <Text style={{color:'#808080', fontSize:16, paddingBottom:5}}><Ionicons name="ios-mail-open-outline" size={16} color="black" /> {' '+ pilot.userDetails.email}</Text>
-            <Text style={{color:'#808080', fontSize:16, paddingBottom:5}}><Ionicons name="call-outline" size={16} color="black" /> {' ' +pilot.userDetails.phone}</Text>
+            <Text style={{color:'#808080', fontSize:16, paddingBottom:5}}><Ionicons name="ios-mail-open-outline" size={16} color="black" /> {' '+ pilot.email}</Text>
+            <Text style={{color:'#808080', fontSize:16, paddingBottom:5}}><Ionicons name="call-outline" size={16} color="black" /> {' ' +pilot.phone}</Text>
           </View>
           <View style={{paddingTop:25, borderBottomWidth: 3, borderBottomColor:'#ffe5d3', backgroundColor:'#F8F8F8'}}></View>
           
