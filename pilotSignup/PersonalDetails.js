@@ -1,9 +1,45 @@
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
 import React, { useState } from 'react'
+import axios from 'axios';
 
 export default function PersonalDetails({ formData, setFormData }) {
-  const [secureEntry, setSecureEntry] = useState(true)
-  
+  const [secureEntry, setSecureEntry] = useState(true);
+  const [state, setState] = useState("");
+  const [city, setCity] = useState("");
+  const [pincode, setPincode] = useState("");
+
+  const getAddress = async(pincode) => {
+
+    const options = {
+      method: 'GET',
+      url: 'https://india-pincode-with-latitude-and-longitude.p.rapidapi.com/api/v1/pincode/' + pincode,
+      headers: {
+        'content-type': 'application/octet-stream',
+        'X-RapidAPI-Key': '87ef83b0camsh60700ab8953b291p1c1423jsn5fbe5c77e28b',
+        'X-RapidAPI-Host': 'india-pincode-with-latitude-and-longitude.p.rapidapi.com'
+      }
+    };
+
+    try {
+      const response = await axios.request(options);
+      console.log(response.data);
+      if(response.data.length > 0) {
+        const state = response.data[0]["state"];
+        const city = response.data[0]["district"];
+        console.log(state +' '+ city +' '+ pincode)
+        handleCityChange(city);
+        setCity(city)
+        handleStateChange(state);
+        setState(state)
+        setPincode(pincode)
+        if(pincode.length === 6 && state.length >= 5 && city.length >= 3)
+          setFormData({...formData, city:city, cityIsSet:true, pincode:pincode, pinIsSet: true, state:state, stateIsSet:true })
+      }
+      
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   const handleAddressChange = (address) => {
     if (address.trim().length >= 4) {
@@ -14,15 +50,19 @@ export default function PersonalDetails({ formData, setFormData }) {
   }
   const handleCityChange = (city) => {
     if (city.trim().length >= 3) {
+        setCity(city)
         setFormData({ ...formData, city:city, cityIsSet:true });
     } else {
+      setCity(city)
         setFormData({ ...formData, city:city, cityIsSet:false });
     }
   }
   const handleStateChange = (state) => {
     if (state.trim().length >= 5) {
+      setState(state)
         setFormData({ ...formData, state:state, stateIsSet:true });
     } else {
+      setState(state)
         setFormData({ ...formData, state:state, stateIsSet:false });
     }
   }
@@ -35,8 +75,12 @@ export default function PersonalDetails({ formData, setFormData }) {
   }
   const handlePinChange = (pincode) => {
     if (pincode.trim().length === 6) {
+        getAddress(pincode);
         setFormData({ ...formData, pincode:pincode, pinIsSet: true });
+        setPincode(pincode)
     } else {
+      setPincode(pincode)
+
         setFormData({ ...formData, pincode:pincode, pinIsSet: false });
     }
   }
@@ -54,11 +98,23 @@ export default function PersonalDetails({ formData, setFormData }) {
       </View>
       <View>
         <TextInput
+          style={[formData.pinIsSet ? styles.TextInput : styles.errorTextInput]}
+          placeholderTextColor="grey"
+          placeholder='Pincode *'
+          keyboardType='numeric'
+          required={true}
+          maxLength={6}
+          value={pincode}
+          onChangeText={(pincode) => handlePinChange(pincode)}
+        />
+      </View>
+      <View>
+        <TextInput
           style={[formData.cityIsSet ? styles.TextInput : styles.errorTextInput]}
           placeholderTextColor="grey"
           placeholder='City *'
           required={true}
-          value={formData.city}
+          value={city}
           onChangeText={(city) => handleCityChange(city)}
         />
       </View>
@@ -68,20 +124,8 @@ export default function PersonalDetails({ formData, setFormData }) {
           placeholderTextColor="grey"
           placeholder='State *'
           required={true}
-          value={formData.state}
+          value={state}
           onChangeText={(state) => handleStateChange(state)}
-        />
-      </View>
-      <View>
-        <TextInput
-          style={[formData.pinIsSet ? styles.TextInput : styles.errorTextInput]}
-          placeholderTextColor="grey"
-          placeholder='Pincode *'
-          keyboardType='numeric'
-          required={true}
-          maxLength={6}
-          value={formData.pincode}
-          onChangeText={(pincode) => handlePinChange(pincode)}
         />
       </View>
       <View>

@@ -123,27 +123,33 @@ export default function BasicDetails({ formData, setFormData }) {
             </View>
 
             <View style={{ marginBottom: 20 }}>
-                <View style={{ flexDirection: 'row' }}>
-                    <TextInput
+                <View style={{ flexDirection: 'column' }}>
+                    
+                    <Text style={{paddingBottom: 10}}>Founded In: *</Text>
+                    {open ? <TouchableOpacity onPress={handleButtonOpen} style={{ padding: 0 }}><TextInput
                         editable={false}
                         placeholderTextColor="grey"
-                        placeholder='Date of Birth *'
-                        value={formData.dob}
-                        style={{width:125, fontSize:17 ,height:55, color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', borderColor: formData.dateIsSet? 'grey': 'red', marginRight: 20, marginBottom: 15 }}
-                    />
-
-                    {open ? <TouchableOpacity onPress={handleButtonOpen} style={{ padding: 0 }}><Text style={styles.btn}>Select</Text></TouchableOpacity> :
-                        <TouchableOpacity onPress={() => { setOpen(!open) }} style={{ padding: 0 }}><Text style={styles.btn}>Choose Date</Text></TouchableOpacity>
+                        placeholder='Date of Founding *'
+                        value={formData.foundedin}
+                        style={{ width: 280, fontSize: 17, height: 55, color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', borderColor: formData.dateIsSet ? 'grey' : 'red', marginRight: 20, marginBottom: 15 }}
+                    /></TouchableOpacity> :
+                        <TouchableOpacity onPress={() => { setOpen(!open) }} style={{ padding: 0 }}><TextInput
+                        editable={false}
+                        placeholderTextColor="grey"
+                        placeholder='Date of Founding *'
+                        value={formData.foundedin}
+                        style={{ width: 280, fontSize: 17, height: 55, color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', borderColor: formData.dateIsSet ? 'grey' : 'red', marginRight: 20, marginBottom: 15 }}
+                    /></TouchableOpacity>
                     }
                 </View>
                 <View>
-                {open ? <DatePicker
-                    onSelectedChange={(date) => {
-                        setDate(date)
-                    }}
-                    mode="calendar"
-                    maximumDate={todaysDate}
-                /> : <></>}
+                    {open ? <DatePicker
+                        onSelectedChange={(date) => {
+                            setDate(date)
+                        }}
+                        mode="calendar"
+                        maximumDate={todaysDate}
+                    /> : <></>}
                 </View>
             </View>
             <View style={styles.inputView}>

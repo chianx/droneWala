@@ -133,25 +133,35 @@ export default function Precise({ formData, setFormData }) {
                     onChangeText={(numOpen) => handlenumOpen(numOpen)}
                 />
             </View>
-            <View style={{ marginBottom: 10, width: 300 }}>
-                <View style={{ flexDirection: 'row' }}>
-                    <TextInput
+            <View style={{ marginBottom: 20 }}>
+                <View style={{ flexDirection: 'column' }}>
+                    
+                    <Text style={{paddingBottom: 10}}>Founded In: *</Text>
+                    {open ? <TouchableOpacity onPress={handleButtonOpen} style={{ padding: 0 }}><TextInput
                         editable={false}
                         placeholderTextColor="grey"
-                        placeholder='Last date to Apply *'
-                        value={formData.date}
-                        style={[formData.dateIsSet ? { height: 55 ,color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', padding: 5, borderColor: 'grey', marginRight: 20, marginBottom: 15 } : {height:55, width:140, color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', padding: 5, borderColor: 'red', marginRight: 20, marginBottom: 15 }]}
-                    />
-
-                    {open ? <TouchableOpacity onPress={handleButtonOpen} style={{ padding: 0 }}><Text style={styles.btn}>Close</Text></TouchableOpacity> :
-                        <TouchableOpacity onPress={() => { setOpen(!open) }} style={{ padding: 0 }}><Text style={styles.btn}>Choose Date</Text></TouchableOpacity>
+                        placeholder='Date of Founding *'
+                        value={formData.foundedin}
+                        style={{ width: 280, fontSize: 17, height: 55, color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', borderColor: formData.dateIsSet ? 'grey' : 'red', marginRight: 20, marginBottom: 15 }}
+                    /></TouchableOpacity> :
+                        <TouchableOpacity onPress={() => { setOpen(!open) }} style={{ padding: 0 }}><TextInput
+                        editable={false}
+                        placeholderTextColor="grey"
+                        placeholder='Date of Founding *'
+                        value={formData.foundedin}
+                        style={{ width: 280, fontSize: 17, height: 55, color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', borderColor: formData.dateIsSet ? 'grey' : 'red', marginRight: 20, marginBottom: 15 }}
+                    /></TouchableOpacity>
                     }
                 </View>
-                {open ? <DatePicker
-                    onSelectedChange={date => setDate(date)}
-                    mode="calendar"
-                    minimumDate={todaysDate}
-                /> : <></>}
+                <View>
+                    {open ? <DatePicker
+                        onSelectedChange={(date) => {
+                            setDate(date)
+                        }}
+                        mode="calendar"
+                        maximumDate={todaysDate}
+                    /> : <></>}
+                </View>
             </View>
         </View>
     )
