@@ -57,17 +57,22 @@ export default function Home({ navigation }) {
       );
       var temp = response.data.articles;
       for(let index in temp) {
+        if(temp[index].urlToImage === null) {
+          temp.splice(index, 1);
+        }
         let title = temp[index].title;
         if(title.length >= 47) {
           title = title.substring(0, 47);
           title = title + "...";
           temp[index].title = title;
         }
-        
         let content = temp[index].description;
-        content = content.substring(0, 80);
-        content = content + "  ...";
-        temp[index].description = content;
+        if(content) {
+          content = content.substring(0, 70);
+          content = content + "  ...";
+          temp[index].description = content;
+        }
+        
       }
       setArticles(temp);
       
@@ -79,7 +84,6 @@ export default function Home({ navigation }) {
     //     key: key,
     //     ...data[key]
     //   }))
-    //   console.log(courses);
     //   setCourses(courses);
     //   mount();
     // });    
@@ -89,7 +93,7 @@ export default function Home({ navigation }) {
 
   const courses = [
     {
-      id: 1,
+      key: 1,
       title: 'Introduction to Drone Flying',
       institution: 'National Institute of Drone Flying',
       description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac ipsum eu metus congue consequat. Fusce auctor, diam id malesuada pharetra, velit nibh pulvinar odio, vitae faucibus massa dolor eu mi. Sed blandit volutpat risus, ac eleifend nisl pretium quis. Integer ut magna sed nisl vestibulum fringilla eget eu lectus. Sed pharetra, quam vel faucibus ullamcorper, nibh tellus bibendum velit, ut placerat lacus ipsum ac quam.',
@@ -104,7 +108,7 @@ export default function Home({ navigation }) {
       phone: '7340322282'
     },
     {
-      id: 2,
+      key: 2,
       title: 'Advanced Drone Flying Techniques',
       institution: 'National Institute of Drone Flying',
       description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac ipsum eu metus congue consequat. Fusce auctor, diam id malesuada pharetra, velit nibh pulvinar odio, vitae faucibus massa dolor eu mi. Sed blandit volutpat risus, ac eleifend nisl pretium quis. Integer ut magna sed nisl vestibulum fringilla eget eu lectus. Sed pharetra, quam vel faucibus ullamcorper, nibh tellus bibendum velit, ut placerat lacus ipsum ac quam.',
@@ -119,7 +123,7 @@ export default function Home({ navigation }) {
       phone: '8112267173'
     },
     {
-      id: 3,
+      key: 3,
       title: 'Drone Photography and Videography',
       institution: 'National Institute of Drone Flying',
       instructor: 'David Brown',
@@ -136,8 +140,8 @@ export default function Home({ navigation }) {
   ];
 
   const Card = ({ item }) => (
-    <TouchableOpacity onPress={() => navigation.navigate('Job Details', { job: item })}>
-      <View style={styles.card} key={item.key}>
+    <TouchableOpacity key={item.key} onPress={() => navigation.navigate('Job Details', { job: item })}>
+      <View style={styles.card}>
         <View style={{ flexDirection: 'row' }}>
           <Image source={{ uri: item.logo }} style={styles.cardImage} />
           <View style={styles.cardContent}>
@@ -155,7 +159,7 @@ export default function Home({ navigation }) {
   );
 
   const CardCourse = ({ item }) => (
-    <TouchableOpacity onPress={() => navigation.navigate("Course Details", { course: item })}>
+    <TouchableOpacity key={item.key} onPress={() => navigation.navigate("Course Details", { course: item })}>
       <View style={{ width: 250, backgroundColor: '#F8F8F8', borderRadius: 8, overflow: 'hidden', marginRight: 16, padding: 15}}>
         <View style={{ flexDirection: 'row' }}>
           <Image source={item.image} style={styles.courseImage} />
@@ -175,7 +179,7 @@ export default function Home({ navigation }) {
   );
 
   const renderDot = (_, index) => (
-    <View key={_.key}
+    <View key={index+1}
       style={[
         styles.dot,
         { backgroundColor: index === activeIndex ? 'coral' : '#d3d3d3' },
@@ -184,8 +188,8 @@ export default function Home({ navigation }) {
   );
 
   const CardNews = ( item, index) => (
-    <TouchableOpacity key={index} style={{marginBottom:10,}} onPress={() => {Linking.openURL(item.url)}}>
-      <View style={{borderRadius: 15, flexDirection:'row', width:'100%', height:130, borderColor:'#a0a0a0', borderWidth:2, padding:10}}>
+    <TouchableOpacity key={index+1} style={{marginBottom:10,}} onPress={() => {Linking.openURL(item.url)}}>
+      <View style={{borderRadius: 15, flexDirection:'row', width:'100%',paddingBottom:15, borderColor:'#a0a0a0', borderWidth:2, padding:10}}>
         <View style={{width:'35%', justifyContent:'center', height:110}}>
           <Image style={{height:110, width:100, paddingRight:10, borderRadius:15}} source={{uri: item.urlToImage}}/>
         </View>
@@ -199,7 +203,7 @@ export default function Home({ navigation }) {
   );
 
   const renderDotCourse = (_, index) => (
-    <View key={_.key}
+    <View key={index+1}
       style={[
         styles.dot,
         { backgroundColor: index === activeIndexCourse ? 'coral' : '#d3d3d3' },
@@ -260,8 +264,8 @@ export default function Home({ navigation }) {
           <FlatList
             // data={getCourses}
             data={courses}
-            renderItem={({ item }) => <CardCourse item={item} />}
             keyExtractor={(item) => item.key}
+            renderItem={({ item }) => <CardCourse item={item} />}
             horizontal
             showsHorizontalScrollIndicator={false}
             snapToInterval={257}

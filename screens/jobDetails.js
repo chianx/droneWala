@@ -31,7 +31,7 @@ export default function JobDetails({route, navigation}) {
       opacity:1,
       animation: true,
       hideOnPress: false,
-      delay: 0,
+      delay: 100,
   });
   }
   return (
