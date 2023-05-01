@@ -77,8 +77,8 @@ export default function JobDetails({route, navigation}) {
             <Text style={{color:'white', fontSize:17, textAlign:'center'}}>Apply Now</Text>
           </TouchableOpacity>
           :
-          <TouchableOpacity onPress={displayToast} style={{backgroundColor:'coral', paddingVertical:9, borderRadius:10, opacity:0.6}}>
-            <Text style={{color:'white', fontSize:17, textAlign:'center'}}>Apply Now</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Applicants", {job:job})} style={{backgroundColor:'coral', paddingVertical:9, borderRadius:10,}}>
+            <Text style={{color:'white', fontSize:17, textAlign:'center'}}>Check Applicants</Text>
           </TouchableOpacity>
           }
           </View>

@@ -106,7 +106,7 @@ export default function FreelanceCompanies({navigation}) {
     ]
     
     const renderItem = ({ item }) => (
-        <TouchableOpacity style={styles.courseContainer} onPress={() => navigation.navigate("Course Details", {course: item})}>
+        <TouchableOpacity style={styles.courseContainer} onPress={() => navigation.navigate("Freelance Details", {freelance: item})}>
         <View style={{flexDirection:'row', padding:12,}}>
           <Image source={item.logo} style={{height:80, width:80}} />
           <View style={{marginLeft:10, flex:1}}>

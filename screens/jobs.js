@@ -7,6 +7,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 import JobDetails from './jobDetails';
 import {db} from '../firebase/databaseConfig'
 import { ref,onValue,push,update,remove } from 'firebase/database';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { all } from 'axios';
 
 export default function Jobs({navigation}) {
 
@@ -16,14 +18,33 @@ export default function Jobs({navigation}) {
   useEffect (() => {
     // isLoading = true;
     const starCountRef = ref(db, 'jobs/');
-    onValue(starCountRef, (snapshot) => {
+    onValue(starCountRef, async(snapshot) => {
       const data = snapshot.val();
-      const job = Object.keys(data).map(key => ({
+      const allJobs = Object.keys(data).map(key => ({
         id: key,
         ...data[key]
       }))
-      setJobs(job);
-      setIsLoading(false);
+      const userdata = await AsyncStorage.getItem("userData");
+      const user = JSON.parse(userdata);
+      let userType = user.userType;
+      if(userType === "company") {
+        var tempJob = [];
+        for(var element in allJobs) {
+            if(allJobs[element].companyName != user.name) {
+                continue;
+            }
+            if(allJobs[element].ftORpt != "Freelance") {
+                tempJob.push(allJobs[element])
+            }
+        }
+        setIsLoading(false);
+        setJobs(tempJob);
+      }else {
+        setJobs(allJobs);
+        setIsLoading(false);
+      }
+      
+      
     });
   }, [])
 
@@ -40,7 +61,7 @@ export default function Jobs({navigation}) {
             <FlatList 
               data={jobs}
               renderItem={({item}) => (
-                <TouchableOpacity onPress={() => navigation.navigate('JobDetails', {job: item})}>
+                <TouchableOpacity onPress={() => navigation.navigate('Job Details', {job: item})}>
                 <View key={item.key} style={styles.jobContainer}>
                   <View style={{flexDirection:'row'}}>
                     <View style={{paddingRight:20}}>

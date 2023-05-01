@@ -1,5 +1,6 @@
 import React from 'react'; 
-import Jobs from '../screens/jobs';
+import FreelanceDetails from '../screens/freelanceDetails';
+import FreelanceCompanies from '../screens/freelanceCompany';
 import { Text, View, TouchableOpacity, Image } from 'react-native';
 import JobDetails from '../screens/jobDetails'
 import Apply from '../screens/apply';
@@ -8,19 +9,17 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Applicants from '../screens/applicants'
 import Images from '../images/index'
-import Application from '../screens/application';
 
 const Stack = createNativeStackNavigator();
 
-export default function JobStack({navigation}) {
+export default function FreelanceStack({navigation}) {
     return (
         // <NavigationContainer independent={true}>
         <Stack.Navigator
-            
         >
             <Stack.Screen 
-                name="Jobs" 
-                component={Jobs}  
+                name="Freelance Projects" 
+                component={FreelanceCompanies}  
                 options = {{
                     headerLeft: () => (
                     <TouchableOpacity onPress={() => navigation.openDrawer()}>
@@ -30,23 +29,17 @@ export default function JobStack({navigation}) {
                         />
                     </TouchableOpacity>
                 ),
+                headerRight: () => (
+                    <TouchableOpacity onPress={() => navigation.navigate("Freelance Form")}>
+                    <Ionicons name="add-circle-outline" size={35} color="black" />
+                    
+                    </TouchableOpacity>
+                )
                 }}
             />
             <Stack.Screen 
-                name="Job Details" 
-                component={JobDetails}
-            />
-            <Stack.Screen 
-                name="Apply" 
-                component={Apply}
-            />
-            <Stack.Screen 
-                name="Application" 
-                component={Application}
-            />
-            <Stack.Screen 
-                name="Applicants" 
-                component={Applicants}
+                name="Freelance Details" 
+                component={FreelanceDetails}
             />
             
         </Stack.Navigator>
