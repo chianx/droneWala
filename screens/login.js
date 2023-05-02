@@ -45,6 +45,7 @@ export default function Login( {navigation} ) {
         var user = userSnap.val()
         console.log(user);
         await AsyncStorage.setItem("userData", JSON.stringify(user));
+        await AsyncStorage.setItem("userType", JSON.stringify(user.userType));
         setIsLoading(false);  
         navigation.navigate("HomeDrawer");
       }else {

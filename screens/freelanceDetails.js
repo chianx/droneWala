@@ -8,11 +8,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function FreelanceDetails ({route, navigation}) {
     const freelance = route.params.freelance;
-    let userType = "";
+    const [userType, setUserType] = useState("");
+  
     const mount = async() => {
-        const user = await AsyncStorage.getItem("userData");
-        const val = JSON.parse(user)
-        userType = val.userType;
+      const type = await AsyncStorage.getItem("userType");
+      const jsonType = JSON.parse(type);
+      setUserType(jsonType);
     }
     useEffect(() => {
         mount()
@@ -59,14 +60,9 @@ export default function FreelanceDetails ({route, navigation}) {
           <View style={{paddingTop:25, borderBottomWidth: 3, borderBottomColor:'#ffe5d3', backgroundColor:'#F8F8F8'}}></View>
           
           <View style={styles.apply}>
-          { userType === "pilot"?
             <TouchableOpacity style={{backgroundColor:'coral', flex:1,height:45, justifyContent:'center', margin:5, borderRadius:10, width:'100%', elevation:5}}>
-              <Text style={{color:'white', fontSize:20, textAlign:'center'}}>Place a bid</Text>
-            </TouchableOpacity> :
-            <TouchableOpacity style={{backgroundColor:'coral', flex:1,height:45, justifyContent:'center', margin:5, borderRadius:10, width:'100%', elevation:5}}>
-              <Text style={{color:'white', fontSize:20, textAlign:'center'}}>View Bids</Text>
+              <Text style={{color:'white', fontSize:20, textAlign:'center'}}>{(userType == "pilot")? "Place a bid" : "View Bids"}</Text>
             </TouchableOpacity>
-          }
           </View>
         </View>
 

@@ -5,12 +5,23 @@ import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import {db} from '../firebase/databaseConfig'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ref,onValue,push,update,remove } from 'firebase/database';
 
 export default function FreelanceCompanies({navigation}) {
 
     const [jobs, setJobs] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [userType, setUserType] = useState("");
+  
+    const mount = async() => {
+      const type = await AsyncStorage.getItem("userType");
+      const jsonType = JSON.parse(type);
+      setUserType(jsonType);
+    }
+    useEffect(() => {
+      mount();
+    }, [])
 
     // useEffect (() => {
     //     // isLoading = true;
@@ -141,9 +152,11 @@ export default function FreelanceCompanies({navigation}) {
                 keyExtractor={(item) => item.id.toString()}
                 contentContainerStyle={styles.flatListContentContainer}
             />
-            <TouchableOpacity style={{alignItems:'flex-end', position:'absolute', bottom:0, width:'100%'}} onPress={() => navigation.navigate("Freelance Form")}>
-                <Ionicons name="add-circle-sharp" size={60} color="coral" />
-            </TouchableOpacity>
+            {userType === "company"? 
+              <TouchableOpacity style={{alignItems:'flex-end', position:'absolute', bottom:0, width:'100%'}} onPress={() => navigation.navigate("Freelance Form")}>
+                  <Ionicons name="add-circle-sharp" size={60} color="coral" />
+              </TouchableOpacity> : <></>
+            }
         </View>
         }
         </View>

@@ -1,4 +1,4 @@
-import React from 'react'; 
+import React, {useEffect, useState} from 'react'; 
 import Jobs from '../screens/jobs';
 import { Text, View, TouchableOpacity, Image } from 'react-native';
 import JobDetails from '../screens/jobDetails'
@@ -9,10 +9,24 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Applicants from '../screens/applicants'
 import Images from '../images/index'
 import Application from '../screens/application';
+import JobForm from '../jobForm/JobForm'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createNativeStackNavigator();
 
 export default function JobStack({navigation}) {
+    const [userType, setUserType] = useState("");
+  
+    const mount = async() => {
+      const type = await AsyncStorage.getItem("userType");
+      const jsonType = JSON.parse(type);
+      setUserType(jsonType);
+    }
+
+    useEffect(() => {
+        mount();
+    }, [])
+
     return (
         // <NavigationContainer independent={true}>
         <Stack.Navigator
@@ -22,7 +36,7 @@ export default function JobStack({navigation}) {
                 name="Jobs" 
                 component={Jobs}  
                 options = {{
-                    headerLeft: () => (
+                headerLeft: () => (
                     <TouchableOpacity onPress={() => navigation.openDrawer()}>
                         <Image
                             source={Images.profile}
@@ -30,11 +44,24 @@ export default function JobStack({navigation}) {
                         />
                     </TouchableOpacity>
                 ),
+                headerRight: () => (
+                    <>
+                    {userType === "company"?
+                        <TouchableOpacity onPress={() => navigation.navigate("Post a Job")}>
+                            <Ionicons name="add-circle-outline" size={35} color="black" />
+                        </TouchableOpacity> : <></>
+                    }
+                    </>
+                )
                 }}
             />
             <Stack.Screen 
                 name="Job Details" 
                 component={JobDetails}
+            />
+            <Stack.Screen 
+                name="Post a Job" 
+                component={JobForm}
             />
             <Stack.Screen 
                 name="Apply" 

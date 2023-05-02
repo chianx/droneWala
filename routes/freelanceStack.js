@@ -1,4 +1,4 @@
-import React from 'react'; 
+import React, {useState, useEffect} from 'react'; 
 import FreelanceDetails from '../screens/freelanceDetails';
 import FreelanceCompanies from '../screens/freelanceCompany';
 import { Text, View, TouchableOpacity, Image } from 'react-native';
@@ -7,12 +7,25 @@ import Apply from '../screens/apply';
 import { NavigationContainer } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Applicants from '../screens/applicants'
-import Images from '../images/index'
+import Applicants from '../screens/applicants';
+import Images from '../images/index';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createNativeStackNavigator();
 
 export default function FreelanceStack({navigation}) {
+    const [userType, setUserType] = useState("");
+  
+    const mount = async() => {
+      const type = await AsyncStorage.getItem("userType");
+      const jsonType = JSON.parse(type);
+      setUserType(jsonType);
+    }
+
+    useEffect(() => {
+        mount();
+    }, [])
+
     return (
         // <NavigationContainer independent={true}>
         <Stack.Navigator
@@ -30,10 +43,13 @@ export default function FreelanceStack({navigation}) {
                     </TouchableOpacity>
                 ),
                 headerRight: () => (
-                    <TouchableOpacity onPress={() => navigation.navigate("Freelance Form")}>
-                    <Ionicons name="add-circle-outline" size={35} color="black" />
-                    
-                    </TouchableOpacity>
+                    <>
+                    {userType === "company"?
+                        <TouchableOpacity onPress={() => navigation.navigate("Freelance Form")}>
+                            <Ionicons name="add-circle-outline" size={35} color="black" />
+                        </TouchableOpacity> : <></>
+                    }
+                    </>
                 )
                 }}
             />

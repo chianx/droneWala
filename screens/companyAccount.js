@@ -87,10 +87,10 @@ export default function Account({isClicked, setIsClicked, navigation }) {
       }
     
     return (
-      <ScrollView contentContainerStyle={{ flexGrow: 1}}>
+      <ScrollView>
         <View style={styles.container}>
             <View style={styles.basic}>
-                <View style={{ paddingHorizontal: 20, flex: 1, justifyContent: 'center' }}>
+                <View style={{ paddingHorizontal: 20, justifyContent: 'center' }}>
                     <View style={{ flexDirection: 'row' }}>
                         <Image source={{uri: user.logo}} style={styles.avatar} />
                         <View style={{ flex: 1, justifyContent: 'center', paddingLeft: 15 }}>
@@ -137,14 +137,12 @@ export default function Account({isClicked, setIsClicked, navigation }) {
                 </View>
             </View>
             
-            <View style={[styles.status]}>
+            {/* <View style={[styles.status]}>
                 <View style={{ flexDirection: 'row', paddingBottom: 15 }}>
                     <View style={[styles.tab, active === 'Jobs' && styles.btnActive, { borderBottomStartRadius: 30, borderTopLeftRadius: 30}]}>
-                        {/* <TouchableOpacity onPress={() => (setActive('Jobs') & setDataList(jobs))} ><Text style={[active === 'Jobs' && { color: 'white' }]}>Jobs</Text></TouchableOpacity> */}
                         <TouchableOpacity onPress={handleJobPress} ><Text style={[active === 'Jobs' && { color: 'white' }]}>Jobs</Text></TouchableOpacity>
                     </View>
                     <View style={[styles.tab, active === 'Freelance' && styles.btnActive, { borderBottomEndRadius: 30, borderTopRightRadius: 30}]}>
-                        {/* <TouchableOpacity onPress={() => setActive('Freelance') & setDataList(freelance)} ><Text style={[active === 'Freelance' && { color: 'white' }]}>Freelance Projects</Text></TouchableOpacity> */}
                         <TouchableOpacity onPress={handleFreelancePress} ><Text style={[active === 'Freelance' && { color: 'white' }]}>Freelance Projects</Text></TouchableOpacity>
                     </View>
                 </View>
@@ -172,7 +170,7 @@ export default function Account({isClicked, setIsClicked, navigation }) {
               })}
                 </View>
 
-            </View>
+            </View> */}
 
         </View>
         <EditProfileModalComp

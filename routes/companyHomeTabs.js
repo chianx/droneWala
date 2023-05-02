@@ -4,16 +4,14 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../screens/home'
 import Images from '../images/index';
-import JobForm from '../jobForm/JobForm'
 import FreelanceStack from './freelanceStack';
-import CompanyAccountStack from './myAccountStack'
+import Account from '../screens/companyAccount';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import JobDetails from '../screens/jobDetails';
-import FreelanceCompanies from '../screens/freelanceCompany';
-import JobsCompany from '../screens/jobsCompany';
 import FreelanceDetails from '../screens/freelanceDetails';
 import JobStack from './jobStack';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 
@@ -76,7 +74,30 @@ export default function CompanyHomeTab({navigation}) {
             headerShown:false,
           }}
         />
-        <Tab.Screen name="My Account" component={CompanyAccountStack} />
+        <Tab.Screen 
+                name="My Account" 
+                options = {{
+                    headerLeft: () => (
+                    <TouchableOpacity onPress={() => navigation.openDrawer()}>
+                        <Image
+                            source={Images.profile}
+                            style={{ height: 45, width: 45, borderRadius:40, marginLeft:15, borderWidth:1, borderColor:'black'}}
+                        />
+                    </TouchableOpacity>
+                    ),
+                    headerShown:true,
+                    headerRight: () => (
+                        <TouchableOpacity onPress={handleClick}
+                        style={{paddingRight:'11%'}}
+                        >
+                        <FontAwesome5 name="user-edit" size={19} color="black" />
+                        </TouchableOpacity>
+                    ),
+                }}
+            >
+            {props => <Account {...props} isClicked={isClicked} setIsClicked={setIsClicked} />}
+
+            </Tab.Screen>
         
         <Tab.Screen name="Job Details" component={JobDetails} 
           options={{

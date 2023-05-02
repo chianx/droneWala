@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import { Text, View, TouchableOpacity, Image } from 'react-native';
+import FreelanceStack from './freelanceStack'
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../screens/home'
@@ -8,9 +9,10 @@ import JobStack from '../routes/jobStack'
 import Account from '../screens/account';
 import Images from '../images/index';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { FontAwesome5 } from '@expo/vector-icons';
 import CourseDetails from '../screens/courseDetails';
 import JobDetails from '../screens/jobDetails';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 
@@ -38,7 +40,11 @@ export default function HomeTab({navigation}) {
             }
              else if (route.name === 'My Account') {
               iconName = focused ? 'person-circle' : 'person-circle-outline';
-            }
+            } 
+              else if (route.name === 'Freelance') {
+                return focused? <MaterialCommunityIcons name="handshake" size={size+1} color={color} />
+               : <MaterialCommunityIcons name="handshake-outline" size={size} color={color} />;
+              }
 
             // You can return any component that you like here!
             return <Ionicons name={iconName} size={size} color={color} />;
@@ -71,6 +77,8 @@ export default function HomeTab({navigation}) {
           }}
         />
         <Tab.Screen name="Jobs" component={JobStack} />
+
+        <Tab.Screen name="Freelance" component={FreelanceStack} />
 
         <Tab.Screen name="Learnings" component={CourseStack} 
           options ={{

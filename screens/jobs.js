@@ -8,13 +8,12 @@ import JobDetails from './jobDetails';
 import {db} from '../firebase/databaseConfig'
 import { ref,onValue,push,update,remove } from 'firebase/database';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { all } from 'axios';
 
 export default function Jobs({navigation}) {
 
   const [jobs, setJobs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
+  const [userType, setUserType] = useState("pilot");
   useEffect (() => {
     // isLoading = true;
     const starCountRef = ref(db, 'jobs/');
@@ -26,8 +25,8 @@ export default function Jobs({navigation}) {
       }))
       const userdata = await AsyncStorage.getItem("userData");
       const user = JSON.parse(userdata);
-      let userType = user.userType;
-      if(userType === "company") {
+      setUserType(user.userType);
+      if(user.userType === "company") {
         var tempJob = [];
         for(var element in allJobs) {
             if(allJobs[element].companyName != user.name) {
@@ -48,12 +47,6 @@ export default function Jobs({navigation}) {
     });
   }, [])
 
-  // const details = [{key:1, jobTitle:'Job Title', company:'Company-Name', salary: '3,000-5,000/month', type:'Full Time', Location:'Jaipur'},
-  //          {key:2, jobTitle:'Lorem Ipsum dolor ebel candle jameesrirf', company:'Garud Survey', salary: '10,000-15,000/month', type:'Full Time',Location:'Jaipur'},
-  //          {key:3, jobTitle:'Job Title-2', company:'Garud Survey', salary: '10,000-15,000/month', type:'Full Time', Location:'Jaipur'},
-  //          {key:4, jobTitle:'Job Title-2', company:'Garud Survey', salary: '10,000-15,000/month', type:'Full Time', Location:'Jaipur'},
-  //           {key:5, jobTitle:'Job Title-3', company:'DronePilots Network', salary: '30,000-35,000/month', type:'Part Time', Location:'Jaipur'},
-  //           {key:6, jobTitle:'Drone Survey Job', company:'Fire Drone', type:'Full Time', salary:'20000/month', Location:'Jaipur'}]
   return (
         
         <View style={styles.container}>
@@ -83,9 +76,13 @@ export default function Jobs({navigation}) {
               )}
             />
         }
+        {userType === "company"? 
+          <TouchableOpacity style={{alignItems:'flex-end', position:'absolute', bottom:0, width:'100%', paddingRight:20}} onPress={() => navigation.navigate("Post a Job")}>
+            <Ionicons name="add-circle-sharp" size={60} color="coral" />
+          </TouchableOpacity> :
+          <></>
+        }
         </View>
-
-
     )
 }
 
