@@ -11,8 +11,6 @@ import {
 export default function Applicants({route, navigation}) {
   const job = route.params.job
   const [applied, setApplied] = useState([]);
-  const [application, setApplication] = useState();
-  const [xyz, setXyz] = useState([]);
   
   useEffect (() => {
     // isLoading = true;
@@ -22,23 +20,21 @@ export default function Applicants({route, navigation}) {
       if(data == null) {
         console.log("null");
       }else {
-        console.log("data " + data);
+        let applicants = [];
         for(var index in data) {
-          console.log(`applications/${data[index]}`);
           const applicationRef = ref(db, `applications/${data[index]}`);
           onValue(applicationRef, (snap) => {
             const application = snap.val();
-            console.log(application);
-            setApplication(application);
+            // setApplication(application);
             console.log(`users/${application.userId}`)
             const xRef = ref(db, `users/${application.userId}`);
                 onValue(xRef, (snaps) => {
                   const x = snaps.val();
-                  console.log(x);
-                  setApplied([...applied, x]);
+                  applicants.push({answer: application, user:x});
             })
           })
         }
+        setApplied(applicants);
       }
     });
   }, [])
@@ -47,17 +43,17 @@ export default function Applicants({route, navigation}) {
         <View style={styles.container}>
             {applied.map((item, index) => {
                 return (
-                    <TouchableOpacity key={index} onPress={() => navigation.navigate("Application", {pilot: item, answer:application})}>
+                    <TouchableOpacity key={index} onPress={() => navigation.navigate("Application", {pilot: item.user, answer:item.answer})}>
                   <View key={item.key} style={styles.jobContainer}>
                     <View style={{flexDirection:'row'}}>
                       <View style={{paddingRight:20}}>
-                        <Image source={Images.profile} style={styles.profilePic}/>
+                        <Image source={{uri: item.user.profile}} style={styles.profilePic}/>
                       </View>
                       <View style={{paddingRight:20, width:200}}>
-                        <Text style={styles.title}>{item.name}</Text>
-                        <Text style={{color:'#808080'}}><Ionicons name="location-outline" size={14} color="#808080" />{' ' +item.city}</Text>
-                        <Text style={{color:'#808080'}}>Experience:{' ' + item.experience}</Text>
-                        <Text style={{color:'#808080'}}>DGCA Certified:{item.certified? ' YES' : ' NO'}</Text>
+                        <Text style={styles.title}>{item.user.name}</Text>
+                        <Text style={{color:'#808080'}}><Ionicons name="location-outline" size={14} color="#808080" />{' ' +item.user.city}</Text>
+                        <Text style={{color:'#808080'}}>Experience:{' ' + item.user.experience}</Text>
+                        <Text style={{color:'#808080'}}>DGCA Certified:{item.user.certified? ' YES' : ' NO'}</Text>
                       </View>
                     </View> 
                   </View>

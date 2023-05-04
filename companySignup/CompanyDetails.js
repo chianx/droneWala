@@ -104,7 +104,7 @@ export default function PersonalDetails({ formData, setFormData }) {
     }
   }
   const handleAboutChange = (about) => {
-    if (about.trim().length >= 50) {
+    if (about.trim().length >= 200) {
       setFormData({ ...formData, about: about, aboutIsSet: true });
     } else {
       setFormData({ ...formData, about: about, aboutIsSet: false });

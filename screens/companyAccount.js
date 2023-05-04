@@ -31,60 +31,62 @@ export default function Account({isClicked, setIsClicked, navigation }) {
     const handleCancelEdit = () => {
        setIsClicked(!isClicked);
     };
-
-    const [allJobs, setAllJobs] = useState([]);
-    const [active, setActive] = useState('Jobs');
-    const [dataList, setDataList] = useState([]);
-    useEffect (() => {
-        // isLoading = true;
+    useEffect(() => {
         mount();
-        const jobRef = ref(db, 'jobs/');
-        onValue(jobRef, async(snapshot) => {
-          const data = snapshot.val();
-          var app = Object.keys(data).map(key => ({
-            id: key,
-            ...data[key]
-          }));
-          setAllJobs(app);
-          setTimeout(() => {
-            handleJobPress();
-          }, 1000);
+    }, [])
+    // const [allJobs, setAllJobs] = useState([]);
+    // const [active, setActive] = useState('Jobs');
+    // const [dataList, setDataList] = useState([]);
+    // useEffect (() => {
+    //     // isLoading = true;
+    //     mount();
+    //     const jobRef = ref(db, 'jobs/');
+    //     onValue(jobRef, async(snapshot) => {
+    //       const data = snapshot.val();
+    //       var app = Object.keys(data).map(key => ({
+    //         id: key,
+    //         ...data[key]
+    //       }));
+    //       setAllJobs(app);
+    //       setTimeout(() => {
+    //         handleJobPress();
+    //       }, 1000);
 
-        });
-      }, [])
-      const handleJobPress =() => {
-        setActive('Jobs')
-        var tempJob = [];
-        var tempFree = [];
-        for(var element in allJobs) {
-            if(allJobs[element].companyName != user.name) {
-                continue;
-            }
-            if(allJobs[element].ftORpt != "Freelance") {
-                tempJob.push(allJobs[element])
-            }else {
-                tempFree.push(allJobs[element]);
-            }
-        }
-        setDataList(tempJob);
+    //     });
+    //   }, [])
+    //   const handleJobPress =() => {
+    //     setActive('Jobs')
+    //     var tempJob = [];
+    //     var tempFree = [];
+    //     for(var element in allJobs) {
+    //         if(allJobs[element].companyName != user.name) {
+    //             continue;
+    //         }
+    //         if(allJobs[element].ftORpt != "Freelance") {
+    //             tempJob.push(allJobs[element])
+    //         }else {
+    //             tempFree.push(allJobs[element]);
+    //         }
+    //     }
+    //     setDataList(tempJob);
 
-      }
-      const handleFreelancePress =() => {
-        setActive('Freelance')
-        var tempJob = [];
-        var tempFree = [];
-        for(var element in allJobs) {
-            if(allJobs[element].companyName != user.name) {
-                continue;
-            }
-            if(allJobs[element].ftORpt != "Freelance") {
-                tempJob.push(allJobs[element])
-            }else {
-                tempFree.push(allJobs[element]);
-            }
-        }
-        setDataList(tempFree);
-      }
+    //   }
+    //   const handleFreelancePress =() => {
+    //     setActive('Freelance')
+    //     var tempJob = [];
+    //     var tempFree = [];
+    //     for(var element in allJobs) {
+    //         if(allJobs[element].companyName != user.name) {
+    //             continue;
+    //         }
+    //         if(allJobs[element].ftORpt != "Freelance") {
+    //             tempJob.push(allJobs[element])
+    //         }else {
+    //             tempFree.push(allJobs[element]);
+    //         }
+    //     }
+    //     setDataList(tempFree);
+    //   }
     
     return (
       <ScrollView>
@@ -121,20 +123,27 @@ export default function Account({isClicked, setIsClicked, navigation }) {
                 </View>
             </View>
 
-            <View style={{ width: '90%', flexDirection: 'row' }}>
-            
-                <View style={[styles.interests, {backgroundColor:'#ffcc99'}]}>
-                    <Text style={{ fontSize: 17, color: '#303030', paddingBottom: 5, width:'100%', paddingLeft:10, paddingTop:10}}>Feilds of Work</Text>
-                    <View style={{flexDirection:'row', width:'100%', flex:1, flexWrap:'wrap'}}>
-                    { category.map((item, index) => {
-                        return (
-                            <View key = {index}>
-                            <Text style={{color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>{item}</Text>
-                            </View>
-                        )
-                    })}
+            <View style={styles.drones}>
+                <Text style={{ fontSize: 17, color: '#303030', paddingBottom: 5, width:'100%', paddingLeft:10, paddingTop:10}}>Fields of Work</Text>
+                <View style={{flexDirection:'row', width:'100%', flex:1, flexWrap:'wrap'}}>
+                { category.map((item, index) => {
+                return (
+                    <View key = {index}>
+                    <Text style={{color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>{item}</Text>
                     </View>
+                )
+                }) 
+                }
                 </View>
+            </View>
+
+            <View style={styles.divider}>
+                <View style={[styles.dividerView, {marginRight:20, marginLeft:20}]}></View>
+                <Text style={styles.dividerText}>About us</Text>
+                <View style={[styles.dividerView, {marginRight:20, marginLeft:20}]}></View>
+            </View>
+            <View style={{width:'90%', marginTop:10}}>
+                <Text style={{color:'grey', fontSize:15}}>{user.about}</Text>
             </View>
             
             {/* <View style={[styles.status]}>
@@ -192,11 +201,11 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     basic: {
-      flex:1,
+        flex:1,
         marginTop: 10,
         borderRadius: 20,
-        backgroundColor: 'coral',
-        height: 140,
+        backgroundColor: '#fda172',
+        paddingVertical:40,
         width: '90%',
         elevation: 10,
         justifyContent:'center'
@@ -229,7 +238,7 @@ const styles = StyleSheet.create({
     interests: {
         marginTop: 17,
         width: '100%',
-        // backgroundColor: '#fda172',
+        backgroundColor: '#ffe5d3',
         // alignItems: 'center',
         borderRadius: 20,
         elevation: 7,
@@ -238,13 +247,13 @@ const styles = StyleSheet.create({
         
     },
     drones: {
-        marginTop: 17,
-        width: '48%',
-        backgroundColor: '#fda172',
-        alignItems: 'center',
-        borderRadius: 20,
-        elevation: 10,
-        padding: 10
+        marginTop:17,
+        width: '90%',
+        backgroundColor: '#ffe5d3',
+        alignItems:'center',
+        borderRadius:20,
+        elevation:10,
+        padding:10
     },
     status: {
         width: '90%',
@@ -291,5 +300,22 @@ const styles = StyleSheet.create({
         borderTopWidth: 3,
         borderTopColor: '#ffe5d3',
         backgroundColor: '#F8F8F8'
-    }
+    },
+    divider: {
+        flexDirection:'row',
+        width:'100%',
+        marginTop: '7%',
+        alignItems: 'center',
+        justifyContent:'space-evenly'
+    },
+    dividerView: {
+        height:2,
+        backgroundColor:'#8e8e8e',
+        width:'25%',
+        opacity: 0.6
+    },
+    dividerText: {
+        fontSize: 22,
+        color:'#8e8e8e'
+    },
 });
