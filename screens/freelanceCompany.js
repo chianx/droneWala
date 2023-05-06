@@ -153,7 +153,7 @@ export default function FreelanceCompanies({navigation}) {
                 contentContainerStyle={styles.flatListContentContainer}
             />
             {userType === "company"? 
-              <TouchableOpacity style={{alignItems:'flex-end', position:'absolute', bottom:0, width:'100%'}} onPress={() => navigation.navigate("Freelance Form")}>
+              <TouchableOpacity style={{alignItems:'flex-end', position:'absolute', bottom:0, width:'100%'}} onPress={() => navigation.navigate("Post a Project")}>
                   <Ionicons name="add-circle-sharp" size={60} color="coral" />
               </TouchableOpacity> : <></>
             }

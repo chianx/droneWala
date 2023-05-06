@@ -216,29 +216,50 @@ export default function Home({ navigation }) {
       <View style={styles.container}>
 
         {/* Icons */}
+        {userType === "pilot"?
         <View style={{ flexDirection: 'row', width: '90%', justifyContent: 'space-between', marginTop:20 }}>
           <View>
-            <TouchableOpacity onPress={() => {userType === "pilot"? navigation.navigate("Jobs") : navigation.navigate("JobsStack") }}>
+            <TouchableOpacity onPress={() => {navigation.navigate("Jobs")}}>
               <Image style={styles.icons} source={Images.searchJobs} />
               <Text style={{ textAlign: 'center', marginVertical: 7, color: '#696969' }}>Search Jobs</Text>
             </TouchableOpacity>
           </View>
           <View>
-            <TouchableOpacity onPress={() => { userType === "company" ? navigation.navigate("Create Post") : navigation.navigate("Learnings") }}>
+            <TouchableOpacity onPress={() => { navigation.navigate("Learnings") }}>
               <Image style={styles.icons} source={Images.learnDrone} />
-              <Text style={{ textAlign: 'center', marginVertical: 7, color: '#696969' }}>
-                {userType === "company" ? "Post a Job" : "Start Learning"}
-              </Text>
+              <Text style={{ textAlign: 'center', marginVertical: 7, color: '#696969' }}>Start Learning</Text>
             </TouchableOpacity>
           </View>
           <View>
-            <TouchableOpacity onPress={() => { userType === "pilot"? navigation.navigate("My Account") : navigation.navigate("CompanyAccountStack")}}>
+            <TouchableOpacity onPress={() => {navigation.navigate("FreelanecStack")}}>
               <Image style={styles.icons} source={Images.myDrones} />
-              <Text style={{ textAlign: 'center', marginVertical: 7, color: '#696969' }}>My Drones</Text>
+              <Text style={{ textAlign: 'center', marginVertical: 7, color: '#696969' }}>Freelance Work</Text>
             </TouchableOpacity>
           </View>
         </View>
-
+        
+        :
+        <View style={{ flexDirection: 'row', width: '90%', justifyContent: 'space-between', marginTop:20 }}>
+          <View>
+            <TouchableOpacity onPress={() => {navigation.navigate("My Jobs", {screen : 'Post a Job'})}}>
+              <Image style={styles.icons} source={Images.searchJobs} />
+              <Text style={{ textAlign: 'center', marginVertical: 7, color: '#696969' }}>Post a Job</Text>
+            </TouchableOpacity>
+          </View>
+          <View>
+            <TouchableOpacity onPress={() => {navigation.navigate("My Projects", {screen : "Post a Project"})}}>
+              <Image style={styles.icons} source={Images.learnDrone} />
+              <Text style={{ textAlign: 'center', marginVertical: 7, color: '#696969' }}>Post a Project</Text>
+            </TouchableOpacity>
+          </View>
+          <View>
+            <TouchableOpacity onPress={() => {navigation.navigate("My Account")}}>
+              <Image style={styles.icons} source={Images.myDrones} />
+              <Text style={{ textAlign: 'center', marginVertical: 7, color: '#696969' }}>My Account</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        }
         {/* Trending Jobs */}
         <View style={{ width: '90%', marginVertical: 25 }}>
           <Text style={{ width: '100%', textAlign: 'left', fontSize: 20, color: '#696969', fontWeight: 'bold', marginBottom: 10, marginLeft: 5 }}>Trending Job Opportunities</Text>

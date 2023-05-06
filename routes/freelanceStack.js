@@ -1,15 +1,14 @@
 import React, {useState, useEffect} from 'react'; 
 import FreelanceDetails from '../screens/freelanceDetails';
 import FreelanceCompanies from '../screens/freelanceCompany';
-import { Text, View, TouchableOpacity, Image } from 'react-native';
-import JobDetails from '../screens/jobDetails'
-import Apply from '../screens/apply';
+import {TouchableOpacity, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Applicants from '../screens/applicants';
 import Images from '../images/index';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import FreelanceForm from '../freelanceForm/form';
+import ChooseCategory from '../freelanceForm/choose';
 
 const Stack = createNativeStackNavigator();
 
@@ -45,7 +44,7 @@ export default function FreelanceStack({navigation}) {
                 headerRight: () => (
                     <>
                     {userType === "company"?
-                        <TouchableOpacity onPress={() => navigation.navigate("Freelance Form")}>
+                        <TouchableOpacity onPress={() => navigation.navigate("Post a Project")}>
                             <Ionicons name="add-circle-outline" size={35} color="black" />
                         </TouchableOpacity> : <></>
                     }
@@ -56,6 +55,14 @@ export default function FreelanceStack({navigation}) {
             <Stack.Screen 
                 name="Freelance Details" 
                 component={FreelanceDetails}
+            />
+            <Stack.Screen 
+                name="Post a Project" 
+                component={ChooseCategory}
+            />
+            <Stack.Screen 
+                name="Freelance Form" 
+                component={FreelanceForm}
             />
             
         </Stack.Navigator>
