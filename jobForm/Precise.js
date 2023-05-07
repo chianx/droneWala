@@ -140,7 +140,7 @@ export default function Precise({ formData, setFormData }) {
                         editable={false}
                         placeholderTextColor="grey"
                         placeholder='Last date to apply *'
-                        value={formData.foundedin}
+                        value={formData.date}
                         style={{ width: 280, fontSize: 17, height: 55, color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', borderColor: formData.dateIsSet ? 'grey' : 'red', marginRight: 20, marginBottom: 15 }}
                     /></TouchableOpacity> :
                         <TouchableOpacity onPress={() => { setOpen(!open) }} style={{ padding: 0 }}>
@@ -148,7 +148,7 @@ export default function Precise({ formData, setFormData }) {
                             editable={false}
                             placeholderTextColor="grey"
                             placeholder='Apply by *'
-                            value={formData.foundedin}
+                            value={formData.date}
                             style={{ width: 280, fontSize: 17, height: 55, color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', borderColor: formData.dateIsSet ? 'grey' : 'red', marginRight: 20, marginBottom: 15 }}
                         />
                         </TouchableOpacity>
@@ -157,11 +157,11 @@ export default function Precise({ formData, setFormData }) {
                 <View>
                     {open ? <DatePicker
                         onSelectedChange={(date) => {
-                            setDate(date);
+                            setFormData({ ...formData, date: date, dateIsSet: true });
                             setOpen(!open);
                         }}
                         mode="calendar"
-                        maximumDate={todaysDate}
+                        minimumDate={todaysDate}
                     /> : <></>}
                 </View>
             </View>

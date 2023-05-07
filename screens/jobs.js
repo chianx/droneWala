@@ -29,13 +29,11 @@ export default function Jobs({navigation}) {
       if(user.userType === "company") {
         var tempJob = [];
         for(var element in allJobs) {
-            if(allJobs[element].companyName != user.name) {
-                continue;
-            }
-            if(allJobs[element].ftORpt != "Freelance") {
-                tempJob.push(allJobs[element])
-            }
-        }
+          if(allJobs[element].companyId != user.userId) {
+              continue;
+          }
+          tempJob.push(allJobs[element])
+      }
         setIsLoading(false);
         setJobs(tempJob);
       }else {

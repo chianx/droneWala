@@ -10,11 +10,14 @@ import { ref, onValue, query, orderByChild, limitToLast, limitToFirst, push, set
 import axios from 'axios';
 
 export default function Home({ navigation }) {
-  const [sugestions, setSugestions] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
   const [activeIndexCourse, setActiveIndexCourse] = useState(0);
   const [userType, setUserType] = useState("");
   const [user, setUser] = useState({});
+  const [getJobs, setJobs] = useState([]);
+  const [articles, setArticles] = useState([]);
+  const [getCourses, setCourses] = useState([]);
+
 
   const mount = async () => {
     const userdata = await AsyncStorage.getItem("userData");
@@ -44,6 +47,40 @@ export default function Home({ navigation }) {
       
     }
     setArticles(temp);
+    if(val.userType === 'company') {
+      console.log("usertype company selected");
+      const starCountRef = ref(db, 'jobs/');
+      onValue(starCountRef, async(snapshot) => {
+      const data = snapshot.val();
+      const allJobs = Object.keys(data).map(key => ({
+        id: key,
+        ...data[key]
+      }))
+        var tempJob = [];
+        for(var element in allJobs) {
+            if(allJobs[element].companyId != user.userId) {
+                continue;
+            }
+            tempJob.push(allJobs[element])
+        }
+        setJobs(tempJob);
+    });
+    }else {
+      const starCountRefJobs = query(ref(db, 'jobs/'), orderByChild('numOpen'), limitToFirst(4));
+      onValue(starCountRefJobs, (snapshot) => {
+      const data = snapshot.val();
+      let job = [];
+      job = Object.keys(data).map(key => ({
+        key: key,
+        ...data[key]
+      }))
+      if(job.length === 0) {
+        
+      }else {
+        setJobs(job);
+      }
+    });
+    }
   }
 
   const { width } = Dimensions.get('window');
@@ -61,29 +98,9 @@ export default function Home({ navigation }) {
     setActiveIndexCourse(Math.round(index));
   };
 
-  const [getJobs, setJobs] = useState([]);
-  const [articles, setArticles] = useState([]);
-  const [getCourses, setCourses] = useState([]);
 
   useEffect(() => {
     mount();
-    const starCountRefJobs = query(ref(db, 'jobs/'), orderByChild('numOpen'), limitToFirst(4));
-    onValue(starCountRefJobs, (snapshot) => {
-      const data = snapshot.val();
-      let job = [];
-      job = Object.keys(data).map(key => ({
-        key: key,
-        ...data[key]
-      }))
-      if(job.length === 0) {
-        
-      }else {
-        setJobs(job);
-      }
-      
-      
-      
-    });
     // onValue(starCountRefCourses, (snapshot) => {
     //   const data = snapshot.val();
     //   const courses = Object.keys(data).map(key => ({
@@ -268,7 +285,8 @@ export default function Home({ navigation }) {
         }
         {/* Trending Jobs */}
         <View style={{ width: '90%', marginVertical: 25 }}>
-          <Text style={{ width: '100%', textAlign: 'left', fontSize: 20, color: '#696969', fontWeight: 'bold', marginBottom: 10, marginLeft: 5 }}>Trending Job Opportunities</Text>
+          <Text style={{ width: '100%', textAlign: 'left', fontSize: 20, color: '#696969', fontWeight: 'bold', marginBottom: 10, marginLeft: 5 }}>{user.userType === "company"? "My Jobs" : "Trending Job Opportunitie"}</Text>
+          {getJobs.length === 0? <View><Text style={{textAlign:'center', fontSize:18, color:'grey'}}>No Jobs Found</Text></View>: <></>}
           <FlatList
             data={getJobs}
             renderItem={({ item }) => <Card item={item} />}
@@ -287,7 +305,7 @@ export default function Home({ navigation }) {
         {/* Courses */}
         {userType === "pilot"?
         <View style={{ width: '90%', marginVertical: 0 }}>
-          <Text style={{ width: '100%', textAlign: 'left', fontSize: 20, color: '#696969', fontWeight: 'bold', marginBottom: 10, marginLeft: 5 }}>Trending Courses</Text>
+          <Text style={{ width: '100%', textAlign: 'left', fontSize: 20, color: '#696969', fontWeight: 'bold', marginBottom: 10, marginLeft: 5 }}>{"Trending Courses"}</Text>
           <FlatList
             // data={getCourses}
             data={courses}
@@ -304,23 +322,6 @@ export default function Home({ navigation }) {
           </View>
         </View> : <></>
         }
-
-        {/* Suggestion Area */}
-        {/* <View style={{ width: '90%', marginTop: 10, marginBottom: 50 }}>
-          <Text style={{ width: '100%', textAlign: 'left', fontSize: 20, color: '#696969', fontWeight: 'bold', marginBottom: 10, marginLeft: 5 }}>Got any Suugestions for us ?</Text>
-
-          <View style={styles.suggestion}>
-            <TextInput
-              placeholder='Your suggestion'
-              multiline
-              numberOfLines={8}
-              onChangeText={(text) => setSugestions(text)}
-              value={sugestions}
-              style={styles.textArea}
-            />
-            <TouchableOpacity style={styles.submitBtn} onPress={handleSubmission}><Text style={{ color: 'white', fontSize: 17 }}>Submit</Text></TouchableOpacity>
-          </View>
-        </View> */}
 
         <View style={{ width: '90%', marginTop: 10, marginBottom: 50 }}>
           <Text style={{ width: '100%', textAlign: 'left', fontSize: 20, color: '#696969', fontWeight: 'bold', marginBottom: 10, marginLeft: 5 }}>News</Text>
@@ -379,7 +380,6 @@ const styles = StyleSheet.create({
   },
   card: {
     width: 230,
-    height: 200,
     backgroundColor: '#F8F8F8',
     borderRadius: 8,
     overflow: 'hidden',
