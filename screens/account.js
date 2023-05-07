@@ -83,9 +83,6 @@ export default function Account({isClicked, setIsClicked, navigation}) {
             <View style={{flexDirection:'row', width:'100%', flex:1, flexWrap:'wrap'}}>
               <Text style={{ color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>Cinematography</Text>
               <Text style={{color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>Mining</Text>
-              <Text style={{color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>Mining</Text>
-              <Text style={{color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>Mining</Text>
-              <Text style={{color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>Agriculture</Text>
               <Text style={{color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>Agriculture</Text>
             </View>
           </View>

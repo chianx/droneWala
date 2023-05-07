@@ -109,7 +109,7 @@ export default function JobForm({navigation}) {
                     var refs = push(ref(db, "jobs/"));
                     const salRange = formData.salRangeFrom+' - '+formData.salRangeTo ;
 
-                    var final =  {companyId: userJson.userId, aboutCompany: userJson.about, logo: userJson.logo, companyName: userJson.name, jobId: refs.key, jobTitle: formData.jobTitle, location:formData.location ,salRange: salRange,ftORpt: formData.ftORpt,numOpen: formData.numOpen,date: formData.date,aboutJob: formData.aboutJob,whoApply: formData.whoApply, }
+                    var final =  {companyId: userJson.userId, aboutCompany: userJson.about, logo: userJson.logo, companyName: userJson.companyName, jobId: refs.key, jobTitle: formData.jobTitle, location:formData.location ,salRange: salRange,ftORpt: formData.ftORpt,numOpen: formData.numOpen,date: formData.date,aboutJob: formData.aboutJob,whoApply: formData.whoApply, }
                     set(refs, final).then(async() => {
                         console.log("Job Form Posted Successfully!");
                     });
@@ -121,28 +121,26 @@ export default function JobForm({navigation}) {
                             id: key,
                             ...data[key]
                         }))
-                        setTokens(fcmTokens);
                         for(var i=0; i<fcmTokens.length; i++) {
                             console.log(fcmTokens[i].fcmToken);
                             sendNotifications(fcmTokens[i].fcmToken);
                         }
-                        setFormData({});
-                        setScreen(0);
-                        Toast.show('Job Posted Successfully!', {
-                            backgroundColor:'#fda172',
-                            duration: Toast.durations.LONG,
-                            position: -100,
-                            shadow: true,
-                            borderRadius: 100, 
-                            animation: true,
-                            opacity:1,
-                            hideOnPress: false,
-                            delay: 1000,
-                        });
-                        setLoading(false);
-                        navigation.navigate("Home");
                     })
-                    
+                    setFormData({});
+                    setScreen(0);
+                    Toast.show('Job Posted Successfully!', {
+                        backgroundColor:'#fda172',
+                        duration: Toast.durations.LONG,
+                        position: -100,
+                        shadow: true,
+                        borderRadius: 100, 
+                        animation: true,
+                        opacity:1,
+                        hideOnPress: false,
+                        delay: 1000,
+                    });
+                    setLoading(false);
+                    navigation.navigate("Home");
                 });
             }else {
                 setErrorMessage(errMsg);

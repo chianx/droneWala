@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Images from '../images/index'
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import {db} from '../firebase/databaseConfig'
@@ -11,15 +11,17 @@ import {
 export default function Applicants({route, navigation}) {
   const job = route.params.job
   const [applied, setApplied] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   
   useEffect (() => {
-    // isLoading = true;
+    setIsLoading(true);
     const jobRef = ref(db, `jobs/${job.jobId}/applied`);
     onValue(jobRef, (snapshot) => {
       const data = snapshot.val();
       if(data == null) {
         console.log("null");
       }else {
+        console.log(data); 
         let applicants = [];
         for(var index in data) {
           const applicationRef = ref(db, `applications/${data[index]}`);
@@ -30,16 +32,22 @@ export default function Applicants({route, navigation}) {
             const xRef = ref(db, `users/${application.userId}`);
                 onValue(xRef, (snaps) => {
                   const x = snaps.val();
+                  console.log(x);
                   applicants.push({answer: application, user:x});
+                  
             })
           })
         }
         setApplied(applicants);
+        setIsLoading(false);
       }
     });
   }, [])
-
-  return (
+  if(isLoading) {
+    return (
+      <View style={{backgroundColor: '#e0e0e0aa', flex:1, justifyContent:'center'}}><ActivityIndicator size="large" color="coral" /></View>
+    )
+  }else return (
         <View style={styles.container}>
             {applied.map((item, index) => {
                 return (

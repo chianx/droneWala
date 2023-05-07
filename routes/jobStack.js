@@ -11,6 +11,7 @@ import Images from '../images/index'
 import Application from '../screens/application';
 import JobForm from '../jobForm/JobForm'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ViewProfile from '../screens/viewProfile';
 
 const Stack = createNativeStackNavigator();
 
@@ -74,6 +75,10 @@ export default function JobStack({navigation}) {
             <Stack.Screen 
                 name="Applicants" 
                 component={Applicants}
+            />
+            <Stack.Screen 
+                name="View Profile" 
+                component={ViewProfile}
             />
             
         </Stack.Navigator>

@@ -19,8 +19,7 @@ export default function Precise({ formData, setFormData }) {
     const FTPT = [
         { key: '1', value: 'Full Time' },
         { key: '2', value: 'Part Time' },
-        { key: '3', value: 'Internship' },
-        { key: '4', value: 'Freelance' }
+        { key: '3', value: 'Internship' }
     ]
     const date1 = new Date();
     const year = date1.getFullYear();
@@ -28,7 +27,7 @@ export default function Precise({ formData, setFormData }) {
     const day = date1.getDate();
     const todaysDate = year + '-0' + month + '-' + day;
     const handlejobTitle = (jobTitle) => {
-        if(formData.jobTitle.trim().length >= 5) {
+        if(jobTitle.trim().length >= 5) {
             setFormData({ ...formData, jobTitle:jobTitle, jobTitleIsSet: true });
         }else {
             setFormData({ ...formData, jobTitle:jobTitle, jobTitleIsSet: false });
@@ -36,7 +35,7 @@ export default function Precise({ formData, setFormData }) {
     }
     const handlesalRangeFrom = (salRangeFrom) => {
        
-        if(formData.salRangeFrom.trim().length >= 2) {
+        if(salRangeFrom.trim().length >= 2) {
             setFormData({ ...formData, salRangeFrom:salRangeFrom, salRangeFromIsSet: true });
         }else {
             setFormData({ ...formData, salRangeFrom:salRangeFrom, salRangeFromIsSet: false });
@@ -44,21 +43,21 @@ export default function Precise({ formData, setFormData }) {
     }
     const handlesalRangeTo = (salRangeTo) => {
        
-        if(formData.salRangeTo.trim().length >= 2) {
+        if(salRangeTo.trim().length >= 2) {
             setFormData({ ...formData, salRangeTo:salRangeTo, salRangeToIsSet: true });
         }else {
             setFormData({ ...formData, salRangeTo:salRangeTo, salRangeToIsSet: false });
         }
     }
     const handlenumOpen = (numOpen) => {
-        if(formData.numOpen.trim() === '') {
+        if(numOpen >= 1) {
             setFormData({ ...formData, numOpen:numOpen, numOpenIsSet: true });
         }else {
             setFormData({ ...formData, numOpen:numOpen, numOpenIsSet: false });
         }
     }
     const handleJobLoaction = (location) => {
-        if(formData.location.trim().length >= 4) {
+        if(location.trim().length >= 4) {
             setFormData({ ...formData, location:location, locationIsSet: true });
         }else {
             setFormData({ ...formData, location:location, locationIsSet: false });
@@ -136,27 +135,30 @@ export default function Precise({ formData, setFormData }) {
             <View style={{ marginBottom: 20 }}>
                 <View style={{ flexDirection: 'column' }}>
                     
-                    <Text style={{paddingBottom: 10}}>Founded In: *</Text>
+                    <Text style={{paddingBottom: 10}}>Last date to apply</Text>
                     {open ? <TouchableOpacity onPress={handleButtonOpen} style={{ padding: 0 }}><TextInput
                         editable={false}
                         placeholderTextColor="grey"
-                        placeholder='Date of Founding *'
+                        placeholder='Last date to apply *'
                         value={formData.foundedin}
                         style={{ width: 280, fontSize: 17, height: 55, color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', borderColor: formData.dateIsSet ? 'grey' : 'red', marginRight: 20, marginBottom: 15 }}
                     /></TouchableOpacity> :
-                        <TouchableOpacity onPress={() => { setOpen(!open) }} style={{ padding: 0 }}><TextInput
-                        editable={false}
-                        placeholderTextColor="grey"
-                        placeholder='Date of Founding *'
-                        value={formData.foundedin}
-                        style={{ width: 280, fontSize: 17, height: 55, color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', borderColor: formData.dateIsSet ? 'grey' : 'red', marginRight: 20, marginBottom: 15 }}
-                    /></TouchableOpacity>
+                        <TouchableOpacity onPress={() => { setOpen(!open) }} style={{ padding: 0 }}>
+                        <TextInput
+                            editable={false}
+                            placeholderTextColor="grey"
+                            placeholder='Apply by *'
+                            value={formData.foundedin}
+                            style={{ width: 280, fontSize: 17, height: 55, color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', borderColor: formData.dateIsSet ? 'grey' : 'red', marginRight: 20, marginBottom: 15 }}
+                        />
+                        </TouchableOpacity>
                     }
                 </View>
                 <View>
                     {open ? <DatePicker
                         onSelectedChange={(date) => {
-                            setDate(date)
+                            setDate(date);
+                            setOpen(!open);
                         }}
                         mode="calendar"
                         maximumDate={todaysDate}

@@ -21,6 +21,29 @@ export default function Home({ navigation }) {
     const val = JSON.parse(userdata)
     setUser(val);
     setUserType(val.userType)
+    const response = await axios.get(
+      'https://newsapi.org/v2/top-headlines?q=drone&apiKey=97a1084b34ba46468b6f46954dc06382'
+    );
+    var temp = response.data.articles;
+    for(let index in temp) {
+      if(temp[index].urlToImage === null) {
+        temp.splice(index, 1);
+      }
+      let title = temp[index].title;
+      if(title.length >= 47) {
+        title = title.substring(0, 47);
+        title = title + "...";
+        temp[index].title = title;
+      }
+      let content = temp[index].description;
+      if(content) {
+        content = content.substring(0, 70);
+        content = content + "  ...";
+        temp[index].description = content;
+      }
+      
+    }
+    setArticles(temp);
   }
 
   const { width } = Dimensions.get('window');
@@ -43,41 +66,24 @@ export default function Home({ navigation }) {
   const [getCourses, setCourses] = useState([]);
 
   useEffect(() => {
+    mount();
     const starCountRefJobs = query(ref(db, 'jobs/'), orderByChild('numOpen'), limitToFirst(4));
-    onValue(starCountRefJobs, async(snapshot) => {
+    onValue(starCountRefJobs, (snapshot) => {
       const data = snapshot.val();
-      const job = Object.keys(data).map(key => ({
+      let job = [];
+      job = Object.keys(data).map(key => ({
         key: key,
         ...data[key]
       }))
-      setJobs(job);
-      mount();
-      const response = await axios.get(
-        'https://newsapi.org/v2/top-headlines?q=drone&apiKey=97a1084b34ba46468b6f46954dc06382'
-      );
-      var temp = response.data.articles;
-      for(let index in temp) {
-        if(temp[index].urlToImage === null) {
-          temp.splice(index, 1);
-        }
-        let title = temp[index].title;
-        if(title.length >= 47) {
-          title = title.substring(0, 47);
-          title = title + "...";
-          temp[index].title = title;
-        }
-        let content = temp[index].description;
-        if(content) {
-          content = content.substring(0, 70);
-          content = content + "  ...";
-          temp[index].description = content;
-        }
+      if(job.length === 0) {
         
+      }else {
+        setJobs(job);
       }
-      setArticles(temp);
+      
+      
       
     });
-
     // onValue(starCountRefCourses, (snapshot) => {
     //   const data = snapshot.val();
     //   const courses = Object.keys(data).map(key => ({
@@ -150,7 +156,7 @@ export default function Home({ navigation }) {
           </View>
         </View>
         <View style={{ marginLeft: 5, marginTop: 20 }}>
-          <Text style={{ color: '#808080' }}><Ionicons name="location-outline" size={14} color="#808080" />{item.Location}</Text>
+          <Text style={{ color: '#808080' }}><Ionicons name="location-outline" size={14} color="#808080" />{item.location}</Text>
           <Text style={{ color: '#808080' }}><Ionicons name="ios-cash-outline" size={14} color="#808080" />{' ₹' + item.salRange}</Text>
           <Text style={{ color: '#808080' }}><AntDesign name="calendar" size={14} color="#808080" />{' ' + item.date}</Text>
         </View>
