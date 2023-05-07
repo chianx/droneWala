@@ -16,53 +16,46 @@ export default function StepOne({ formData, setFormData }) {
         else setFormData({ ...formData, date: date, dateIsSet: true });
     }
     const [te, setTe] = useState(false);
-
-    const timeFrames = [
-        { key: '1', value: 'Aerial Survey', option: 'A' },
-        { key: '2', value: 'Agricultural Survey', option: 'B' },
-        { key: '3', value: 'Cinematography', option: 'C' },
-        { key: '4', value: 'Drone Delivery', option: 'D' },
-        { key: '5', value: 'Others', option: 'E' },
-    ]
     const date1 = new Date();
     const year = date1.getFullYear();
     const month = date1.getMonth() + 1;
     const day = date1.getDate();
     const todaysDate = year + '-0' + month + '-' + day;
-    const handlejobTitle = (jobTitle) => {
-        if(formData.jobTitle.trim().length >= 5) {
-            setFormData({ ...formData, jobTitle:jobTitle, jobTitleIsSet: true });
+    const handleTitle = (title) => {
+        if(title.trim().length >= 4) {
+            setFormData({ ...formData, title:title, titleIsSet: true });
         }else {
-            setFormData({ ...formData, jobTitle:jobTitle, jobTitleIsSet: false });
+            setFormData({ ...formData, title:title, titleIsSet: false });
         }
     }
-    const handlesalRangeFrom = (salRangeFrom) => {
-        if(formData.salRangeFrom.trim().length >= 2) {
-            setFormData({ ...formData, salRangeFrom:salRangeFrom, salRangeFromIsSet: true });
+    const handleAreaSize = (areaSize) => {
+        if(areaSize >= 2) {
+            setFormData({ ...formData, areaSize:areaSize, areaSizeIsSet: true });
         }else {
-            setFormData({ ...formData, salRangeFrom:salRangeFrom, salRangeFromIsSet: false });
+            setFormData({ ...formData, areaSize:areaSize, areaSizeIsSet: false });
         }
     }
-    const handlesalRangeTo = (salRangeTo) => {
-        if(formData.salRangeTo.trim().length >= 2) {
-            setFormData({ ...formData, salRangeTo:salRangeTo, salRangeToIsSet: true });
+    const handleAreaLocation = (areaLoc) => {
+        if(areaLoc.trim().length >= 2) {
+            setFormData({ ...formData, areaLoc:areaLoc, areaLocIsSet: true });
         }else {
-            setFormData({ ...formData, salRangeTo:salRangeTo, salRangeToIsSet: false });
+            setFormData({ ...formData, areaLoc:areaLoc, areaLocIsSet: false });
         }
     }
-    const handleJobLoaction = (location) => {
-        if(formData.location.trim().length >= 4) {
-            setFormData({ ...formData, location:location, locationIsSet: true });
-        }else {
-            setFormData({ ...formData, location:location, locationIsSet: false });
-        }
+    const handleWorkDurationFrom = (workDuration) => {
+        setFormData({ ...formData, workDurationFrom:workDuration, workDurationFromIsSet: true });
     }
-    // title: "",
+    const handleWorkDurationTo = (workDuration) => {
+        setFormData({ ...formData, workDurationTo:workDuration, workDurationToIsSet: true });
+    }
+    const handlePayload = (payload) => {
+        setFormData({ ...formData, payload:payload, payloadIsSet: true });
+    }
+
     // areaSize: "",
     // areaLoc: "",
     // workDuration: "",
     // payload: "",
-    // titleIsSet: false,
     // areaSizeIsSet: false,
     // areaLocIsSet: false,
     // workDurationIsSet: false,
@@ -75,41 +68,55 @@ export default function StepOne({ formData, setFormData }) {
                     placeholderTextColor="grey"
                     placeholder='Project Title *'
                     value={formData.title}
-                    onChangeText={(title) => null } //handlejobTitle(title)}
+                    onChangeText={(title) => handleTitle(title)}
                 />
             </View>
+
             { formData.category === "Aerial Survey" || formData.category === "Agricultural Survey" ? 
             
                 <View style={[ styles.inputView]}>
                     <TextInput
                         style={[formData.areaSizeIsSet ? styles.TextInput : styles.errorTextInput]}
                         placeholderTextColor="grey"
-                        placeholder='Area Size *'
+                        placeholder='Area Size (in acres) *'
                         keyboardType='numeric'
                         value={formData.areaSize}
-                        onChangeText={(areaSize) => null } //handleJobLoaction(areaSize)}
+                        onChangeText={(areaSize) => handleAreaSize(areaSize)}
                     />
                 </View>
                 : 
                 null
             }
+
             <View style={styles.inputView}>
                 <TextInput
                     style={[formData.areaLocIsSet ? styles.TextInput : styles.errorTextInput]}
                     placeholderTextColor="grey"
                     placeholder='Area Location *'
                     value={formData.areaLoc}
-                    onChangeText={(areaLoc) => null } //handlesalRangeFrom(areaLoc)}
+                    onChangeText={(areaLoc) => handleAreaLocation(areaLoc)}
                 />
             </View>
-            <View style={[styles.inputView]}>
+
+            <Text style={{color: "coral", marginBottom: 10}}>Enter Work Duration (in weeks)</Text>
+            <View style={{flexDirection:'row'}}>
                 <TextInput
-                    style={[formData.workDurationIsSet ? styles.TextInput : styles.errorTextInput, { width: 180}]}
+                    // style={[formData.workDurationFromIsSet ? styles.TextInput : styles.errorTextInput, { width: 180}]}
+                    style={{backgroundColor: "white", borderRadius: 8, borderWidth: 1, marginRight: 35, borderColor: formData.workDurationFromIsSet ?'grey':'red', width: 140, height: 55, marginBottom: 20, alignItems: "flex-start", justifyContent: "center", padding: 10, fontSize: 17, color: 'grey'}}
                     placeholderTextColor="grey"
-                    placeholder='Work Duration *'
+                    placeholder='Duration From*'
                     keyboardType='numeric'
-                    value={formData.workDuration}
-                    onChangeText={(workDuration) => null } //handlesalRangeTo(workDuration)}
+                    value={formData.workDurationFrom}
+                    onChangeText={(workDuration) => handleWorkDurationFrom(workDuration)}
+                />
+                <TextInput
+                    // style={[formData.workDurationToIsSet ? styles.TextInput : styles.errorTextInput, { width: 180}]}
+                    style={{backgroundColor: "white", borderRadius: 8, borderWidth: 1, borderColor: formData.workDurationToIsSet ?'grey':'red', width: 130, height: 55, marginBottom: 20, alignItems: "flex-start", justifyContent: "center", padding: 10, fontSize: 17, color: 'grey'}}
+                    placeholderTextColor="grey"
+                    placeholder='Duration To*'
+                    keyboardType='numeric'
+                    value={formData.workDurationTo}
+                    onChangeText={(workDuration) => handleWorkDurationTo(workDuration)}
                 />
             </View>
 
@@ -119,8 +126,9 @@ export default function StepOne({ formData, setFormData }) {
                     style={[formData.payloadIsSet ? styles.TextInput : styles.errorTextInput]}
                     placeholderTextColor="grey"
                     placeholder='Payload *'
+                    keyboardType='numeric'
                     value={formData.payload}
-                    onChangeText={(payload) => null } //handlesalRangeFrom(payload)}
+                    onChangeText={(payload) => handlePayload(payload)}
                 />
             </View>
             : null }

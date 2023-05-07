@@ -11,7 +11,7 @@ import {
 export default function Applicants({route, navigation}) {
   const job = route.params.job
   const [applied, setApplied] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   
   useEffect (() => {
     setIsLoading(true);
@@ -45,7 +45,7 @@ export default function Applicants({route, navigation}) {
   }, [])
   if(isLoading) {
     return (
-      <View style={{backgroundColor: '#e0e0e0aa', flex:1, justifyContent:'center'}}><ActivityIndicator size="large" color="coral" /></View>
+      <View style={{backgroundColor: '#e0e0e0aa', height:300, justifyContent:'center'}}><ActivityIndicator size="large" color="coral" /></View>
     )
   }else return (
         <View style={styles.container}>

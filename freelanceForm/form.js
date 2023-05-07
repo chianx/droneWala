@@ -4,6 +4,8 @@ import {db} from '../firebase/databaseConfig'
 import {set, ref, push} from 'firebase/database';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import StepOne from './stepOne';
+import StepTwo from './steptwo.js';
+import Toast from 'react-native-root-toast';
 
 export default function FreelanceForm({route, navigation}) {
     const category = route.params.category;
@@ -43,14 +45,16 @@ export default function FreelanceForm({route, navigation}) {
             title: "",
             areaSize: "",
             areaLoc: "",
-            workDuration: "",
+            workDurationFrom: "",
+            workDurationTo: "",
             timeFrame: "",
             payload: "",
             categoryIsSet: false,
             titleIsSet: false,
             areaSizeIsSet: false,
             areaLocIsSet: false,
-            workDurationIsSet: false,
+            workDurationFromIsSet: false,
+            workDurationToIsSet: false,
             timeFrameIsSet: false,
             payloadIsSet: false,
             
@@ -60,9 +64,11 @@ export default function FreelanceForm({route, navigation}) {
             bidCriteria: "",
             maximumBid: "",
             KML_File: "",
+            fileName: "",
             I_agree: "",
             workDetailsIsSet: false,
             bidCriteriaIsSet: false,
+            fileNameIsSet: false,
             maximumBidIsSet: false,
             KML_FileIsSet: false,
             I_agreeIsSet: false,
@@ -72,7 +78,7 @@ export default function FreelanceForm({route, navigation}) {
         if (screen === 0) {
             return <StepOne formData={formData} setFormData={setFormData}/>
         } else {
-            return <Description formData={formData} setFormData={setFormData}/>
+            return <StepTwo formData={formData} setFormData={setFormData}/>
         }
     }
     const createUserInFirebase = () => {
@@ -81,7 +87,7 @@ export default function FreelanceForm({route, navigation}) {
             var validate = false;
             
             // validate name
-            if(formData.category === "aerial" || formData.category === "agricultural") {
+            if(formData.category === "Aerial Survey" || formData.category === "Agricultural Survey") {
                 if(!formData.workDetailsIsSet) {
                     errMsg = "Invalid Work Details";
                     formData.workDetailsIsSet = false;
@@ -124,14 +130,24 @@ export default function FreelanceForm({route, navigation}) {
                     console.log(result);
                     
                     var userJson = JSON.parse(result);
-                    var refs = push(ref(db, "jobs/"));
+                    var refs = push(ref(db, "freelance/"));
 
-                    var final =  {...formData, etc} ////////////////////////////////////////////////////////////////////////////////////////////////////
+                    var final =  {...formData, companyName:userJson.companyName, logo:userJson.logo, companyId:userJson.userId, aboutCompany:userJson.about, freelanceId:refs.key}; 
                     set(refs, final);
                 })
-
                 setFormData({});
                 setScreen(0);
+                Toast.show('Freelance Project Posted Successfully!', {
+                    backgroundColor:'#fda172',
+                    duration: Toast.durations.LONG,
+                    position: -100,
+                    shadow: true,
+                    borderRadius: 100, 
+                    animation: true,
+                    opacity:1,
+                    hideOnPress: false,
+                    delay: 1000,
+                });
                 navigation.navigate("Home");
             }
             else {
@@ -146,7 +162,7 @@ export default function FreelanceForm({route, navigation}) {
             var validate = false;
             
             // validate name
-            if(formData.category === "aerial" || formData.category === "agricultural") {
+            if(formData.category === "Aerial Survey" || formData.category === "Agricultural Survey") {
                 if(!formData.titleIsSet) {
                     errMsg = "Invalid Title";
                     formData.titleIsSet = false;
@@ -156,32 +172,26 @@ export default function FreelanceForm({route, navigation}) {
                 }else if(!formData.areaLocIsSet) {
                     errMsg = "Invalid Area Location";
                     formData.areaLocIsSet = false;
-                }else if(!formData.workDurationIsSet) {
-                    errMsg = "Invalid Work Duration";
-                    formData.workDurationIsSet = false;
-                }else if(!formData.timeFrameIsSet) {
-                    errMsg = "Select Time Frame";
-                    formData.timeFrameIsSet = false;
-                }else if(!formData.payloadIsSet) {
-                    errMsg = "Invalid Payload";
-                    formData.payloadIsSet = false;
+                }else if(!formData.workDurationFromIsSet) {
+                    errMsg = "Invalid From Work Duration";
+                    formData.workDurationFromIsSet = false;
+                }else if(!formData.workDurationToIsSet) {
+                    errMsg = "Invalid To Work Duration";
+                    formData.workDurationToIsSet = false;
                 }else validate = true;
-            }else if(formData.category === "cinema" || formData.category === "others") {
+            }else if(formData.category === "Cinematography" || formData.category === "Others") {
                 if(!formData.titleIsSet) {
                     errMsg = "Invalid Title";
                     formData.titleIsSet = false;
                 }else if(!formData.areaLocIsSet) {
                     errMsg = "Invalid Area Location";
                     formData.areaLocIsSet = false;
-                }else if(!formData.workDurationIsSet) {
-                    errMsg = "Invalid Work Duration";
-                    formData.workDurationIsSet = false;
-                }else if(!formData.timeFrameIsSet) {
-                    errMsg = "Select Time Frame";
-                    formData.timeFrameIsSet = false;
-                }else if(!formData.payloadIsSet) {
-                    errMsg = "Invalid Payload";
-                    formData.payloadIsSet = false;
+                }else if(!formData.workDurationFromIsSet) {
+                    errMsg = "Invalid From Work Duration";
+                    formData.workDurationFromIsSet = false;
+                }else if(!formData.workDurationToIsSet) {
+                    errMsg = "Invalid To Work Duration";
+                    formData.workDurationToIsSet = false;
                 }else validate = true;
             }else {
                 if(!formData.titleIsSet) {
@@ -190,12 +200,12 @@ export default function FreelanceForm({route, navigation}) {
                 }else if(!formData.areaLocIsSet) {
                     errMsg = "Invalid Area Location";
                     formData.areaLocIsSet = false;
-                }else if(!formData.workDurationIsSet) {
-                    errMsg = "Invalid Work Duration";
-                    formData.workDurationIsSet = false;
-                }else if(!formData.timeFrameIsSet) {
-                    errMsg = "Select Time Frame";
-                    formData.timeFrameIsSet = false;
+                }else if(!formData.workDurationFromIsSet) {
+                    errMsg = "Invalid From Work Duration";
+                    formData.workDurationFromIsSet = false;
+                }else if(!formData.workDurationToIsSet) {
+                    errMsg = "Invalid To Work Duration";
+                    formData.workDurationToIsSet = false;
                 }else if(!formData.payloadIsSet) {
                     errMsg = "Invalid Payload";
                     formData.payloadIsSet = false;
