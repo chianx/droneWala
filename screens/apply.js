@@ -124,10 +124,10 @@ export default function Apply({ route, navigation }) {
             setUrl(downloadURL);
             if (downloadURL != null) {
               // Add the answer to the firebase database.
-              var refs = push(dbRefs(db, "applications/"));
               const userdata = await AsyncStorage.getItem("userData");
               var json = JSON.parse(userdata)
               console.log("userdata " + userdata)
+              var refs = dbRefs(db, `applications/${job.jobId}/${json.userId}`)
               var final =  {
                 id: refs.key,
                 userId: json.userId,
@@ -144,14 +144,28 @@ export default function Apply({ route, navigation }) {
               runTransaction(jobRef, (job) => {
                 if(job.applied) {
                   var arr = Array.from(job.applied);
-                  arr.push(refs.key);
+                  arr.push(json.userId);
                   job = {...job, applied: arr}
                 }else {
                   var arr = []
-                  arr.push(refs.key);
+                  arr.push(json.userId);
                   job = {...job, applied: arr}
                 }
                 return job
+              });
+
+              var userRef = dbRefs(db, "users/" + json.userId)
+              runTransaction(userRef, (user) => {
+                if(user.applied) {
+                  var arr = Array.from(user.applied);
+                  arr.push(job.jobId);
+                  user = {...user, applied: arr}
+                }else {
+                  var arr = []
+                  arr.push(job.jobId);
+                  user = {...user, applied: arr}
+                }
+                return user
               });
               
               setIsLoading(false);

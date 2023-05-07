@@ -7,22 +7,72 @@ import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import EditProfileModal from './editProfile';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {db} from '../firebase/databaseConfig'
+import {  
+  ref,
+  onValue,
+} from 'firebase/database';
 
 export default function Account({isClicked, setIsClicked, navigation}) {
   
   const [user, setUser] = useState({});
-    const [drones, setDrones] = useState([]);
-    const mount = async() => {
-      const userdata = await AsyncStorage.getItem("userData");
-      const val = JSON.parse(userdata)
-      setUser(val);
-      setDrones(val.droneSelect);
-      console.log(val)
-      // setCategory(val.category);
-    }
-    useEffect(() => {
-      mount();
-    }, []);
+  const [drones, setDrones] = useState([]);
+  const [accepted, setAccepted] = useState([]);
+  const [rejected, setRejected] = useState([]);
+  const [review, setReview] = useState([]);
+  const [active, setActive] = useState('Pending');
+  const [dataList, setDataList] = useState([...accepted]);
+
+  const mount = async() => {
+    const userdata = await AsyncStorage.getItem("userData");
+    const val = JSON.parse(userdata)
+    setUser(val);
+    setDrones(val.droneSelect);
+    console.log(val)
+    // setCategory(val.category);
+  }
+
+  const fetchJobsApplied = async() => {
+    const tempApplied = [];
+    const tempRejected = [];
+    const tempPending = [];
+    // Fetch the user applied job with status...
+    const userdata = await AsyncStorage.getItem("userData");
+    var user = JSON.parse(userdata)
+    var userRef = ref(db, `users/${user.userId}`);
+    onValue(userRef, (jobSnap) => {
+      var appliedArr = Array.from(jobSnap.val().applied);
+      for(var index in appliedArr) {
+        var applicationRef = ref(db, `applications/${appliedArr[index]}/${user.userId}`);
+        onValue(applicationRef, (snap) => {
+          var application = snap.val();
+          if(application.status == "applied") {
+              console.log("applied " + jobSnap.val())
+              tempApplied.push(jobSnap.val());
+          }else if(application.status == "rejected") {
+              console.log("rejected " + jobSnap.val())
+              tempRejected.push(jobSnap.val());
+          }else {
+              console.log("pending " + jobSnap.val())
+              tempPending.push(jobSnap.val());
+          }
+        })
+      }
+
+      console.log(tempApplied);
+      console.log(tempRejected);
+      console.log(tempPending);
+    })
+    
+    setAccepted(tempApplied);
+    setRejected(tempRejected);
+    setReview(tempPending);
+  }
+
+  useEffect(() => {
+    mount();
+    fetchJobsApplied()
+  }, []);
 
   const handleSaveProfile =() => {
     setIsClicked(!isClicked);
@@ -32,17 +82,6 @@ export default function Account({isClicked, setIsClicked, navigation}) {
     setIsClicked(!isClicked);
   };
 
-  const pending = [{key:2, jobTitle:'Lorem Ipsum dolor ebel candle jameesrirf', company:'Garud Survey', salary: '10,000-15,000/month', type:'Full Time',Location:'Jaipur'},
-  {key:3, jobTitle:'Job Title-2', company:'Garud Survey', salary: '10,000-15,000/month', type:'Full Time', Location:'Jaipur'}];
-
-  const rejected = [{key:4, jobTitle:'Job Title-2', company:'Garud Survey', salary: '10,000-15,000/month', type:'Full Time', Location:'Jaipur'},
-  {key:5, jobTitle:'Job Title-3', company:'DronePilots Network', salary: '30,000-35,000/month', type:'Part Time', Location:'Jaipur'},
-  {key:6, jobTitle:'Drone Survey Job', company:'Fire Drone', type:'Full Time', salary:'20000/month', Location:'Jaipur'}];
-  const completed = [{key:5, jobTitle:'Job Title-3', company:'DronePilots Network', salary: '30,000-35,000/month', type:'Part Time', Location:'Jaipur'},
-  {key:6, jobTitle:'Drone Survey Job', company:'Fire Drone', type:'Full Time', salary:'20000/month', Location:'Jaipur'}];
-
-  const [active, setActive] = useState('Pending');
-  const [dataList, setDataList] = useState([...pending]);
   return (
         <ScrollView contentContainerStyle={{ flexGrow: 1}}>
 
@@ -104,10 +143,10 @@ export default function Account({isClicked, setIsClicked, navigation}) {
           <View style={styles.status}>
             <View style={{flexDirection:'row'}}>
               <View style={[styles.tab, active==='Pending' && styles.btnActive]}>
-                <TouchableOpacity onPress={() => (setActive('Pending') & setDataList(pending) )} ><Text style={[active==='Pending' && {color:'white'}]}>Pending</Text></TouchableOpacity>
+                <TouchableOpacity onPress={() => (setActive('Pending') & setDataList(review) )} ><Text style={[active==='Pending' && {color:'white'}]}>Pending</Text></TouchableOpacity>
               </View>
               <View style={[styles.tab, active==='Completed' && styles.btnActive]}>
-                <TouchableOpacity onPress={() => setActive('Completed') & setDataList(completed)} ><Text style={[active==='Completed' && {color:'white'}]}>Completed</Text></TouchableOpacity>
+                <TouchableOpacity onPress={() => setActive('Completed') & setDataList(accepted)} ><Text style={[active==='Completed' && {color:'white'}]}>Completed</Text></TouchableOpacity>
               </View>
               <View style={[styles.tab, active==='Rejected' && styles.btnActive]}>
                 <TouchableOpacity onPress={() => setActive('Rejected') & setDataList(rejected)}><Text style={[active==='Rejected' && {color:'white'}]}>Rejected</Text></TouchableOpacity>

@@ -15,7 +15,7 @@ export default function Applicants({route, navigation}) {
   
   useEffect (() => {
     setIsLoading(true);
-    const jobRef = ref(db, `jobs/${job.jobId}/applied`);
+    const jobRef = ref(db, `applications/${job.jobId}`);
     onValue(jobRef, (snapshot) => {
       const data = snapshot.val();
       if(data == null) {
@@ -23,21 +23,20 @@ export default function Applicants({route, navigation}) {
       }else {
         console.log(data); 
         let applicants = [];
-        for(var index in data) {
-          const applicationRef = ref(db, `applications/${data[index]}`);
-          onValue(applicationRef, (snap) => {
-            const application = snap.val();
-            // setApplication(application);
-            console.log(`users/${application.userId}`)
-            const xRef = ref(db, `users/${application.userId}`);
+        const applicationRef = ref(db, `applications/${job.jobId}`);
+        onValue(applicationRef, (snap) => {
+          const applications = snap.val();
+          // setApplication(application);
+          for(var index in applications) {
+            console.log(`users/${applications[index].userId}`)
+            const xRef = ref(db, `users/${applications[index].userId}`);
                 onValue(xRef, (snaps) => {
                   const x = snaps.val();
                   console.log(x);
-                  applicants.push({answer: application, user:x});
-                  
+                  applicants.push({answer: applications[index], user:x});
             })
-          })
-        }
+          }
+        })
         setApplied(applicants);
         setIsLoading(false);
       }
@@ -101,6 +100,6 @@ jobContainer: {
     paddingVertical: 15,
     borderTopWidth: 3,
     borderTopColor: '#ffe5d3',
-    backgroundColor: '#F8F8F8'
+    backgroundColor:'#F8F8F8'
 }
 });

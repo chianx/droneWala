@@ -4,10 +4,40 @@ import Images from '../images/index'
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import * as OpenAnything from 'react-native-openanything'
+import {db} from '../firebase/databaseConfig'
+import {  
+  ref,
+  update,
+} from 'firebase/database';
 
 export default function Application({route, navigation}) {
-    const pilot = route.params.pilot;
-    const answer = route.params.answer;
+  const pilot = route.params.pilot;
+  const jobApplicant = route.params.answer;
+
+  const acceptRequest = () => {
+    // Change the applicant job status to applied...
+    var refs = ref(db, `applications/${jobApplicant.jobId}/${jobApplicant.id}`)
+    var final =  {
+      status: "accepted" // rejected, review, accepted.
+    }
+    update(refs, final);
+    console.log("application summited.")
+
+    // TODO: SEND NOTIFICATION
+  }
+
+  const rejectRequest = () => {
+    // Change the applicant job status to applied...
+    var refs = ref(db, `applications/${jobApplicant.jobId}/${jobApplicant.id}`)
+    var final =  {
+      status: "rejected" // rejected, review, accepted.
+    }
+    update(refs, final);
+    console.log("application summited.")
+
+    // TODO: SEND NOTIFICATION
+  }
+
   return (
     <ScrollView>
         <View style={styles.container}>
@@ -23,14 +53,14 @@ export default function Application({route, navigation}) {
           <View style={{paddingHorizontal:15, paddingTop:25}}>
             <Text style={styles.title}>Why does he think he is fit for the job ?</Text>
             <Text style={{paddingTop:7, fontSize:15, color:'#505050', lineHeight: 21}}>
-              {answer.answer}     
+              {jobApplicant.answer}     
             </Text>
           </View>
           
           {/* <View style={{paddingTop:25, borderBottomWidth: 3, borderBottomColor:'#ffe5d3'}}></View> */}
           <View style={{paddingHorizontal:15, paddingTop:25}}>
             <Text style={{width:'100%', fontWeight:'bold', fontSize:19, color:'#505050', paddingBottom:8}}>Resume of {pilot.name}</Text>
-            <TouchableOpacity onPress={() => OpenAnything.Pdf(answer.resume)} style={styles.download}>
+            <TouchableOpacity onPress={() => OpenAnything.Pdf(jobApplicant.resume)} style={styles.download}>
             <Text style={{color:'white', fontSize:15, textAlign:'center'}}>Download</Text>
             </TouchableOpacity>
           </View>
@@ -44,11 +74,11 @@ export default function Application({route, navigation}) {
           <View style={{paddingTop:25, borderBottomWidth: 3, borderBottomColor:'#ffe5d3', backgroundColor:'#F8F8F8'}}></View>
           
           <View style={styles.apply}>
-            <TouchableOpacity style={{backgroundColor:'white', justifyContent:'center', margin:5, height:55, flex:1 ,borderRadius:10, width:'48%', borderWidth:2, borderColor:'coral', elevation:5}}>
+            <TouchableOpacity onPress={() => rejectRequest()} style={{backgroundColor:'white', justifyContent:'center', margin:5, height:55, flex:1 ,borderRadius:10, width:'48%', borderWidth:2, borderColor:'coral', elevation:5}}>
               <Text style={{color:'coral', fontSize:20, textAlign:'center'}}>Reject</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={{backgroundColor:'coral', flex:1,height:55, justifyContent:'center', margin:5, borderRadius:10, width:'48%', elevation:5}}>
+            <TouchableOpacity onPress={() => acceptRequest()} style={{backgroundColor:'coral', flex:1,height:55, justifyContent:'center', margin:5, borderRadius:10, width:'48%', elevation:5}}>
               <Text style={{color:'white', fontSize:20, textAlign:'center'}}>Accept</Text>
             </TouchableOpacity>
           </View>
