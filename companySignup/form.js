@@ -54,6 +54,7 @@ export default function Form({navigation}) {
             companyIsSet: false,
             websiteIsSet : false,
             aboutIsSet: false,
+            numPeopleIsSet: false,
             type: ""
         }
     )
@@ -72,13 +73,7 @@ export default function Form({navigation}) {
             var validate = false;
            
             // validate name
-            if(!formData.cinIsSet) {
-                errMsg = "Invalid CIN Number"
-                formData.cinIsSet = false
-            }else if(!formData.gstIsSet) {
-                errMsg = "Invalid GST Number"
-                formData.gstIsSet = false
-            }else if(!formData.addressIsSet)  {
+            if(!formData.addressIsSet)  {
                 errMsg = "Invalid Address"
                 formData.addressIsSet = false
             }else if (!formData.cityIsSet) {
@@ -92,7 +87,7 @@ export default function Form({navigation}) {
                 formData.pinIsSet = false
             }else validate = true;
            
-            if(validate && formData.cinIsSet && formData.gstIsSet && formData.addressIsSet && formData.cityIsSet && formData.stateIsSet && formData.pinIsSet) {
+            if(validate && formData.addressIsSet && formData.cityIsSet && formData.stateIsSet && formData.pinIsSet) {
                 setErrorMessage("");
                 // Final
                 var uid = auth.currentUser.uid
@@ -183,9 +178,13 @@ export default function Form({navigation}) {
             }else if (!formData.aboutIsSet) {
                 errMsg = "Invalid About"
                 formData.aboutIsSet = false
-            }else validate = true;
+            }else if (!formData.numPeopleIsSet) {
+                errMsg = "Select Number of People"
+                formData.aboutIsSet = false
+            }
+            else validate = true;
            
-            if(validate && formData.logoIsSet && formData.companyIsSet && formData.websiteIsSet && formData.aboutIsSet) {
+            if(validate && formData.logoIsSet && formData.companyIsSet && formData.websiteIsSet && formData.aboutIsSet && formData.numPeopleIsSet) {
                 setScreen((currScreen) => currScreen + 1);
                 setErrorMessage("");
             }

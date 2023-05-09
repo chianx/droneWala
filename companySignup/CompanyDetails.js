@@ -153,7 +153,7 @@ export default function PersonalDetails({ formData, setFormData }) {
           setSelected={(val) => {
             setSelectedNumPeople(val)
             setpeopleIsSet(true)
-            setFormData({ ...formData, numPeople: selectedNumPeople });
+            setFormData({ ...formData, numPeople: val, numPeopleIsSet:true });
             console.log(formData)
 
           }}
