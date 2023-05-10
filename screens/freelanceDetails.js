@@ -100,7 +100,7 @@ export default function FreelanceDetails({ route, navigation, formData }) {
             </TouchableOpacity>
           
           :
-          <TouchableOpacity
+          <TouchableOpacity onPress={() => navigation.navigate("View Bids")}
           style={{ backgroundColor: 'coral', flex: 1, height: 45, justifyContent: 'center', margin: 5, borderRadius: 10, width: '100%', elevation: 5 }}>
             <Text style={{ color: 'white', fontSize: 20, textAlign: 'center' }}>View Bids</Text>
           </TouchableOpacity>

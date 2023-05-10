@@ -12,9 +12,6 @@ export default function PersonalDetails({ formData, setFormData }) {
   const [date, setDate] = useState("");
   const handleButtonOpen = () => {
     setOpen(!open);
-    if (date.length !== "")
-      setFormData({ ...formData, foundedin: date, dateIsSet: true });
-    else setFormData({ ...formData, foundedin: date, dateIsSet: false });
   };
   const [open, setOpen] = useState(false);
   const date1 = new Date();
@@ -100,7 +97,8 @@ export default function PersonalDetails({ formData, setFormData }) {
           {open ? (
             <DatePicker
               onSelectedChange={(date) => {
-                setDate(date);
+                setFormData({ ...formData, foundedin: date, dateIsSet: true });
+                setOpen(!open);
               }}
               mode="calendar"
               maximumDate={todaysDate}

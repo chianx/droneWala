@@ -9,6 +9,7 @@ import Images from '../images/index';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FreelanceForm from '../freelanceForm/form';
 import ChooseCategory from '../freelanceForm/choose';
+import ViewBids from '../screens/viewBids';
 
 const Stack = createNativeStackNavigator();
 
@@ -63,6 +64,10 @@ export default function FreelanceStack({navigation}) {
             <Stack.Screen 
                 name="Freelance Form" 
                 component={FreelanceForm}
+            />
+            <Stack.Screen 
+                name="View Bids" 
+                component={ViewBids}
             />
             
         </Stack.Navigator>
