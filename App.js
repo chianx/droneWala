@@ -25,20 +25,20 @@ export default function App() {
     })
 
     messaging().onMessage(async (remoteMessage) => {
-      const content = {
-        title: 'My Notification',
-        body: 'This is a local notification',
-        data: { customData: 'Optional custom data' },
-      };
+      // const content = {
+      //   title: 'My Notification',
+      //   body: 'This is a local notification',
+      //   data: { customData: 'Optional custom data' },
+      // };
     
-      const trigger = {
-        seconds: 5, // Trigger the notification after 5 seconds (you can use other options like 'minutes', 'hours', etc.)
-      };
+      // const trigger = {
+      //   seconds: 5, // Trigger the notification after 5 seconds (you can use other options like 'minutes', 'hours', etc.)
+      // };
     
-      await Notifications.scheduleNotificationAsync({
-        content,
-        trigger,
-      });
+      // await Notifications.scheduleNotificationAsync({
+      //   content,
+      //   trigger,
+      // });
       console.log('FCM Message Data:', remoteMessage);
       // Handle the received message data here
     });
