@@ -13,12 +13,6 @@ export default function FreelanceCompanies({navigation}) {
     const [freelance, setFreelance] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [userType, setUserType] = useState("");
-  
-    const mount = async() => {
-      const type = await AsyncStorage.getItem("userType");
-      const jsonType = JSON.parse(type);
-      setUserType(jsonType);
-    }
 
     const fetchData = async() => {
       const starCountRef = ref(db, 'freelance/');
@@ -50,35 +44,9 @@ export default function FreelanceCompanies({navigation}) {
     }
 
     useEffect(() => {
-      mount();
+      // mount();
       fetchData();
     }, [])
-
-    // useEffect (() => {
-    //     // isLoading = true;
-    //     const starCountRef = ref(db, 'jobs/');
-    //     onValue(starCountRef, (snapshot) => {
-    //     const data = snapshot.val();
-    //     const job = Object.keys(data).map(key => ({
-    //         id: key,
-    //         ...data[key]
-    //     }))
-    //     var tempFree = [];
-    //     for(var element in allJobs) {
-    //         if(allJobs[element].companyName != user.name) {
-    //             continue;
-    //         }
-    //         if(allJobs[element].ftORpt != "Freelance") {
-    //             tempJob.push(allJobs[element])
-    //         }else {
-    //             tempFree.push(allJobs[element]);
-    //         }
-    //     }
-    //     setDataList(tempJob);
-    //     setJobs(job);
-    //     setIsLoading(false);
-    //     });
-    // }, [])
     
     const renderItem = ({ item }) => (
         <TouchableOpacity style={styles.courseContainer} onPress={() => navigation.navigate("Freelance Details", {freelance: item})}>

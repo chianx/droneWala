@@ -10,18 +10,46 @@ import Toast from 'react-native-root-toast';
 export default function JobDetails({route, navigation}) {
   const [userType, setUserType] = useState("");
   const [user, setUser] = useState({});
+  const job = route.params.job;
+  const [canApply, setCanAplly] = useState(true);
 
   const mount = async () => {
     const userdata = await AsyncStorage.getItem("userData");
     const val = JSON.parse(userdata)
     setUser(val);
-    setUserType(val.userType)
+    setUserType(val.userType);
+    var userId = val.userId;
+    if(job.applied) {
+      for(var index in job.applied) {
+        if(job.applied[index] === userId) {
+          setCanAplly(false);
+          break;
+        }
+      }
+    }
   }
   useEffect(() => {
     mount();
+
   }, [])
-  const job = route.params.job;
-  console.log(job);
+
+  const handleApply = () => {
+    if(canApply) {
+      navigation.navigate("Apply", {job:job});
+    }else {
+      console.log("Here");
+      Toast.show('You have already applied to this Job.', {
+        // backgroundColor:'#fda172',
+        duration: Toast.durations.LONG,
+        position: -130,
+        shadow: true,
+        animation: true,
+        opacity:1,
+        hideOnPress: false,
+        delay: 500,
+    });
+    }
+  }
   return (
     <ScrollView>
         <View style={styles.container}>
@@ -65,7 +93,7 @@ export default function JobDetails({route, navigation}) {
             </Text>
           </View>
           <View style={styles.apply}>
-          {userType === "pilot"? <TouchableOpacity onPress={() => navigation.navigate("Apply", {job:job})} style={{backgroundColor:'coral', paddingVertical:9, borderRadius:10}}>
+          {userType === "pilot"? <TouchableOpacity onPress={() => handleApply()} style={{backgroundColor:'coral', paddingVertical:9, borderRadius:10, opacity: canApply? 1 : 0.6}}>
             <Text style={{color:'white', fontSize:17, textAlign:'center'}}>Apply Now</Text>
           </TouchableOpacity>
           :
