@@ -5,6 +5,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import * as OpenAnything from 'react-native-openanything'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {db} from '../firebase/databaseConfig'
+import { ref,onValue,push,update,remove, set } from 'firebase/database';
 
 export default function FreelanceDetails({ route, navigation, formData }) {
   const freelance = route.params.freelance;
@@ -17,16 +19,18 @@ export default function FreelanceDetails({ route, navigation, formData }) {
     setIsModalVisible(!isModalVisible);
   };
 
-  const submitBid = () => {
+  const submitBid = async() => {
     console.log(bid)
-    if(parseInt(bid) || +bid) {
-      // check if less than maximum bid
-      // if(bid <= +formData.maximumBid){
-        console.log("accepted "+bid)
-        toggleModal()
-        setBidIsSet(true)
-      // }
+    const userdata = await AsyncStorage.getItem("userData");
+    const user = JSON.parse(userdata);
+
+    var bidRef = ref(db, `bids/${freelance.id}/${user.userId}`)
+    var bidJson = {
+      id: bidRef.key,
+      amount: bid,
+      userId: user.userId,
     }
+    set(bidRef, bidJson)
   }
 
   const handleBid = (bid) => {
