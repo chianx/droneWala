@@ -1,18 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Images from '../images/index'
-import { Ionicons } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
 import {db} from '../firebase/databaseConfig'
 import { ref,onValue,push,update,remove } from 'firebase/database';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Notifications({navigation}) {
 
-  const [jobs, setJobs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const users = [
+  const notifications = [
     {notificationId: 1, title:'This is notification 1', content:'This is sample notifiction from Firebase', image:Images.profile, data:{}, time:'3 hours ago'},
     {notificationId: 2, title:'Congratulations!', content:'This is another sample notifiction from Firebase', image:Images.drone2, data:{}, time:'5 hours ago'},
     {notificationId: 3, title:'Congratulations again!', content:'You have been shortlisted for the role of Drone Pilot by drone Pilots Network', image:Images.drone3, data:{}, time:'1 day ago'},
@@ -25,7 +21,7 @@ export default function Notifications({navigation}) {
         <View style={styles.container}>
         
             <FlatList 
-              data={users}
+              data={notifications}
               renderItem={({item}) => (
                 <TouchableOpacity onPress={() => {}}>
                 <View key={item.notificationId} style={styles.jobContainer}>
