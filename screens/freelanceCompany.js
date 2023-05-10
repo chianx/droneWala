@@ -10,7 +10,7 @@ import { ref,onValue,push,update,remove } from 'firebase/database';
 
 export default function FreelanceCompanies({navigation}) {
 
-    const [jobs, setJobs] = useState([]);
+    const [freelance, setFreelance] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [userType, setUserType] = useState("");
   
@@ -19,8 +19,39 @@ export default function FreelanceCompanies({navigation}) {
       const jsonType = JSON.parse(type);
       setUserType(jsonType);
     }
+
+    const fetchData = async() => {
+      const starCountRef = ref(db, 'freelance/');
+      onValue(starCountRef, async(snapshot) => {
+        const data = snapshot.val();
+        const allJobs = Object.keys(data).map(key => ({
+          id: key,
+          ...data[key]
+        }))
+
+        const userdata = await AsyncStorage.getItem("userData");
+        const user = JSON.parse(userdata);
+        setUserType(user.userType);
+        
+        if(user.userType === "company") {
+          var tempJob = [];
+          for(var element in allJobs) {
+              if(allJobs[element].companyId != user.userId) {
+                  continue;
+              }
+              tempJob.push(allJobs[element])
+          }
+          setFreelance(tempJob);
+        }else {
+          setFreelance(allJobs);
+        }
+        setIsLoading(false);
+      });
+    }
+
     useEffect(() => {
       mount();
+      fetchData();
     }, [])
 
     // useEffect (() => {
@@ -48,78 +79,11 @@ export default function FreelanceCompanies({navigation}) {
     //     setIsLoading(false);
     //     });
     // }, [])
-
-    const freelance = [
-        {
-            id:1,
-            companyName:'DronePilots Network',
-            category:'Aerial Survey',
-            logo:Images.profile,
-            maxBid:'110000',
-            closingDate: '05/05/2023',
-            location:'Gurugram, Haryana',
-            title:'Conducting FIs, Topographic and Hydrographic Survey using Photogrametric Technique',
-            postDate:'30/04/2023',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac ipsum eu metus congue consequat. Fusce auctor, diam id malesuada pharetra, velit nibh pulvinar odio, vitae faucibus massa dolor eu mi. Sed blandit volutpat risus, ac eleifend nisl pretium quis. Integer ut magna sed nisl vestibulum fringilla eget eu lectus. Sed pharetra, quam vel faucibus ullamcorper, nibh tellus bibendum velit, ut placerat lacus ipsum ac quam.',
-            workDuration: '2 Month',
-            areaSize: '2 Acre',
-            document:'file',
-            bidCriteria:'Lorem ipsum dolor sit amet, \n consectetur adipiscing elit. \n Sed ac ipsum eu metus congue consequat. Fusce auctor, diam id malesuada pharetra, velit nibh pulvinar odio, \n vitae faucibus massa dolor eu mi. \n Sed blandit volutpat risus, ac eleifend nisl pretium quis. Integer ut magna sed nisl vestibulum fringilla eget eu lectus. Sed pharetra, \n quam vel faucibus ullamcorper, nibh tellus bibendum velit, ut placerat lacus ipsum ac quam.'
-        },
-        {
-            id:2,
-            companyName:'DronePilots Network',
-            category:'Aerial Survey',
-            logo:Images.profile,
-            maxBid:'50000',
-            closingDate: '05/05/2023',
-            location:'Jaipur, Rajasthan',
-            title:'Supply of Unmanned Aerial Vehicle of Micro Drone Camera',
-            postDate:'30/04/2023',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac ipsum eu metus congue consequat. Fusce auctor, diam id malesuada pharetra, velit nibh pulvinar odio, vitae faucibus massa dolor eu mi. Sed blandit volutpat risus, ac eleifend nisl pretium quis. Integer ut magna sed nisl vestibulum fringilla eget eu lectus. Sed pharetra, quam vel faucibus ullamcorper, nibh tellus bibendum velit, ut placerat lacus ipsum ac quam.',
-            workDuration: '2 Month',
-            areaSize: '2 Acre',
-            document:'file',
-            bidCriteria:'Lorem ipsum dolor sit amet, \n consectetur adipiscing elit. \n Sed ac ipsum eu metus congue consequat. Fusce auctor, diam id malesuada pharetra, velit nibh pulvinar odio, \n vitae faucibus massa dolor eu mi. \n Sed blandit volutpat risus, ac eleifend nisl pretium quis. Integer ut magna sed nisl vestibulum fringilla eget eu lectus. Sed pharetra, \n quam vel faucibus ullamcorper, nibh tellus bibendum velit, ut placerat lacus ipsum ac quam.'
-        }, 
-        {
-            id:3,
-            companyName:'DronePilots Network',
-            category:'Aerial Survey',
-            logo:Images.profile,
-            maxBid:'60000',
-            closingDate: '05/05/2023',
-            location:'Jaipur, Rajasthan',
-            title:'Providing Inspection Services for Stacks and Flare through drones as BPCL',
-            postDate:'30/04/2023',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac ipsum eu metus congue consequat. Fusce auctor, diam id malesuada pharetra, velit nibh pulvinar odio, vitae faucibus massa dolor eu mi. Sed blandit volutpat risus, ac eleifend nisl pretium quis. Integer ut magna sed nisl vestibulum fringilla eget eu lectus. Sed pharetra, quam vel faucibus ullamcorper, nibh tellus bibendum velit, ut placerat lacus ipsum ac quam.',
-            workDuration: '2 Month',
-            areaSize: '2 Acre',
-            document:'file',
-            bidCriteria:'Lorem ipsum dolor sit amet, \n consectetur adipiscing elit. \n Sed ac ipsum eu metus congue consequat. Fusce auctor, diam id malesuada pharetra, velit nibh pulvinar odio, \n vitae faucibus massa dolor eu mi. \n Sed blandit volutpat risus, ac eleifend nisl pretium quis. Integer ut magna sed nisl vestibulum fringilla eget eu lectus. Sed pharetra, \n quam vel faucibus ullamcorper, nibh tellus bibendum velit, ut placerat lacus ipsum ac quam.'
-        }, 
-        {
-            id:4,
-            title:'Survey Through Drone',
-            companyName:'DronePilots Network',
-            category:'Aerial Survey',
-            logo:Images.profile,
-            maxBid:'11000',
-            closingDate: '05/05/2023',
-            location:'Mumbai, Maharashtra',
-            postDate:'30/04/2023',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac ipsum eu metus congue consequat. Fusce auctor, diam id malesuada pharetra, velit nibh pulvinar odio, vitae faucibus massa dolor eu mi. Sed blandit volutpat risus, ac eleifend nisl pretium quis. Integer ut magna sed nisl vestibulum fringilla eget eu lectus. Sed pharetra, quam vel faucibus ullamcorper, nibh tellus bibendum velit, ut placerat lacus ipsum ac quam.',
-            workDuration: '2 Month',
-            areaSize: '2 Acre',
-            document:'file',
-            bidCriteria:'Lorem ipsum dolor sit amet, \n consectetur adipiscing elit. \n Sed ac ipsum eu metus congue consequat. Fusce auctor, diam id malesuada pharetra, velit nibh pulvinar odio, \n vitae faucibus massa dolor eu mi. \n Sed blandit volutpat risus, ac eleifend nisl pretium quis. Integer ut magna sed nisl vestibulum fringilla eget eu lectus. Sed pharetra, \n quam vel faucibus ullamcorper, nibh tellus bibendum velit, ut placerat lacus ipsum ac quam.'
-        }, 
-    ]
     
     const renderItem = ({ item }) => (
         <TouchableOpacity style={styles.courseContainer} onPress={() => navigation.navigate("Freelance Details", {freelance: item})}>
         <View style={{flexDirection:'row', padding:12,}}>
-          <Image source={item.logo} style={{height:80, width:80}} />
+          <Image source={{uri: item.logo}} style={{height:80, width:80}} />
           <View style={{marginLeft:10, flex:1}}>
             <Text style={{fontWeight:600, fontSize:16}}>{item.title}</Text>
             <Text style={{color:'#444', fontWeight:'400', fontSize:16}}>{item.companyName}</Text>
