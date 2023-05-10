@@ -15,32 +15,23 @@ export default function Applicants({route, navigation}) {
   
   useEffect (() => {
     setIsLoading(true);
-    const jobRef = ref(db, `applications/${job.jobId}`);
-    onValue(jobRef, (snapshot) => {
-      const data = snapshot.val();
-      if(data == null) {
-        console.log("null");
-      }else {
-        console.log(data); 
-        let applicants = [];
-        const applicationRef = ref(db, `applications/${job.jobId}`);
-        onValue(applicationRef, (snap) => {
-          const applications = snap.val();
-          // setApplication(application);
-          for(var index in applications) {
-            console.log(`users/${applications[index].userId}`)
-            const xRef = ref(db, `users/${applications[index].userId}`);
-                onValue(xRef, (snaps) => {
-                  const x = snaps.val();
-                  console.log(x);
-                  applicants.push({answer: applications[index], user:x});
-            })
-          }
+    let applicants = [];
+    const applicationRef = ref(db, `applications/${job.jobId}`);
+    onValue(applicationRef, (snap) => {
+      const applications = snap.val();
+      // setApplication(application);
+      for(var index in applications) {
+        console.log(`users/${applications[index].userId}`)
+        const xRef = ref(db, `users/${applications[index].userId}`);
+            onValue(xRef, (snaps) => {  
+              const x = snaps.val();
+              console.log(x);
+              applicants.push({answer: applications[index], user:x});
         })
-        setApplied(applicants);
-        setIsLoading(false);
       }
-    });
+    })
+    setApplied(applicants);
+    setIsLoading(false);
   }, [])
   if(isLoading) {
     return (
