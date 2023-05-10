@@ -11,6 +11,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import JobDetails from '../screens/jobDetails';
 import FreelanceDetails from '../screens/freelanceDetails';
 import JobStack from './jobStack';
+import Notifications from '../screens/notifications';
 import { FontAwesome5 } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
@@ -63,7 +64,12 @@ export default function CompanyHomeTab({navigation}) {
                 style={{ height: 40, width: 40, borderRadius:40, marginLeft:10, borderWidth:1, borderColor:'black'}}
               />
             </TouchableOpacity>
-          )
+            ),
+            headerRight: () => (
+              <TouchableOpacity style={{marginRight:'10%'}} onPress={() => navigation.navigate("Notifications")}>
+                <Ionicons name="notifications" size={24} color="grey" />
+              </TouchableOpacity>
+            )
           }}
         />
         <Tab.Screen name="My Jobs" component={JobStack} 
@@ -112,6 +118,18 @@ export default function CompanyHomeTab({navigation}) {
           }}
         />
         <Tab.Screen name="Freelance Details" component={FreelanceDetails} 
+          options={{
+            headerShown:true,
+            tabBarButton: () => null,
+            tabBarVisible: false,
+            headerLeft: () => (
+            <TouchableOpacity style={{paddingLeft:15, paddingRight:15}} onPress={() => navigation.goBack()}>
+              <Ionicons name="arrow-back" size={26} color="black" />
+            </TouchableOpacity>
+          )
+          }}
+        />
+        <Tab.Screen name="Notifications" component={Notifications} 
           options={{
             headerShown:true,
             tabBarButton: () => null,

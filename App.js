@@ -8,12 +8,14 @@ import HomeDrawer from './routes/homeDrawer';
 import SignupStack from './routes/signupStack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-root-toast';
+// import * as Notifications from 'expo-notifications';
 // do not remove gesture handler (important)
 // import 'react-native-gesture-handler';
 
 export default function App() {
   const [login, setLogin] = useState(false);
   useEffect( () => {
+
     messaging().onNotificationOpenedApp( async (remoteMessage) => {
       console.log('Notification recieved', remoteMessage.notification);
     })
@@ -21,6 +23,26 @@ export default function App() {
     messaging().setBackgroundMessageHandler(async (remoteMessage) => {
       console.log('Message Handles in th background!', remoteMessage);
     })
+
+    messaging().onMessage(async (remoteMessage) => {
+      const content = {
+        title: 'My Notification',
+        body: 'This is a local notification',
+        data: { customData: 'Optional custom data' },
+      };
+    
+      const trigger = {
+        seconds: 5, // Trigger the notification after 5 seconds (you can use other options like 'minutes', 'hours', etc.)
+      };
+    
+      await Notifications.scheduleNotificationAsync({
+        content,
+        trigger,
+      });
+      console.log('FCM Message Data:', remoteMessage);
+      // Handle the received message data here
+    });
+
     const getData = async() => {
       const loginStatus = await AsyncStorage.getItem("login");
       console.log("here",loginStatus);
