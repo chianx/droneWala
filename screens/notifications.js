@@ -30,15 +30,15 @@ export default function Notifications({navigation}) {
                 <TouchableOpacity onPress={() => {}}>
                 <View key={item.notificationId} style={styles.jobContainer}>
                   <View style={{flexDirection:'row'}}>
-                    <View style={{paddingRight:20}}>
+                    {/* <View style={{paddingRight:20}}>
                       <Image source={item.image} style={styles.profilePic}/>
-                    </View>
-                    <View style={{paddingRight:20, width:'75%'}}>
+                    </View> */}
+                    <View style={{paddingRight:10, width:'100%'}}>
                       <Text style={styles.title}>{item.title}</Text>
                       <Text style={{fontSize:14}}>{item.content}</Text>
                       <Text style={{textAlign:'right', fontSize:13, color:'grey'}}>{item.time}</Text>
                     </View>
-                  </View> 
+                  </View>
                 </View>
                 </TouchableOpacity>
               )}
