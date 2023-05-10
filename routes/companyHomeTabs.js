@@ -111,7 +111,7 @@ export default function CompanyHomeTab({navigation}) {
             tabBarButton: () => null,
             tabBarVisible: false,
             headerLeft: () => (
-            <TouchableOpacity style={{paddingLeft:15, paddingRight:15}} onPress={() => navigation.goBack()}>
+            <TouchableOpacity style={{paddingLeft:15, paddingRight:15}} onPress={() => navigation.navigate("My Jobs")}>
               <Ionicons name="arrow-back" size={26} color="black" />
             </TouchableOpacity>
           )
@@ -123,7 +123,7 @@ export default function CompanyHomeTab({navigation}) {
             tabBarButton: () => null,
             tabBarVisible: false,
             headerLeft: () => (
-            <TouchableOpacity style={{paddingLeft:15, paddingRight:15}} onPress={() => navigation.goBack()}>
+            <TouchableOpacity style={{paddingLeft:15, paddingRight:15}} onPress={() => navigation.navigate("My Jobs")}>
               <Ionicons name="arrow-back" size={26} color="black" />
             </TouchableOpacity>
           )
@@ -135,7 +135,7 @@ export default function CompanyHomeTab({navigation}) {
             tabBarButton: () => null,
             tabBarVisible: false,
             headerLeft: () => (
-            <TouchableOpacity style={{paddingLeft:15, paddingRight:15}} onPress={() => navigation.goBack()}>
+            <TouchableOpacity style={{paddingLeft:15, paddingRight:15}} onPress={() => navigation.navigate("My Jobs")}>
               <Ionicons name="arrow-back" size={26} color="black" />
             </TouchableOpacity>
           )

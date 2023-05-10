@@ -2,9 +2,10 @@ import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Images from '../images/index'
 import {db} from '../firebase/databaseConfig'
+import messaging from '@react-native-firebase/messaging';
 import { ref,onValue,push,update,remove } from 'firebase/database';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import axios from 'axios'
 export default function Notifications({navigation}) {
 
   const [isLoading, setIsLoading] = useState(false);
@@ -15,6 +16,28 @@ export default function Notifications({navigation}) {
     {notificationId: 4, title:'This is notification 2', content:'This is just a test notification from server', image:Images.drone1, data:{}, time:'3 days ago'},
     
   ]
+  useEffect(() => {
+    messaging().getToken().then(token => {
+      var topicName = "DroneWalaJob";
+      var config = {
+        method:'post',
+        url: "https://iid.googleapis.com/iid/v1/" + token +  "/rel/topics/" + topicName,
+        headers: {
+          Authorization: 
+              'key=AAAAjoab_0Y:APA91bEsHKY-W-hT0iIH3NycyckJay3rdc8VAAUSYsDgrM3-5D-cHPlOWiNWXWkqAv8QEmfRS9QHc2_A9wC6X-p9na-wGQ4hNJrMyCJ3QYlmIsNaOcb8tC_pVP1Lc5XHWIlHqxFRKzos',
+              'Content-Type': 'application/json',
+        },
+      }
+      console.log("token", token);
+      if (token) {
+        axios(config).then(function (response) {
+          console.log(JSON.stringify(response));
+        }).catch(function (error) {
+            console.log(error);
+        });
+      }
+    })
+  }, [])
 
   return (
         
