@@ -5,25 +5,65 @@ import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import * as OpenAnything from 'react-native-openanything'
 import {db} from '../firebase/databaseConfig'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {  
   ref,
   update,
 } from 'firebase/database';
+import axios from 'axios';
 
 export default function Application({route, navigation}) {
   const pilot = route.params.pilot;
+  console.log("pilot",pilot)
+  
   const jobApplicant = route.params.answer;
+  console.log("jobApplicat", jobApplicant)
 
-  const acceptRequest = () => {
+  const acceptRequest = async() => {
     // Change the applicant job status to applied...
     var refs = ref(db, `applications/${jobApplicant.jobId}/${jobApplicant.id}`)
     var final =  {
       status: "accepted" // rejected, review, accepted.
     }
     update(refs, final);
+
+    await AsyncStorage.getItem("userData", (error, result) => {
+      var userJson = JSON.parse(result);
+      var token = pilot.fcmToken;
+      console.log(token);
+        var data = JSON.stringify({
+          data: {"data" : "this is data"},
+          notification: {
+            body: "You have been selected by "+ userJson.companyName +" company for their job",
+            title: "Congratulations! You got it.",
+          },
+          to: token,
+        });
+    
+        var config = {
+          method: "post",
+          url: "https://fcm.googleapis.com/fcm/send",
+          headers: {
+            Authorization:
+              "key=AAAAjoab_0Y:APA91bEsHKY-W-hT0iIH3NycyckJay3rdc8VAAUSYsDgrM3-5D-cHPlOWiNWXWkqAv8QEmfRS9QHc2_A9wC6X-p9na-wGQ4hNJrMyCJ3QYlmIsNaOcb8tC_pVP1Lc5XHWIlHqxFRKzos",
+            "Content-Type": "application/json",
+          },
+          data: data,
+        };
+    
+        axios(config)
+          .then(function (response) {
+            console.log(JSON.stringify(response.data));
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+    })
     console.log("application summited.")
 
     // TODO: SEND NOTIFICATION
+    // Done Prateek
+
   }
 
   const rejectRequest = () => {
@@ -36,6 +76,7 @@ export default function Application({route, navigation}) {
     console.log("application summited.")
 
     // TODO: SEND NOTIFICATION
+    // We don't have to send notification in case of rejection
   }
 
   return (

@@ -47,15 +47,14 @@ export default function JobForm({navigation}) {
         }
     )
 
-    const sendNotifications = async token => {
-        console.log(token);
+    const sendNotifications = async topic => {
         var data = JSON.stringify({
-            data: {}, 
+            data: {"Hello": "This is data"}, 
             notification : {
                 body: 'New job has been posted by XYZ company',
                 title: 'New Job Post'
             },
-            to: token
+            to: "/topics/" + topic
         });
 
         var config = {
@@ -113,19 +112,32 @@ export default function JobForm({navigation}) {
                     set(refs, final).then(async() => {
                         console.log("Job Form Posted Successfully!");
                     });
-
-                    const starCountRef = ref(db, 'pilotTokens/');
-                    onValue(starCountRef, (snapshot) => {
-                        const data = snapshot.val();
-                        const fcmTokens = Object.keys(data).map(key => ({
-                            id: key,
-                            ...data[key]
-                        }))
-                        for(var i=0; i<fcmTokens.length; i++) {
-                            console.log(fcmTokens[i].fcmToken);
-                            sendNotifications(fcmTokens[i].fcmToken);
-                        }
-                    })
+                    var topic = "Jobs";
+                    var data = JSON.stringify({
+                        data: {"Hello": "This is data"}, 
+                        notification : {
+                            body: 'New job has been posted by '+ userJson.companyName +' company',
+                            title: 'New Job Post'
+                        },
+                        to: "/topics/" + topic
+                    });
+            
+                    var config = {
+                        method:'post',
+                        url: 'https://fcm.googleapis.com/fcm/send',
+                        headers: {
+                            Authorization: 
+                                'key=AAAAjoab_0Y:APA91bEsHKY-W-hT0iIH3NycyckJay3rdc8VAAUSYsDgrM3-5D-cHPlOWiNWXWkqAv8QEmfRS9QHc2_A9wC6X-p9na-wGQ4hNJrMyCJ3QYlmIsNaOcb8tC_pVP1Lc5XHWIlHqxFRKzos',
+                                'Content-Type': 'application/json',
+                        },
+                        data : data
+                    };
+            
+                    axios(config).then(function (response) {
+                        console.log(JSON.stringify(response.data));
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
                     setFormData({});
                     setScreen(0);
                     Toast.show('Job Posted Successfully!', {

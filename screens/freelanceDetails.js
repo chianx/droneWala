@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, TextInput, StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
-import Images from '../images/index'
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
@@ -9,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {db} from '../firebase/databaseConfig'
 import { ref, onValue, push, update, remove, runTransaction, set } from 'firebase/database';
 import Toast from 'react-native-root-toast';
+import axios from 'axios';
 
 export default function FreelanceDetails({ route, navigation, formData }) {
   const freelance = route.params.freelance;
@@ -18,6 +18,36 @@ export default function FreelanceDetails({ route, navigation, formData }) {
   const [bidIsSet, setBidIsSet] = useState(false);
   const [canApply, setCanAplly] = useState(true);
   
+  const sendNotification = async (token) => {
+    console.log(token);
+    var data = JSON.stringify({
+      data: {"data" : "this is data"},
+      notification: {
+        body: "Someone placed a bid on your freelance Project.",
+        title: "A bid is placed!",
+      },
+      to: token,
+    });
+
+    var config = {
+      method: "post",
+      url: "https://fcm.googleapis.com/fcm/send",
+      headers: {
+        Authorization:
+          "key=AAAAjoab_0Y:APA91bEsHKY-W-hT0iIH3NycyckJay3rdc8VAAUSYsDgrM3-5D-cHPlOWiNWXWkqAv8QEmfRS9QHc2_A9wC6X-p9na-wGQ4hNJrMyCJ3QYlmIsNaOcb8tC_pVP1Lc5XHWIlHqxFRKzos",
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
   const handlePlaceBid = () => {
     if(canApply) {
@@ -74,7 +104,12 @@ export default function FreelanceDetails({ route, navigation, formData }) {
       delay: 1000,
     });
     setCanAplly(false);
-
+    const starCountRef = ref(db, 'users/' + freelance.companyId + "/fcmToken");
+    onValue(starCountRef, (snapshot) => {
+      const token = snapshot.val();
+      console.log("fcmToken " + token)
+      sendNotification(token);
+  })
   }
 
   const handleBid = (bid) => {

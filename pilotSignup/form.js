@@ -97,14 +97,41 @@ export default function PilotForm({navigation}) {
                     messaging().getToken().then(token => {
                         console.log(token);
                         fcmToken = token;
-                        var tokenPush = { fcmToken: token, interests: formData.interests, name:formData.name, city:formData.city, state:formData.state, userId:uid};
-                        console.log(tokenPush);
-                        set(ref(db, 'pilotTokens/' + uid), tokenPush).then(async() => {
-                            console.log(tokenPush);
-                        }).catch((error) => {
-                            setErrorMessage("Something went wrong, Please try again.");
-                            setLoading(false);
-                        })
+                        
+                        // -------------------------------------------------
+                        // subscribe starts here
+                        var configJobs = {
+                            method:'post',
+                            url: "https://iid.googleapis.com/iid/v1/" + token +  "/rel/topics/Jobs",
+                            headers: {
+                              Authorization: 
+                                  'key=AAAAjoab_0Y:APA91bEsHKY-W-hT0iIH3NycyckJay3rdc8VAAUSYsDgrM3-5D-cHPlOWiNWXWkqAv8QEmfRS9QHc2_A9wC6X-p9na-wGQ4hNJrMyCJ3QYlmIsNaOcb8tC_pVP1Lc5XHWIlHqxFRKzos',
+                                  'Content-Type': 'application/json',
+                            },
+                        }
+                        var configFreelance = {
+                            method:'post',
+                            url: "https://iid.googleapis.com/iid/v1/" + token +  "/rel/topics/Freelance",
+                            headers: {
+                              Authorization: 
+                                  'key=AAAAjoab_0Y:APA91bEsHKY-W-hT0iIH3NycyckJay3rdc8VAAUSYsDgrM3-5D-cHPlOWiNWXWkqAv8QEmfRS9QHc2_A9wC6X-p9na-wGQ4hNJrMyCJ3QYlmIsNaOcb8tC_pVP1Lc5XHWIlHqxFRKzos',
+                                  'Content-Type': 'application/json',
+                            },
+                        }
+                        if (token) {
+                            axios(configJobs).then(function (response) {
+                              console.log(JSON.stringify(response));
+                            }).catch(function (error) {
+                                console.log(error);
+                            });
+                            axios(configFreelance).then(function (response) {
+                              console.log(JSON.stringify(response));
+                            }).catch(function (error) {
+                                console.log(error);
+                            });
+                        }
+                        // subscribe ends here
+                        // ---------------------------------------------------
 
                         var final = {...formData, userId: uid, fcmToken: fcmToken}
 

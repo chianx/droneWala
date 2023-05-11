@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import StepOne from './stepOne';
 import StepTwo from './steptwo.js';
 import Toast from 'react-native-root-toast';
+import axios from 'axios'
 
 export default function FreelanceForm({route, navigation}) {
     const category = route.params.category;
@@ -134,9 +135,36 @@ export default function FreelanceForm({route, navigation}) {
 
                     var final =  {...formData, companyName:userJson.companyName, logo:userJson.logo, companyId:userJson.userId, aboutCompany:userJson.about, freelanceId:refs.key}; 
                     set(refs, final);
+                    var topic = "Freelance";
+                    var data = JSON.stringify({
+                        data: {"Hello": "This is data"}, 
+                        notification : {
+                            body: 'New Freelance Project has been posted by '+ userJson.companyName +' company',
+                            title: 'New Freelance Post'
+                        },
+                        to: "/topics/" + topic
+                    });
+                    var config = {
+                        method:'post',
+                        url: 'https://fcm.googleapis.com/fcm/send',
+                        headers: {
+                            Authorization: 
+                                'key=AAAAjoab_0Y:APA91bEsHKY-W-hT0iIH3NycyckJay3rdc8VAAUSYsDgrM3-5D-cHPlOWiNWXWkqAv8QEmfRS9QHc2_A9wC6X-p9na-wGQ4hNJrMyCJ3QYlmIsNaOcb8tC_pVP1Lc5XHWIlHqxFRKzos',
+                                'Content-Type': 'application/json',
+                        },
+                        data : data
+                    };
+                
+                    axios(config).then(function (response) {
+                        console.log(JSON.stringify(response.data));
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
                 })
                 setFormData({});
                 setScreen(0);
+                
+                
                 Toast.show('Freelance Project Posted Successfully!', {
                     backgroundColor:'#fda172',
                     duration: Toast.durations.LONG,
