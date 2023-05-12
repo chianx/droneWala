@@ -18,7 +18,7 @@ export default function Notifications({navigation}) {
   ]
   useEffect(() => {
     messaging().getToken().then(token => {
-      var topicName = "DroneWalaJob";
+      var topicName = "Freelance";
       var config = {
         method:'post',
         url: "https://iid.googleapis.com/iid/v1/" + token +  "/rel/topics/" + topicName,

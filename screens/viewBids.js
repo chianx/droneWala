@@ -32,11 +32,13 @@ export default function ViewBids({route, navigation}) {
               const x = snaps.val();
               console.log(x);
               applicants.push({answer: applications[index], user:x});
+              console.log(applicants);
         })
       }
+      setApplied(applicants);
     })
-    console.log(applicants);
-    setApplied(applicants);
+    // console.log(applicants);
+    
     setIsLoading(false);
   }, [])
 
@@ -55,17 +57,17 @@ export default function ViewBids({route, navigation}) {
             <FlatList 
               data={users}
               renderItem={({item}) => (
-                <TouchableOpacity onPress={() => navigation.navigate('View Profile', {user: item})}>
+                <TouchableOpacity onPress={() => navigation.navigate('View Profile', {userId: item.user.userId})}>
                 <View key={item.key} style={styles.jobContainer}>
                   <View style={{flexDirection:'row'}}>
                     <View style={{paddingRight:20}}>
                       <Image source={item.profile} style={styles.profilePic}/>
                     </View>
                     <View style={{paddingRight:20, width:200}}>
-                      <Text style={styles.title}>{item.pilotName}</Text>
-                      <Text style={{color:'#808080', paddingBottom:3}}><Ionicons name="location-outline" size={14} color="#808080" />{' '+ item.location}</Text>
-                      <Text style={{color:'#808080', paddingBottom:3}}>Experience{' ₹' + item.experience}</Text>
-                      <Text style={{color:'#808080', paddingBottom:6}}>Certified: {' '+item.certified}</Text>
+                      <Text style={styles.title}>{item.user.name}</Text>
+                      <Text style={{color:'#808080', paddingBottom:3}}><Ionicons name="location-outline" size={14} color="#808080" />{' '+ item.user.city + ", " + item.user.state}</Text>
+                      <Text style={{color:'#808080', paddingBottom:3}}>Experience{' ' + item.user.experience}</Text>
+                      <Text style={{color:'#808080', paddingBottom:6}}>Certified: {item.user.dgcaCert? "Yes" : "No"}</Text>
                     </View>
                   </View> 
                   <Text style={{fontSize:16, fontWeight:'bold', color:'grey'}}>Bid Placed: ₹ {item.bid}</Text>
@@ -102,6 +104,6 @@ const styles = StyleSheet.create({
     paddingVertical:15,
     borderTopWidth:3,
     borderTopColor:'#ffe5d3',
-    backgroundColor:'#F8F8F8'
+    // backgroundColor:'#F8F8F8'
   }
 });

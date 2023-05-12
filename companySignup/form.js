@@ -7,6 +7,7 @@ import { db, auth } from '../firebase/databaseConfig'
 import {ref, set} from 'firebase/database'
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios'
 
 export default function Form({navigation}) {
     const [screen, setScreen] = useState(0);
@@ -55,7 +56,6 @@ export default function Form({navigation}) {
             websiteIsSet : false,
             aboutIsSet: false,
             numPeopleIsSet: false,
-            type: ""
         }
     )
     const ScreenDisplay = () => {
@@ -101,13 +101,36 @@ export default function Form({navigation}) {
                     messaging().getToken().then(token => {
                         console.log(token);
                         fcmToken = token;
-                        var tokenPush = { fcmToken: token, category: formData.category, name:formData.companyName, city:formData.city, state:formData.state, userId:uid};
-                        set(ref(db, 'companyTokens/' + uid), tokenPush).then(async() => {
-                            console.log("Token Push Successful", tokenPush);
-                        }).catch((error) => {
-                            setErrorMessage("Something went wrong, Please try again.");
-                            setLoading(false);
-                        })
+                        // -------------------------------------------------
+                        // subscribe starts here
+                        var topicName = "all-companies";
+                        var config = {
+                            method:'post',
+                            url: "https://iid.googleapis.com/iid/v1/" + token +  "/rel/topics/" + topicName,
+                            headers: {
+                              Authorization: 
+                                  'key=AAAAjoab_0Y:APA91bEsHKY-W-hT0iIH3NycyckJay3rdc8VAAUSYsDgrM3-5D-cHPlOWiNWXWkqAv8QEmfRS9QHc2_A9wC6X-p9na-wGQ4hNJrMyCJ3QYlmIsNaOcb8tC_pVP1Lc5XHWIlHqxFRKzos',
+                                  'Content-Type': 'application/json',
+                            },
+                        }
+                        if (token) {
+                            axios(config).then(function (response) {
+                              console.log(JSON.stringify(response));
+                            }).catch(function (error) {
+                                console.log(error);
+                            });
+                        }
+                        // subscribe ends here
+                        // ---------------------------------------------------
+
+                        // Send tokens to /companyTokens route of firebase
+                        // var tokenPush = { fcmToken: token, category: formData.category, name:formData.companyName, city:formData.city, state:formData.state, userId:uid};
+                        // set(ref(db, 'companyTokens/' + uid), tokenPush).then(async() => {
+                        //     console.log("Token Push Successful", tokenPush);
+                        // }).catch((error) => {
+                        //     setErrorMessage("Something went wrong, Please try again.");
+                        //     setLoading(false);
+                        // })
 
                         var final =  {...formData, userId: uid, fcmToken:fcmToken};
                         set(ref(db, 'users/' + uid), final).then(async() => {

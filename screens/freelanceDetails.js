@@ -1,22 +1,70 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, TextInput, StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
-import Images from '../images/index'
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 import * as OpenAnything from 'react-native-openanything'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {db} from '../firebase/databaseConfig'
-import { ref,onValue,push,update,remove, set } from 'firebase/database';
+import { ref, onValue, push, update, remove, runTransaction, set } from 'firebase/database';
+import Toast from 'react-native-root-toast';
+import axios from 'axios';
 
 export default function FreelanceDetails({ route, navigation, formData }) {
   const freelance = route.params.freelance;
   const [userType, setUserType] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [bid, setBid] = useState('');
-  const [bidIsSet, setBidIsSet] = useState(false)
+  const [bidIsSet, setBidIsSet] = useState(false);
+  const [canApply, setCanAplly] = useState(true);
+  
+  const sendNotification = async (token) => {
+    console.log(token);
+    var data = JSON.stringify({
+      data: {"data" : "this is data"},
+      notification: {
+        body: "Someone placed a bid on your freelance Project.",
+        title: "A bid is placed!",
+      },
+      to: token,
+    });
 
-  const toggleModal = () => {
-    setIsModalVisible(!isModalVisible);
+    var config = {
+      method: "post",
+      url: "https://fcm.googleapis.com/fcm/send",
+      headers: {
+        Authorization:
+          "key=AAAAjoab_0Y:APA91bEsHKY-W-hT0iIH3NycyckJay3rdc8VAAUSYsDgrM3-5D-cHPlOWiNWXWkqAv8QEmfRS9QHc2_A9wC6X-p9na-wGQ4hNJrMyCJ3QYlmIsNaOcb8tC_pVP1Lc5XHWIlHqxFRKzos",
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  const handlePlaceBid = () => {
+    if(canApply) {
+      setIsModalVisible(!isModalVisible);
+    }else {
+      Toast.show('You have already placed bid for this Project.', {
+        // backgroundColor:'#fda172',
+        duration: Toast.durations.LONG,
+        position: -130,
+        shadow: true,
+        animation: true,
+        opacity:1,
+        hideOnPress: false,
+        delay: 500,
+    });
+    }
+    
   };
 
   const submitBid = async() => {
@@ -30,18 +78,57 @@ export default function FreelanceDetails({ route, navigation, formData }) {
       amount: bid,
       userId: user.userId,
     }
-    set(bidRef, bidJson)
+    set(bidRef, bidJson);
+    setIsModalVisible(!isModalVisible);
+    var freelanceRef = ref(db, "freelance/" + freelance.freelanceId)
+    runTransaction(freelanceRef, (freelance) => {
+      if(freelance.applied) {
+        var arr = Array.from(freelance.applied);
+        arr.push(user.userId);
+        freelance = {...freelance, applied: arr}
+      }else {
+        var arr = []
+        arr.push(user.userId);
+        freelance = {...freelance, applied: arr}
+      }
+      return freelance
+    });
+    Toast.show('Bid Placed Succesfully!', {
+      // backgroundColor:'#fda172',
+      duration: Toast.durations.LONG,
+      position: -130,
+      shadow: true,
+      animation: true,
+      opacity:1,
+      hideOnPress: false,
+      delay: 1000,
+    });
+    setCanAplly(false);
+    const starCountRef = ref(db, 'users/' + freelance.companyId + "/fcmToken");
+    onValue(starCountRef, (snapshot) => {
+      const token = snapshot.val();
+      console.log("fcmToken " + token)
+      sendNotification(token);
+  })
   }
 
   const handleBid = (bid) => {
     setBid(bid);
   };
 
-
   const mount = async () => {
-    const type = await AsyncStorage.getItem("userType");
-    const jsonType = JSON.parse(type);
-    setUserType(jsonType);
+    const userdata = await AsyncStorage.getItem("userData");
+    const json = JSON.parse(userdata);
+    setUserType(json.userType);
+    var userId = json.userId;
+    if(freelance.applied) {
+      for(var index in freelance.applied) {
+        if(freelance.applied[index] === userId) {
+          setCanAplly(false);
+          break;
+        }
+      }
+    }
   }
   useEffect(() => {
     mount()
@@ -52,12 +139,14 @@ export default function FreelanceDetails({ route, navigation, formData }) {
         <View style={styles.basic}>
           <View style={{ width: '70%' }}>
             <Text style={styles.title}>{freelance.title}</Text>
-            <Text style={{ marginVertical: 4, fontSize: 16 }}>{freelance.companyName}</Text>
-            <Text style={{ color: '#808080', fontSize: 16, paddingBottom: 5 }}><Ionicons name="location-outline" size={16} color="#808080" />{freelance.location}</Text>
+            <TouchableOpacity onPress={() => {navigation.navigate("View Profile", {userType:"company", userId:freelance.companyId})}}>
+              <Text style={{color:'#808080', paddingBottom:15, fontWeight:'bold', fontSize:17}}>{freelance.companyName} <Entypo name="link" size={18} color="#808080" /></Text>
+            </TouchableOpacity>
+            <Text style={{ color: '#808080', fontSize: 16, paddingBottom: 5 }}><Ionicons name="location-outline" size={16} color="#808080" />{freelance.areaLoc}</Text>
             <Text style={{ color: '#808080', fontSize: 16, paddingBottom: 5 }}>Category:{' ' + freelance.category}</Text>
             <Text style={{ color: '#808080', fontSize: 16, paddingBottom: 5 }}><AntDesign name="calendar" size={16} color="#808080" />{' ' + freelance.closingDate}</Text>
           </View>
-          <Image source={freelance.logo} style={styles.profilePic} />
+          <Image source={{uri: freelance.logo}} style={styles.profilePic} />
         </View>
         <View style={{ paddingHorizontal: 15, paddingTop: 25 }}>
           <Text style={styles.title}>Work Description</Text>
@@ -73,7 +162,7 @@ export default function FreelanceDetails({ route, navigation, formData }) {
         {/* <View style={{paddingTop:25, borderBottomWidth: 3, borderBottomColor:'#ffe5d3'}}></View> */}
         <View style={{ paddingHorizontal: 15, paddingTop: 25 }}>
           <Text style={{ width: '100%', fontWeight: 'bold', fontSize: 19, color: '#505050', paddingBottom: 8 }}>Files for the project</Text>
-          <TouchableOpacity onPress={() => OpenAnything.Pdf(freelance.document)} style={styles.download}>
+          <TouchableOpacity onPress={() => OpenAnything.Pdf(freelance.KML_File)} style={styles.download}>
             <Text style={{ color: 'white', fontSize: 15, textAlign: 'center' }}>Download</Text>
           </TouchableOpacity>
         </View>
@@ -81,8 +170,8 @@ export default function FreelanceDetails({ route, navigation, formData }) {
         <View style={{ paddingHorizontal: 15, paddingTop: 25, backgroundColor: '#F8F8F8' }}>
           <Text style={{ width: '100%', fontWeight: 'bold', fontSize: 19, color: '#505050', paddingBottom: 8 }}>Other Details</Text>
 
-          <Text style={{ color: '#808080', fontSize: 16, paddingBottom: 5 }}>Maximum Bid: {' ₹' + freelance.maxBid}</Text>
-          <Text style={{ color: '#808080', fontSize: 16, paddingBottom: 5 }}>Work Duration: {' ' + freelance.workDuration}</Text>
+          <Text style={{ color: '#808080', fontSize: 16, paddingBottom: 5 }}>Maximum Bid: {' ₹ ' + freelance.maximumBid}</Text>
+          <Text style={{ color: '#808080', fontSize: 16, paddingBottom: 5 }}>Work Duration: {' ' + freelance.workDurationFrom + "-" + freelance.workDurationTo + " Weeks"}</Text>
           <Text style={{ color: '#808080', fontSize: 16, paddingBottom: 5 }}>Area Size: {' ' + freelance.areaSize}</Text>
         </View>
         <View style={{ paddingTop: 25, borderBottomWidth: 3, borderBottomColor: '#ffe5d3', backgroundColor: '#F8F8F8' }}></View>
@@ -93,8 +182,8 @@ export default function FreelanceDetails({ route, navigation, formData }) {
             // <Text style={{ color: 'white', fontSize: 20, textAlign: 'center' }}>Bid Placed Successfully</Text>
             // : 
             <TouchableOpacity
-            style={{ backgroundColor: 'coral', flex: 1, height: 45, justifyContent: 'center', margin: 5, borderRadius: 10, width: '100%', elevation: 5 }}
-            onPress={toggleModal}
+            style={{ backgroundColor: 'coral', flex: 1, height: 45, justifyContent: 'center', margin: 5, borderRadius: 10, width: '100%', elevation: 5, opacity: canApply? 1:0.6 }}
+            onPress={handlePlaceBid}
             >
               <Text style={{ color: 'white', fontSize: 20, textAlign: 'center' }}>Place a bid</Text>
             </TouchableOpacity>
@@ -111,7 +200,7 @@ export default function FreelanceDetails({ route, navigation, formData }) {
         animationType="slide"
         visible={isModalVisible}
         transparent={true}
-        onRequestClose={toggleModal} >
+        onRequestClose={() => setIsModalVisible(!isModalVisible)} >
           <View style={{ backgroundColor: '#f0f0f0', borderColor:'coral', position:'absolute', bottom:'7%', width: '100%', borderTopLeftRadius:20, borderTopRightRadius:20, borderWidth: 1, padding: 20}}>
 
           <View style={{flexDirection: "row", marginBottom: 20,}}>
