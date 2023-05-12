@@ -37,7 +37,15 @@ export default function Applicants({route, navigation}) {
     return (
       <View style={{backgroundColor: '#e0e0e0aa', height:300, justifyContent:'center'}}><ActivityIndicator size="large" color="coral" /></View>
     )
-  }else return (
+  }else  {
+    if(applied.length === 0) {
+      return (<View style={[styles.container, {alignItems: 'center', justifyContent: 'center'}]}>
+        <View style={{alignSelf: 'center', marginVertical: 'auto'}}>
+        <Text style={{fontSize: 20, alignContent: 'center', color: 'coral', fontWeight: 'bold', textShadowColor: 'grey', textShadowOffset: { width: -1.5, height: 1 }, textShadowRadius: 1,}}>No Applications Found</Text>
+        </View>
+        </View>
+      )
+    }else return (
         <View style={styles.container}>
             {applied.map((item, index) => {
                 return (
@@ -61,7 +69,7 @@ export default function Applicants({route, navigation}) {
             {/* <Image source={Images.loading}  style={styles.gif} /> */}
         </View>
     )
-}
+  }}
 
 const styles = StyleSheet.create({
   container: {

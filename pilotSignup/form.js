@@ -13,9 +13,9 @@ export default function PilotForm({navigation}) {
     const [loading, setLoading] = useState(false);
     const [screen, setScreen] = useState(0)
     const FormTitle = [
-        "Basic Details",
-        "Personal Details",
-        "Pilot Details"
+        "Pilot Signup",
+        "Pilot Signup",
+        "Pilot Signup"
     ]
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -129,8 +129,6 @@ export default function PilotForm({navigation}) {
                 setErrorMessage(errMsg);
             }
         }
-        // Screen 2 Vadilaton
-        // const userData = {name:formData.name}
     }
     const callNext = () => {
         console.log(formData);

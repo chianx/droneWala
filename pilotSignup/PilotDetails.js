@@ -6,9 +6,9 @@ import { MultipleSelectList } from 'react-native-dropdown-select-list'
 
 export default function PilotDetails({ formData, setFormData }) {
   const [shouldShow, setshouldShow] = useState(false)
-  const [selectedDrone, setSelectedDrone] = React.useState([]);
-  const [selectedExperience, setSelectedExperience] = React.useState("");
-  const [selectedInterest, setSelectedInterest] = useState([]);
+  const [selectedDrone, setSelectedDrone] = React.useState(formData.droneSelect);
+  const [selectedExperience, setSelectedExperience] = React.useState(formData.experience);
+  const [selectedInterest, setSelectedInterest] = useState(formData.interests);
 
   const [t, setT] = useState(false);
   const [te, setTe] = useState(false);
@@ -56,7 +56,8 @@ export default function PilotDetails({ formData, setFormData }) {
                   style={styles.pressable}
                   onPress={() => {
                     setshouldShow((prev) => !prev)
-                    setFormData({ ...formData, dcgaCert:false });
+                    setFormData({ ...formData, dcgaCert:false, certNum: "" });
+                    handleCERTNumberChange("")
                   }}>
                   <Text style={styles.button}>Press if you don't have DCGA Certification!</Text>
                 </Pressable>
@@ -75,7 +76,7 @@ export default function PilotDetails({ formData, setFormData }) {
                 <Pressable
                   onPress={() => {
                     setshouldShow((prev) => !prev)
-                    setFormData({ ...formData, dcgaCert:true });
+
                   }}>
                   <Text style={styles.button}>Press if you have DCGA Certification!</Text>
                 </Pressable>
