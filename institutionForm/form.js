@@ -121,9 +121,6 @@ export default function InstitutionForm({navigation}) {
             }
             
         }
-        // set(ref(db, 'users/'), {formData})
-        // Screen 2 Vadilaton
-        // const userData = {name:formData.name}
     }
 
     

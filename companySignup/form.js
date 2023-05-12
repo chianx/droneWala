@@ -13,9 +13,9 @@ export default function Form({navigation}) {
     const [screen, setScreen] = useState(0);
     const [loading, setLoading] = useState(false);
     const FormTitle = [
-        "Personal Details",
-        "Basic Details",
-        "Company Details"
+        "Company Signup",
+        "Company Signup",
+        "Company Signup"
     ]
     const [errorMessage, setErrorMessage] = useState("");
     const [formData, setFormData] = useState(
@@ -153,9 +153,6 @@ export default function Form({navigation}) {
             }
             
         }
-        // set(ref(db, 'users/'), {formData})
-        // Screen 2 Vadilaton
-        // const userData = {name:formData.name}
     }
 
     const callNext = () => {

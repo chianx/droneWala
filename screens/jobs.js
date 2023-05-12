@@ -49,8 +49,13 @@ export default function Jobs({navigation}) {
         
         <View style={styles.container}>
         {isLoading? <View style={{backgroundColor: '#e0e0e0aa', flex:1, justifyContent:'center'}}><ActivityIndicator size="large" color="coral" /></View> : 
-        <View>
-        {jobs.length  === 0? <View><Text style={{textAlign:'center', color:'grey', fontWeight:400, fontSize:20}}>No Jobs Found!</Text></View>:
+            jobs.length === 0 ? 
+            <View style={[styles.container, {alignItems: 'center', justifyContent: 'center'}]}>
+            <View style={{alignSelf: 'center', marginVertical: 'auto'}}>
+            <Text style={{fontSize: 20, alignContent: 'center', color: 'coral', fontWeight: 'bold', textShadowColor: 'grey', textShadowOffset: { width: -1.5, height: 1 }, textShadowRadius: 1,}}>No Jobs Posted Yet</Text>
+            </View>
+            </View>
+            : 
             <FlatList 
               data={jobs}
               renderItem={({item}) => (
@@ -75,8 +80,6 @@ export default function Jobs({navigation}) {
                 </TouchableOpacity>
               )}
             />
-        }
-        </View>
         }
         {userType === "company"? 
           <TouchableOpacity style={{alignItems:'flex-end', position:'absolute', bottom:0, width:'100%', paddingRight:20}} onPress={() => navigation.navigate("Post a Job")}>

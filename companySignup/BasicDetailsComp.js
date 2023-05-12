@@ -4,9 +4,10 @@ import axios from 'axios';
 
 export default function PersonalDetails({ formData, setFormData }) {
   const [secureEntry, setSecureEntry] = useState(true);
-  const [state, setState] = useState("");
-  const [city, setCity] = useState("");
-  const [pincode, setPincode] = useState("");
+  const [canEdit, setCanEdit] = useState(false);
+  const [state, setState] = useState(formData.city);
+  const [city, setCity] = useState(formData.state);
+  const [pincode, setPincode] = useState(formData.pincode);
   
   const getAddress = async(pincode) => {
 
@@ -33,16 +34,23 @@ export default function PersonalDetails({ formData, setFormData }) {
       const response = await axios.request(options);
       console.log(response.data);
       if(response.data != "No Data Found" && response.data["details"].length > 0) {
-        const state = response.data["details"][0]["city_name"];
-        const city = response.data["details"][0]["state_name"];
+        const state = response.data["details"][0]["state_name"];
+        const city = response.data["details"][0]["city_name"];
+
         console.log(state +' '+ city +' '+ pincode)
         handleCityChange(city);
         setCity(city)
         handleStateChange(state);
         setState(state)
         setPincode(pincode)
-        if(pincode.length === 6 && state.length >= 5 && city.length >= 3)
+        if(pincode.length === 6 && state.length >= 5 && city.length >= 3) {
+          setCanEdit(false);
           setFormData({...formData, city:city, cityIsSet:true, pincode:pincode, pinIsSet: true, state:state, stateIsSet:true })
+        }else
+          setCanEdit(true);
+      }else {
+        setCanEdit(true);
+
       }
       
     } catch (error) {
@@ -123,6 +131,7 @@ export default function PersonalDetails({ formData, setFormData }) {
           placeholderTextColor="grey"
           placeholder='City *'
           required={true}
+          editable={canEdit}
           value={city}
           onChangeText={(city) => handleCityChange(city)}
         />
@@ -132,6 +141,7 @@ export default function PersonalDetails({ formData, setFormData }) {
           style={[formData.stateIsSet ? styles.TextInput : styles.errorTextInput]}
           placeholderTextColor="grey"
           placeholder='State *'
+          editable={canEdit}
           required={true}
           value={state}
           onChangeText={(state) => handleStateChange(state)}

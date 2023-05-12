@@ -9,6 +9,8 @@ import DatePicker from 'react-native-modern-datepicker';
 export default function BasicDetails({ formData, setFormData }) {
     const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
     const [image, setImage] = useState(null);
+    const [fname, setFname] = useState(formData.name);
+    const [fnameSet, setFnameSet] = useState(formData.nameIsSet);
 
   useEffect(() => {
     (async () => {
@@ -91,10 +93,13 @@ export default function BasicDetails({ formData, setFormData }) {
     const todaysDate = year + '-0' + month + '-' + day;
 
     const handleNameChange = (name) => {
+      setFname(name);
         if (formData.name.trim().length >= 2) {
+          setFnameSet(true);
             setFormData({ ...formData, name:name, nameIsSet: true});
         } else {
-            setFormData({ ...formData, name:name, nameIsSet: false});
+          setFnameSet(false);
+          setFormData({ ...formData, name:name, nameIsSet: false});
         }
     }
     const handleEmailChange = (email) => {
@@ -114,10 +119,10 @@ export default function BasicDetails({ formData, setFormData }) {
       </View>
             <View style={styles.inputView}>
                 <TextInput
-                    style={[formData.nameIsSet ? styles.TextInput : styles.errorTextInput]}
+                    style={[fnameSet ? styles.TextInput : styles.errorTextInput]}
                     placeholderTextColor="grey"
                     placeholder='Full Name *'
-                    value={formData.name}
+                    value={fname}
                     onChangeText={(name) => handleNameChange(name)}
                 />
             </View>

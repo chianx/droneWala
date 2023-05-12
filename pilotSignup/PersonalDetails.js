@@ -4,37 +4,44 @@ import axios from 'axios';
 
 export default function PersonalDetails({ formData, setFormData }) {
   const [secureEntry, setSecureEntry] = useState(true);
-  const [state, setState] = useState("");
-  const [city, setCity] = useState("");
-  const [pincode, setPincode] = useState("");
+  const [canEdit, setCanEdit] = useState(false);
+  const [state, setState] = useState(formData.city);
+  const [city, setCity] = useState(formData.state);
+  const [pincode, setPincode] = useState(formData.pincode);
 
   const getAddress = async(pincode) => {
 
     const options = {
-      method: 'GET',
-      url: 'https://india-pincode-with-latitude-and-longitude.p.rapidapi.com/api/v1/pincode/' + pincode,
+      method: 'POST',
+      url: 'https://get-details-by-pin-code-india.p.rapidapi.com/detailsbypincode',
       headers: {
-        'content-type': 'application/octet-stream',
+        'content-type': 'application/json',
         'X-RapidAPI-Key': '87ef83b0camsh60700ab8953b291p1c1423jsn5fbe5c77e28b',
-        'X-RapidAPI-Host': 'india-pincode-with-latitude-and-longitude.p.rapidapi.com'
-      }
+        'X-RapidAPI-Host': 'get-details-by-pin-code-india.p.rapidapi.com'
+      },
+      data: {pincode: pincode}
     };
-
     try {
       const response = await axios.request(options);
       console.log(response.data);
-      if(response.data.length > 0) {
-        const state = response.data[0]["state"];
-        const city = response.data[0]["district"];
+      if(response.data != "No Data Found" && response.data["details"].length > 0) {
+        const state = response.data["details"][0]["state_name"];
+        const city = response.data["details"][0]["city_name"];
         console.log(state +' '+ city +' '+ pincode)
         handleCityChange(city);
         setCity(city)
         handleStateChange(state);
         setState(state)
         setPincode(pincode)
-        if(pincode.length === 6 && state.length >= 5 && city.length >= 3)
+        if(pincode.length === 6 && state.length >= 5 && city.length >= 3){
+          setCanEdit(false);
           setFormData({...formData, city:city, cityIsSet:true, pincode:pincode, pinIsSet: true, state:state, stateIsSet:true })
+        }else
+          setCanEdit(true);
+      }else {
+        setCanEdit(true);
       }
+      
       
     } catch (error) {
       console.error(error);
@@ -113,6 +120,7 @@ export default function PersonalDetails({ formData, setFormData }) {
           style={[formData.cityIsSet ? styles.TextInput : styles.errorTextInput]}
           placeholderTextColor="grey"
           placeholder='City *'
+          editable={canEdit}
           required={true}
           value={city}
           onChangeText={(city) => handleCityChange(city)}
@@ -123,6 +131,7 @@ export default function PersonalDetails({ formData, setFormData }) {
           style={[formData.stateIsSet ? styles.TextInput : styles.errorTextInput]}
           placeholderTextColor="grey"
           placeholder='State *'
+          editable={canEdit}
           required={true}
           value={state}
           onChangeText={(state) => handleStateChange(state)}
