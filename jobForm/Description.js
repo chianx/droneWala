@@ -3,14 +3,14 @@ import React, { useState } from 'react'
 
 export default function Description({ formData, setFormData }) {
   const handleaboutJob = (aboutJob) => {
-    if(formData.aboutJob.trim().length >= 100) {
+    if(formData.aboutJob && formData.aboutJob.length >= 100) {
       setFormData({ ...formData, aboutJob:aboutJob, aboutJobIsSet: true });
     }else {
         setFormData({ ...formData, aboutJob:aboutJob, aboutJobIsSet: false });
     }
   }
   const handlewhoApply = (whoApply) => {
-    if(formData.whoApply.trim().length >= 100) {
+    if(formData.whoApply && formData.whoApply.length >= 100) {
       setFormData({ ...formData, whoApply:whoApply, whoApplyIsSet: true });
   }else {
       setFormData({ ...formData, whoApply:whoApply, whoApplyIsSet: false });

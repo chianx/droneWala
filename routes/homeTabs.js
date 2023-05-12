@@ -13,6 +13,7 @@ import CourseDetails from '../screens/courseDetails';
 import JobDetails from '../screens/jobDetails';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Notifications from '../screens/notifications';
 
 const Tab = createBottomTabNavigator();
 
@@ -52,14 +53,7 @@ export default function HomeTab({navigation}) {
           headerShown:false,
           tabBarActiveTintColor: '#ed7117',
           tabBarInactiveTintColor: 'gray',
-          // headerLeft: () => (
-          //   <TouchableOpacity onPress={() => navigation.openDrawer()}>
-          //     <Image
-          //       source={Images.profile}
-          //       style={{ height: 40, width: 40, borderRadius:40, marginLeft:10, borderWidth:1, borderColor:'black'}}
-          //     />
-          //   </TouchableOpacity>
-          // )
+          
         })}
       >
         <Tab.Screen name="Home" component={Home} 
@@ -73,7 +67,12 @@ export default function HomeTab({navigation}) {
                 style={{ height: 40, width: 40, borderRadius:40, marginLeft:10, borderWidth:1, borderColor:'black'}}
               />
             </TouchableOpacity>
-          )
+          ),
+          headerRight: () => (
+              <TouchableOpacity style={{marginRight:'10%'}} onPress={() => navigation.navigate("Notifications")}>
+                <Ionicons name="notifications" size={24} color="grey" />
+              </TouchableOpacity>
+            )
           }}
         />
         <Tab.Screen name="Jobs" component={JobStack} />
@@ -120,7 +119,7 @@ export default function HomeTab({navigation}) {
             tabBarButton: () => null,
             tabBarVisible: false,
             headerLeft: () => (
-            <TouchableOpacity style={{paddingLeft:15, paddingRight:15}} onPress={() => navigation.goBack()}>
+            <TouchableOpacity style={{paddingLeft:15, paddingRight:15}} onPress={() => navigation.navigate("Jobs")}>
               <Ionicons name="arrow-back" size={26} color="black" />
             </TouchableOpacity>
           )
@@ -133,7 +132,20 @@ export default function HomeTab({navigation}) {
             tabBarButton: () => null,
             tabBarVisible: false,
             headerLeft: () => (
-            <TouchableOpacity style={{paddingLeft:15, paddingRight:15}} onPress={() => navigation.goBack()}>
+            <TouchableOpacity style={{paddingLeft:15, paddingRight:15}} onPress={() => navigation.navigate("Jobs")}>
+              <Ionicons name="arrow-back" size={26} color="black" />
+            </TouchableOpacity>
+          )
+          }}
+        />
+
+        <Tab.Screen name="Notifications" component={Notifications} 
+          options={{
+            headerShown:true,
+            tabBarButton: () => null,
+            tabBarVisible: false,
+            headerLeft: () => (
+            <TouchableOpacity style={{paddingLeft:15, paddingRight:15}} onPress={() => navigation.navigate("Jobs")}>
               <Ionicons name="arrow-back" size={26} color="black" />
             </TouchableOpacity>
           )

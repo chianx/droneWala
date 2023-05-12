@@ -44,13 +44,13 @@ export default function Apply({ route, navigation }) {
     }
   };
 
-  const sendNotifications = async (token) => {
+  const sendNotification = async (token) => {
     console.log(token);
     var data = JSON.stringify({
-      data: {},
+      data: {"data" : "this is data"},
       notification: {
-        body: "Someone applied to your job",
-        title: "Check who",
+        body: "Check who has applied for your job",
+        title: "Someone applied to your job",
       },
       to: token,
     });
@@ -173,11 +173,11 @@ export default function Apply({ route, navigation }) {
           });
         }
       );
-      const starCountRef = fireBaseDatabase.ref(db, 'companyTokens/' + job.companyId);
+      const starCountRef = fireBaseDatabase.ref(db, 'users/' + job.companyId + "/fcmToken");
       fireBaseDatabase.onValue(starCountRef, (snapshot) => {
-          const data = snapshot.val();
-          console.log("fcmToken " + data)
-          sendNotifications(data.fcmToken);
+          const token = snapshot.val();
+          console.log("fcmToken " + token)
+          sendNotification(token);
           Toast.show('Application Submitted.', {
             backgroundColor:'#a0a0a0',
             duration: Toast.durations.LONG,
