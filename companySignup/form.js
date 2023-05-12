@@ -215,7 +215,7 @@ export default function Form({navigation}) {
                
     }
     return (
-        <Modal visible={true} animationType="slide">
+        <Modal visible={true} animationType="slide" style={{backgroundColor: 'white'}}>
             <View style={styles.wrapper}>
                 <Text style={styles.title}>{FormTitle[screen]}</Text>
             </View>
