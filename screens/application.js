@@ -32,7 +32,6 @@ export default function Application({route, navigation}) {
       var token = pilot.fcmToken;
       console.log(token);
         var data = JSON.stringify({
-          data: {"data" : "this is data"},
           notification: {
             body: "You have been selected by "+ userJson.companyName +" company for their job",
             title: "Congratulations! You got it.",
@@ -53,13 +52,16 @@ export default function Application({route, navigation}) {
     
         axios(config)
           .then(function (response) {
-            console.log(JSON.stringify(response.data));
+            var refNotification = push(ref(db, "notification/"));
+            var now = new Date();
+            var notificationData = {id: refNotification.key, body: data.notification.body, title:data.notification.title, date:now, from:userJson.userId, type:pilot.userId};
+            set(refNotification, notificationData);
           })
           .catch(function (error) {
             console.log(error);
           });
     })
-    console.log("application summited.")
+    console.log("application accepted.")
 
     // TODO: SEND NOTIFICATION
     // Done Prateek
@@ -73,7 +75,7 @@ export default function Application({route, navigation}) {
       status: "rejected" // rejected, review, accepted.
     }
     update(refs, final);
-    console.log("application summited.")
+    console.log("application rejected.")
 
     // TODO: SEND NOTIFICATION
     // We don't have to send notification in case of rejection

@@ -17,7 +17,7 @@ export default function FreelanceDetails({ route, navigation, formData }) {
   const [bid, setBid] = useState('');
   const [canApply, setCanApply] = useState(true);
   
-  const sendNotification = async (token) => {
+  const sendNotification = async (userJson, token) => {
     console.log(token);
     var data = JSON.stringify({
       data: {"data" : "this is data"},
@@ -41,7 +41,10 @@ export default function FreelanceDetails({ route, navigation, formData }) {
 
     axios(config)
       .then(function (response) {
-        console.log(JSON.stringify(response.data));
+        var refNotification = push(ref(db, "notification/"));
+        var now = new Date();
+        var notificationData = {id: refNotification.key, body: data.notification.body, title:data.notification.title, date:now, from:userJson.userId, type:freelance.companyId};
+        set(refNotification, notificationData)
       })
       .catch(function (error) {
         console.log(error);
@@ -108,7 +111,7 @@ export default function FreelanceDetails({ route, navigation, formData }) {
         onValue(starCountRef, (snapshot) => {
           const token = snapshot.val();
           console.log("fcmToken " + token)
-          sendNotification(token);
+          sendNotification(user, token);
         })
     }else {
       Toast.show('Your bid should be less than ₹ ' + freelance.maximumBid + "" , {
