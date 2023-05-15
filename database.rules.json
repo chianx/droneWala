@@ -1,0 +1,11 @@
+{
+  "rules": {
+    ".read": true,
+    ".write": true,
+    "bids" : {
+      "$uid": {
+      	".indexOn": ["amount"]
+      }
+    } 
+  }
+}
