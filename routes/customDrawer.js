@@ -58,8 +58,8 @@ const CustomDrawer = ({prop, navigation}) => {
     }
     return (
         <View style={{flex:1}}>
-            <DrawerContentScrollView contentContainerStyle={{backgroundColor:'coral'}}>
-                <ImageBackground source={Images.background} style={{padding:20}}>
+            <DrawerContentScrollView contentContainerStyle={{backgroundColor:'grey'}}>
+                <ImageBackground source={Images.coral} style={{padding:20}}>
                     <Image source = {{uri: user.userType === 'pilot'? user.profile : user.logo}} style={{height:80, width:80, borderRadius:40, marginBottom:10}} />
                     <Text style={{color:'white', fontSize:18, paddingBottom:5}}>{user.name}</Text>
                     

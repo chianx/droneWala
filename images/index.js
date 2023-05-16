@@ -5,6 +5,7 @@ const Images = {
     drone : require('./drone.png'),
     profile : require('./profile.jpg'),
     background : require('./backgroundOrange.jpg'),
+    coral : require('./gray.jpg'),
     experience: require('./experience.png'),
     droneIcon: require('./droneIcon.png'),
     certified: require('./certified.png'),
