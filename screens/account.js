@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, ScrollView, RefreshControl } from 'react-native';
 import Images from '../images/index';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
@@ -22,6 +22,7 @@ export default function Account({isClicked, setIsClicked, navigation}) {
   const [review, setReview] = useState([]);
   const [active, setActive] = useState('Pending');
   const [dataList, setDataList] = useState([...accepted]);
+  const [refreshing, setRefreshing] = useState(false);
 
   const mount = async() => {
     const userdata = await AsyncStorage.getItem("userData");
@@ -31,6 +32,13 @@ export default function Account({isClicked, setIsClicked, navigation}) {
     console.log(val)
     // setCategory(val.category);
   }
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
   const fetchJobsApplied = async() => {
     const tempApplied = [];
@@ -47,21 +55,18 @@ export default function Account({isClicked, setIsClicked, navigation}) {
         onValue(applicationRef, (snap) => {
           var application = snap.val();
           if(application.status == "applied") {
-              console.log("applied " + jobSnap.val())
               tempApplied.push(jobSnap.val());
           }else if(application.status == "rejected") {
-              console.log("rejected " + jobSnap.val())
               tempRejected.push(jobSnap.val());
           }else {
-              console.log("pending " + jobSnap.val())
               tempPending.push(jobSnap.val());
           }
         })
       }
 
-      console.log(tempApplied);
-      console.log(tempRejected);
-      console.log(tempPending);
+      console.log("applied ", tempApplied);
+      console.log("rejected ", tempRejected);
+      console.log("pending ", tempPending);
     })
     
     setAccepted(tempApplied);
@@ -83,7 +88,9 @@ export default function Account({isClicked, setIsClicked, navigation}) {
   };
 
   return (
-        <ScrollView contentContainerStyle={{ flexGrow: 1}}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1}} refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
 
         <View style={styles.container}>
           <View style={styles.basic}>
@@ -160,12 +167,12 @@ export default function Account({isClicked, setIsClicked, navigation}) {
                   <View key={item.key} style={styles.jobContainer}>
                     <View style={{flexDirection:'row'}}>
                       <View style={{paddingRight:20}}>
-                        <Image source={Images.profile} style={styles.profilePic}/>
+                        <Image source={{uri: item.logo}} style={styles.profilePic}/>
                       </View>
                       <View style={{paddingRight:20, width:200}}>
                         <Text style={styles.title}>{item.jobTitle}</Text>
                         <Text style={{color:'#808080', paddingBottom:5}}>{item.company}</Text>
-                        <Text style={{color:'#808080'}}><Ionicons name="location-outline" size={14} color="#808080" />{item.Location}</Text>
+                        <Text style={{color:'#808080'}}><Ionicons name="location-outline" size={14} color="#808080" />{item.location}</Text>
                         <Text style={{color:'#808080'}}><Ionicons name="ios-cash-outline" size={14} color="#808080" />{' ₹' + item.salary}</Text>
                         <Text style={{color:'#808080'}}><AntDesign name="calendar" size={14} color="#808080" />{' '+item.type}</Text>
                       </View>
