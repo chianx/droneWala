@@ -21,7 +21,7 @@ export default function FreelanceCompanies({navigation}) {
         const allJobs = Object.keys(data).map(key => ({
           id: key,
           ...data[key]
-        }))
+        })).reverse()
 
         const userdata = await AsyncStorage.getItem("userData");
         const user = JSON.parse(userdata);
@@ -37,7 +37,25 @@ export default function FreelanceCompanies({navigation}) {
           }
           setFreelance(tempJob);
         }else {
-          setFreelance(allJobs);
+          var tempJob = [];
+          for(var element in allJobs) {
+            var job = allJobs[element];
+            console.log(job.date);
+            const date = new String(job.date)
+            const year = parseInt(date.slice(0, 4));
+            const month = parseInt(date.slice(5,7))-1;
+            const day = parseInt(date.slice(8,10));
+            const lastDate = new Date(year, month, day);
+  
+            const currDate = new Date();
+            console.warn(`last: ${lastDate} curr: ${currDate} comp: ${lastDate.getTime() > currDate.getTime()}`)
+  
+            if(lastDate.getTime() < currDate.getTime()) {
+                continue;
+            }
+            tempJob.push(job)
+          }
+          setJobs(tempJob);
         }
         setIsLoading(false);
       });

@@ -11,6 +11,7 @@ import {db} from '../firebase/databaseConfig'
 import {  
   ref,
   onValue,
+  get
 } from 'firebase/database';
 
 export default function Account({isClicked, setIsClicked, navigation}) {
@@ -40,21 +41,27 @@ export default function Account({isClicked, setIsClicked, navigation}) {
     const userdata = await AsyncStorage.getItem("userData");
     var user = JSON.parse(userdata)
     var userRef = ref(db, `users/${user.userId}`);
-    onValue(userRef, (jobSnap) => {
-      var appliedArr = Array.from(jobSnap.val().applied);
+    onValue(userRef, (userSnap) => {
+      var appliedArr = Array.from(userSnap.val().applied);
       for(var index in appliedArr) {
         var applicationRef = ref(db, `applications/${appliedArr[index]}/${user.userId}`);
         onValue(applicationRef, (snap) => {
           var application = snap.val();
-          if(application.status == "applied") {
-              console.log("applied " + jobSnap.val())
-              tempApplied.push(jobSnap.val());
+          if(application.status == "accepted") {
+              console.log("applied " + application.jobId.jobId)
+              get(ref(db, `jobs/${application.jobId}`)).then((jobSnap) => {
+                tempApplied.push(jobSnap.val());
+              })
           }else if(application.status == "rejected") {
-              console.log("rejected " + jobSnap.val())
-              tempRejected.push(jobSnap.val());
+              console.log("rejected " + application.jobId)
+              get(ref(db, `jobs/${application.jobId}`)).then((jobSnap) => {
+                tempRejected.push(jobSnap.val());
+              })
           }else {
-              console.log("pending " + jobSnap.val())
-              tempPending.push(jobSnap.val());
+              console.log("pending " + application.jobId)
+              get(ref(db, `jobs/${application.jobId}`)).then((jobSnap) => {
+                tempPending.push(jobSnap.val());
+              })
           }
         })
       }

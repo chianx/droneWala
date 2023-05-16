@@ -19,14 +19,15 @@ export default function FreelanceDetails({ route, navigation, formData }) {
   
   const sendNotification = async (userJson, token) => {
     console.log(token);
-    var data = JSON.stringify({
+    var notificationJson = {
       data: {"data" : "this is data"},
       notification: {
         body: "Someone placed a bid on your freelance Project.",
         title: "A bid is placed!",
       },
       to: token,
-    });
+    };
+    var data = JSON.stringify(notificationJson);
 
     var config = {
       method: "post",
@@ -39,13 +40,12 @@ export default function FreelanceDetails({ route, navigation, formData }) {
       data: data,
     };
 
+    var refNotification = push(ref(db, "notifications/"));
+    var now = new Date();
+    var notificationData = {id: refNotification.key, body: notificationJson.notification.body, title: notificationJson.notification.title, date: now, from: userJson.userId, type:freelance.companyId};
+    set(refNotification, notificationData)
+
     axios(config)
-      .then(function (response) {
-        var refNotification = push(ref(db, "notification/"));
-        var now = new Date();
-        var notificationData = {id: refNotification.key, body: data.notification.body, title:data.notification.title, date:now, from:userJson.userId, type:freelance.companyId};
-        set(refNotification, notificationData)
-      })
       .catch(function (error) {
         console.log(error);
       });

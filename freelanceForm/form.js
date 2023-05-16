@@ -154,13 +154,12 @@ export default function FreelanceForm({route, navigation}) {
                         data : data
                     };
                 
-                    axios(config).then(function (response) {
-                        console.log(JSON.stringify(response.data));
-                        var refNotification = push(ref(db, "notification/"));
-                        var now = new Date();
-                        var notificationData = {id: refNotification.key, body: data.notification.body, title:data.notification.title, date:now, from:userJson.userId, type:"freelance",};
-                        set(refNotification ,notificationData)
-                    }).catch(function (error) {
+                    var refNotification = push(ref(db, "notifications/"));
+                    var now = new Date();
+                    var notificationData = {id: refNotification.key, body: data.notification.body, title:data.notification.title, date:now, from:userJson.userId, type:"freelance",};
+                    set(refNotification ,notificationData)
+
+                    axios(config).catch(function (error) {
                         console.log(error);
                     });
                 })

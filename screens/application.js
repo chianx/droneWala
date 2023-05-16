@@ -50,13 +50,12 @@ export default function Application({route, navigation}) {
           data: data,
         };
     
+        var refNotification = push(ref(db, "notifications/"));
+        var now = new Date();
+        var notificationData = {id: refNotification.key, body: data.notification.body, title:data.notification.title, date:now, from:userJson.userId, type:pilot.userId};
+        set(refNotification, notificationData);
+
         axios(config)
-          .then(function (response) {
-            var refNotification = push(ref(db, "notification/"));
-            var now = new Date();
-            var notificationData = {id: refNotification.key, body: data.notification.body, title:data.notification.title, date:now, from:userJson.userId, type:pilot.userId};
-            set(refNotification, notificationData);
-          })
           .catch(function (error) {
             console.log(error);
           });
