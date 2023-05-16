@@ -83,13 +83,14 @@ export default function JobForm({navigation}) {
                         console.log("Job Form Posted Successfully!");
                     });
                     var topic = "Jobs";
-                    var data = JSON.stringify({
+                    const notificatioData = {
                         notification : {
                             body: 'New job has been posted by '+ userJson.companyName +' company',
                             title: 'New Job Post'
                         },
                         to: "/topics/" + topic
-                    });
+                    }
+                    var data = JSON.stringify(notificatioData);
             
                     var config = {
                         method:'post',
@@ -102,13 +103,12 @@ export default function JobForm({navigation}) {
                         data : data
                     };
             
-                    axios(config).then(function (response) {
-                        console.log(JSON.stringify(response.data));
-                        var refNotification = push(ref(db, "notification/"));
-                        var now = new Date();
-                        var notificationData = {id: refNotification.key, body: data.notification.body, title:data.notification.title, date:now, from:userJson.userId, type:"jobs",};
-                        set(refNotification ,notificationData)
-                    }).catch(function (error) {
+                    var refNotification = push(ref(db, "notifications/"));
+                    var now = new Date();
+                    var notificationData = {id: refNotification.key, body: notificatioData.notification.body, title: notificatioData.notification.title, date:now, from:userJson.userId, type:"jobs",};
+                    set(refNotification ,notificationData)
+
+                    axios(config).catch(function (error) {
                         console.log(error);
                     });
                     setFormData({});
