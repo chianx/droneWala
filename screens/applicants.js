@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ActivityIndicator, RefreshControl, ScrollView } from 'react-native';
 import Images from '../images/index'
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import {db} from '../firebase/databaseConfig'
@@ -12,7 +12,16 @@ export default function Applicants({route, navigation}) {
   const job = route.params.job
   const [applied, setApplied] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  
+
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1300);
+  }, []);
+
   useEffect (() => {
     setIsLoading(true);
     let applicants = [];
@@ -46,6 +55,11 @@ export default function Applicants({route, navigation}) {
         </View>
       )
     }else return (
+      <ScrollView
+        contentContainerStyle={styles.scrollView}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         <View style={styles.container}>
             {applied.map((item, index) => {
                 return (
@@ -68,6 +82,7 @@ export default function Applicants({route, navigation}) {
               })}
             {/* <Image source={Images.loading}  style={styles.gif} /> */}
         </View>
+        </ScrollView>
     )
   }}
 
@@ -100,5 +115,11 @@ jobContainer: {
     borderTopWidth: 3,
     borderTopColor: '#ffe5d3',
     backgroundColor:'#F8F8F8'
-}
+},
+scrollView: {
+  flex: 1,
+  backgroundColor: 'white',
+  alignItems: 'center',
+  justifyContent: 'center',
+},
 });

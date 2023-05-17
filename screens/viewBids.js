@@ -13,6 +13,15 @@ export default function ViewBids({route, navigation}) {
   const [isLoading, setIsLoading] = useState(false);
   const [users, setApplied] = useState([]);
 
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
   useEffect(() => {
     setIsLoading(true);
     const freelanceRef = query(
@@ -55,6 +64,11 @@ export default function ViewBids({route, navigation}) {
         </View>
         : 
             <FlatList 
+              refreshControl={<RefreshControl
+                colors={["#9Bd35A", "#689F38"]}
+                refreshing={refreshing}
+                onRefresh={onRefresh.bind(this)} 
+              />}
               data={users}
               renderItem={({item}) => (
                 <TouchableOpacity onPress={() => navigation.navigate('View Profile', {userId: item.user.userId})}>
