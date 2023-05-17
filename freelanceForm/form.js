@@ -308,7 +308,7 @@ export default function FreelanceForm({route, navigation}) {
 
 const styles = StyleSheet.create({
     wrapper: {
-        marginTop:50,
+        marginTop:20,
         alignItems: "center",
     },
     title: {

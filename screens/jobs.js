@@ -30,10 +30,11 @@ export default function Jobs({navigation}) {
       if(user.userType === "company") {
         var tempJob = [];
         for(var element in allJobs) {
-          if(job.companyId != user.userId) {
+          console.log(allJobs[element]);
+          if(allJobs[element].companyId != user.userId) {
               continue;
           }
-          tempJob.push(job)
+          tempJob.push(allJobs[element])
       }
         setIsLoading(false);
         setJobs(tempJob);
@@ -55,8 +56,9 @@ export default function Jobs({navigation}) {
           }
           tempJob.push(job)
         }
-        setJobs(tempJob);
         setIsLoading(false);
+        setJobs(tempJob);
+        
       }
       
       

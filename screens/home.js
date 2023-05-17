@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, Image, ScrollView, TouchableOpacity, FlatList, Dimensions, Linking } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image, ScrollView, TouchableOpacity, FlatList, Dimensions, Linking, RefreshControl } from 'react-native';
 import Images from '../images/index';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
@@ -20,8 +20,8 @@ export default function Home({ navigation }) {
 
 
   const mount = async () => {
-    const userdata = await AsyncStorage.getItem("userData");
-    const val = JSON.parse(userdata)
+    await AsyncStorage.getItem("userData", async(error, result) => {
+      const val = JSON.parse(result)
     setUser(val);
     setUserType(val.userType)
     const response = await axios.get(
@@ -50,18 +50,20 @@ export default function Home({ navigation }) {
     if(val.userType === 'company') {
       console.log("usertype company selected");
       const starCountRef = ref(db, 'jobs/');
-      onValue(starCountRef, async(snapshot) => {
-      const data = snapshot.val();
-      const allJobs = Object.keys(data).map(key => ({
-        id: key,
-        ...data[key]
-      }))
+      onValue(starCountRef, (snapshot) => {
+        const data = snapshot.val();
+        let allJobs =[];
+        allJobs = Object.keys(data).map(key => ({
+          id: key,
+          ...data[key]
+        }))
         var tempJob = [];
         for(var element in allJobs) {
-            if(allJobs[element].companyId != user.userId) {
+            if(allJobs[element].companyId != val.userId) {
                 continue;
             }
             tempJob.push(allJobs[element])
+            console.log("temp job = " + tempJob);
         }
         setJobs(tempJob);
     });
@@ -81,6 +83,8 @@ export default function Home({ navigation }) {
       }
     });
     }
+    });
+    
   }
 
   const { width } = Dimensions.get('window');
@@ -161,7 +165,14 @@ export default function Home({ navigation }) {
       phone: '8385052405'
     },
   ];
+  const [refreshing, setRefreshing] = useState(false);
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1500);
+  }, []);
   const Card = ({ item }) => (
     <TouchableOpacity key={item.key} onPress={() => navigation.navigate('Job Details', { job: item })}>
       <View style={styles.card}>
@@ -235,7 +246,11 @@ export default function Home({ navigation }) {
   );
 
   return (
-    <ScrollView>
+    <ScrollView
+      contentContainerStyle={styles.scrollView}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+    }>
       <View style={styles.container}>
 
         {/* Icons */}
