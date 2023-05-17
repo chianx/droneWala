@@ -71,7 +71,7 @@ export default function FreelanceDetails({ route, navigation, formData }) {
 
   const submitBid = async() => {
     // console.log(parseInt(bid) <= parseInt(freelance.maximumBid));
-    if(bid <= parseInt(freelance.maximumBid)) {
+    if(bid > 0 && bid <= parseInt(freelance.maximumBid)) {
         console.log("placed: "+bid.toString())
         const userdata = await AsyncStorage.getItem("userData");
         const user = JSON.parse(userdata);
@@ -114,11 +114,22 @@ export default function FreelanceDetails({ route, navigation, formData }) {
           console.log("fcmToken " + token)
           sendNotification(user, token);
         })
-    }else {
-      Toast.show('Your bid should be less than ₹ ' + freelance.maximumBid + "" , {
+    }else if(bid == 0) {
+      Toast.show('Place Bid Less Than ₹ ' + freelance.maximumBid + " and not equal to" , {
         // backgroundColor:'#fda172',
         duration: Toast.durations.LONG,
-        position: -130,
+        position: -330,
+        shadow: true,
+        animation: true,
+        opacity:1,
+        hideOnPress: false,
+        delay: 500,
+      });
+    }else {
+      Toast.show('Your bid should be less than ₹ ' + parseInt(freelance.maximumBid) + "" , {
+        // backgroundColor:'#fda172',
+        duration: Toast.durations.LONG,
+        position: -330,
         shadow: true,
         animation: true,
         opacity:1,
@@ -130,6 +141,7 @@ export default function FreelanceDetails({ route, navigation, formData }) {
   }
 
   const handleBid = (bid) => {
+
     setBid(bid);
   };
 
