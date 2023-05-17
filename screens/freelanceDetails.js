@@ -55,6 +55,7 @@ export default function FreelanceDetails({ route, navigation, formData }) {
     if(canApply) {
       setIsModalVisible(!isModalVisible);
     }else {
+      console.log('You have already placed bid for this Project.')
       Toast.show('You have already placed bid for this Project.', {
         // backgroundColor:'#fda172',
         duration: Toast.durations.LONG,
@@ -114,8 +115,11 @@ export default function FreelanceDetails({ route, navigation, formData }) {
           sendNotification(user, token);
         })
     }else {
-      Toast.show('Your bid should be less than ₹ ' + freelance.maximumBid + "" , {
-        // backgroundColor:'#fda172',
+      console.log('Your bid should be less than ₹ ' + freelance.maximumBid + "" );
+      setIsModalVisible(!isModalVisible);
+      setBid();
+      Toast.show('Your bid should be less than ₹ ' + freelance.maximumBid, {
+        backgroundColor:'#ff474c',
         duration: Toast.durations.LONG,
         position: -130,
         shadow: true,
@@ -220,7 +224,7 @@ export default function FreelanceDetails({ route, navigation, formData }) {
           <View style={{ backgroundColor: '#f0f0f0', borderColor:'coral', position:'absolute', bottom:'7%', width: '100%', borderTopLeftRadius:20, borderTopRightRadius:20, borderWidth: 1, padding: 20}}>
 
           <View style={{flexDirection: "row", marginBottom: 20,}}>
-          <TouchableOpacity style={[styles.modalBackground, styles.button, {left: 0,}]} onPress={() => {toggleModal(); setBid("");}}>
+          <TouchableOpacity style={[styles.modalBackground, styles.button, {left: 0,}]} onPress={() => {setIsModalVisible(!isModalVisible); setBid("");}}>
               <Text><AntDesign name="closecircleo" size={24} color="#404040" /></Text>
             </TouchableOpacity>
           </View>

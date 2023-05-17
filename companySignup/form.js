@@ -73,7 +73,16 @@ export default function Form({navigation}) {
             var validate = false;
            
             // validate name
-            if(!formData.addressIsSet)  {
+            if(!formData.cinIsSet) {
+                errMsg = "Invalid CIN Number"
+                formData.cinIsSet = false
+            }else if(!formData.gstIsSet) {
+                errMsg = "Invalid GST Number"
+                formData.gstIsSet = false
+            }else if(!formData.categoryIsSet) {
+                errMsg = "Invalid Category"
+                formData.categoryIsSet = false
+            }else if(!formData.addressIsSet)  {
                 errMsg = "Invalid Address"
                 formData.addressIsSet = false
             }else if (!formData.cityIsSet) {

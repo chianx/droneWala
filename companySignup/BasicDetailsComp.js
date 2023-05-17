@@ -1,14 +1,21 @@
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import axios from 'axios';
+import { MultipleSelectList } from 'react-native-dropdown-select-list'
 
-export default function PersonalDetails({ formData, setFormData }) {
+export default function BasicDetails({ formData, setFormData }) {
   const [secureEntry, setSecureEntry] = useState(true);
   const [canEdit, setCanEdit] = useState(false);
   const [state, setState] = useState(formData.city);
   const [city, setCity] = useState(formData.state);
   const [pincode, setPincode] = useState(formData.pincode);
-  
+  const category = [
+    { key: '1', value: 'Agriculture' },
+    { key: '2', value: 'Delivery' },
+    { key: '3', value: 'Survey Mapping' },
+    { key: '4', value: 'Events' },
+    { key: '5', value: 'Miscellaneous' },
+]
   const getAddress = async(pincode) => {
 
     // const options = {
@@ -101,8 +108,63 @@ export default function PersonalDetails({ formData, setFormData }) {
         setFormData({ ...formData, pincode:pincode, pinIsSet: false });
     }
   }
+  const handleCINChange = (CINno) => {
+    if (CINno.trim().length >= 5) {
+      setFormData({ ...formData, CINno: CINno, cinIsSet: true });
+    } else {
+      setFormData({ ...formData, CINno: CINno, cinIsSet: false });
+    }
+  }
+  const handleGSTChange = (GSTno) => {
+    if (GSTno.trim().length >= 5) {
+        setFormData({ ...formData, GSTno: GSTno, gstIsSet:true });
+    } else {
+        setFormData({ ...formData, GSTno: GSTno, gstIsSet:false });
+    }
+  }
   return (
     <View>
+    <View style={styles.inputView}>
+        <TextInput
+          style={[formData.cinIsSet ? styles.TextInput : styles.errorTextInput]}
+          placeholderTextColor="grey"
+          placeholder='CIN Number *'
+          keyboardType='numeric'
+            // maxLength={12}
+          value={formData.CINno}
+          onChangeText={(CINno) => handleCINChange(CINno)}
+        />
+      </View>
+      <View style={styles.inputView}>
+        <TextInput
+          style={[formData.gstIsSet ? styles.TextInput : styles.errorTextInput]}
+          placeholderTextColor="grey"
+          placeholder='GST Number *'
+          keyboardType='numeric'
+            // maxLength={6}
+          value={formData.GSTno}
+          onChangeText={(GSTno) => handleGSTChange(GSTno)}
+        />
+      </View>
+      <View style={{ marginBottom: 20, width: 280 }}>
+      <MultipleSelectList
+          style={[formData.selectedDroneIsSet ? null : {borderColor: "red"}]}
+          placeholder='Select Category *'
+          setSelected={(val) => {
+            setSelectedCategory(val)
+            setT(true)
+          }}
+          search={false}
+          data={category}
+          save="value"
+          value={formData.droneSelect}
+          boxStyles={[formData.selectedDroneIsSet ? null : { borderColor: "red" }, { backgroundColor: "white" }]}
+          onSelect={() => {
+            setFormData({ ...formData, droneSelect:selectedDrone, selectedDroneIsSet: t });
+          }}
+          label="Category"
+        />
+      </View>
       <View>
         <TextInput
           style={[formData.addressIsSet ? styles.TextInput : styles.errorTextInput]}

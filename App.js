@@ -50,12 +50,11 @@ export default function App() {
   }
 
   // requestUserPermission();
-  if (!login)
+  if (login)
   return (
-    // <NavigationContainer>
-    //   <HomeDrawer />      
-    // </NavigationContainer>
-    <Account/>
+    <NavigationContainer>
+      <HomeDrawer />      
+    </NavigationContainer>
   );
   else return (
     <NavigationContainer>
