@@ -21,7 +21,7 @@ export default function FreelanceCompanies({navigation}) {
         const allJobs = Object.keys(data).map(key => ({
           id: key,
           ...data[key]
-        }))
+        })).reverse()
 
         const userdata = await AsyncStorage.getItem("userData");
         const user = JSON.parse(userdata);
