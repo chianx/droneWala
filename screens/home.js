@@ -54,7 +54,7 @@ export default function Home({ navigation }) {
         const data = snapshot.val();
         let allJobs =[];
         allJobs = Object.keys(data).map(key => ({
-          id: key,
+          key: key,
           ...data[key]
         }))
         var tempJob = [];
@@ -269,7 +269,7 @@ export default function Home({ navigation }) {
             </TouchableOpacity>
           </View>
           <View>
-            <TouchableOpacity onPress={() => {navigation.navigate("FreelanecStack")}}>
+            <TouchableOpacity onPress={() => {navigation.navigate("Freelance")}}>
               <Image style={styles.icons} source={Images.myDrones} />
               <Text style={{ textAlign: 'center', marginVertical: 7, color: '#696969' }}>Freelance Work</Text>
             </TouchableOpacity>

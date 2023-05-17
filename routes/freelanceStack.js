@@ -11,7 +11,7 @@ import ChooseCategory from '../freelanceForm/choose';
 import ViewBids from '../screens/viewBids';
 import ViewProfile from '../screens/viewProfile';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import axios from 'axios'
 const Stack = createNativeStackNavigator();
 
 export default function FreelanceStack({navigation}) {
@@ -20,44 +20,47 @@ export default function FreelanceStack({navigation}) {
 
     const toggleSwitch = async(state) => {
         
-        console.log(state)
         setIsEnabled(!isEnabled); 
         if(state) {
-            const userdata = await AsyncStorage.getItem("userData");
-            const user = JSON.parse(userdata);
-            console.log("Subscribed to topic")
-            var configFreelance = {
-                method:'post',
-                url: "https://iid.googleapis.com/iid/v1/" + user.fcmToken +  "/rel/topics/Freelance",
-                headers: {
-                  Authorization: 
-                      'key=AAAAjoab_0Y:APA91bEsHKY-W-hT0iIH3NycyckJay3rdc8VAAUSYsDgrM3-5D-cHPlOWiNWXWkqAv8QEmfRS9QHc2_A9wC6X-p9na-wGQ4hNJrMyCJ3QYlmIsNaOcb8tC_pVP1Lc5XHWIlHqxFRKzos',
-                      'Content-Type': 'application/json',
-                },
-            }
-            axios(configFreelance).then(function (response) {
-                console.log(JSON.stringify(response));
+            await AsyncStorage.getItem("userData", (error, result) => {
+                let user = JSON.parse(result);
                 console.log("Subscribed to topic")
-              }).catch(function (error) {
-                  console.log(error);
-              });
+                var configFreelance = {
+                    method:'post',
+                    url: "https://iid.googleapis.com/iid/v1/" + user.fcmToken +  "/rel/topics/Freelance",
+                    headers: {
+                    Authorization: 
+                        'key=AAAAjoab_0Y:APA91bEsHKY-W-hT0iIH3NycyckJay3rdc8VAAUSYsDgrM3-5D-cHPlOWiNWXWkqAv8QEmfRS9QHc2_A9wC6X-p9na-wGQ4hNJrMyCJ3QYlmIsNaOcb8tC_pVP1Lc5XHWIlHqxFRKzos',
+                        'Content-Type': 'application/json',
+                    },
+                }
+                axios(configFreelance).then(function (response) {
+                    console.log(JSON.stringify(response));
+                    console.log("Subscribed to topic")
+                }).catch(function (error) {
+                    console.log(error);
+                });
+                });
         }else {
-            console.log("Unsubscribe to topic")
-            var configFreelance = {
-                method:'DELETE',
-                url: "https://iid.googleapis.com/iid/v1/" + user.fcmToken +  "/rel/topics/Freelance",
-                headers: {
-                  Authorization: 
-                      'key=AAAAjoab_0Y:APA91bEsHKY-W-hT0iIH3NycyckJay3rdc8VAAUSYsDgrM3-5D-cHPlOWiNWXWkqAv8QEmfRS9QHc2_A9wC6X-p9na-wGQ4hNJrMyCJ3QYlmIsNaOcb8tC_pVP1Lc5XHWIlHqxFRKzos',
-                      'Content-Type': 'application/json',
-                },
-            }
-            axios(configFreelance).then(function (response) {
-                console.log(JSON.stringify(response));
-                console.log("Unsubscribe to topic")
-              }).catch(function (error) {
-                  console.log(error);
-              });
+            await AsyncStorage.getItem("userData", (error, result) => {
+                let user = JSON.parse(result);
+                console.log("Unsubscribed to topic")
+                var configFreelance = {
+                    method:'post',
+                    url: "https://iid.googleapis.com/iid/v1/" + user.fcmToken +  "/rel/topics/Freelance",
+                    headers: {
+                    Authorization: 
+                        'key=AAAAjoab_0Y:APA91bEsHKY-W-hT0iIH3NycyckJay3rdc8VAAUSYsDgrM3-5D-cHPlOWiNWXWkqAv8QEmfRS9QHc2_A9wC6X-p9na-wGQ4hNJrMyCJ3QYlmIsNaOcb8tC_pVP1Lc5XHWIlHqxFRKzos',
+                        'Content-Type': 'application/json',
+                    },
+                }
+                axios(configFreelance).then(function (response) {
+                    console.log(JSON.stringify(response));
+                    console.log("Unsubscribed to topic")
+                }).catch(function (error) {
+                    console.log(error);
+                });
+                });
         }
     }  
 

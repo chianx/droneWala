@@ -1,10 +1,9 @@
-import react from 'react';
+import React, {useRef, useState} from 'react';
 import {View, Text, Image, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import Images from '../images';
-import { useState } from 'react';
 import Swiper from 'react-native-swiper';
 export default function WalkThrough({navigation}) {
-
+    const swiperRef = useRef(null);
     const walkthroughList = [
         {key:1, title: "Welcome to Drones Wala", image: Images.drone1},
         {key:2, title: "Searching for Jobs?", image: Images.drone2},
@@ -15,9 +14,13 @@ export default function WalkThrough({navigation}) {
         if(index == 2) setIsLast(true);
         else setIsLast(false);
     }
+    const handleNext = () => {
+        swiperRef.current?.scrollBy(1)
+    }
     return (
         <View style={{flex:1, backgroundColor:'white'}}>
             <Swiper 
+                ref={swiperRef}
                 paginationStyle={{
                     position:'absolute',
                     bottom:"25%",
@@ -43,7 +46,7 @@ export default function WalkThrough({navigation}) {
                     <Text style={styles.buttonText}>Get Started</Text>
                 </TouchableOpacity>
                 { !isLast ?
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handleNext}>
                     <Text style={{fontSize:18, color:'grey'}}>Skip</Text>
                 </TouchableOpacity> : <></>
                 }
