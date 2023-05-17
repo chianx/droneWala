@@ -11,7 +11,7 @@ export default function Signup({navigation}) {
                 <Text style={{fontSize:30, color:'grey', fontWeight:'bold'}}>Drone<Text style={{fontWeight:'bold', fontSize:30, color:'coral'}}>Walas</Text></Text>
               </View>
 
-              <Image style={{width:'100%', height:240}} source={Images.droneBanner} />
+              <Image style={{width:'100%', height:'25%'}} source={Images.droneBanner} />
 
               <Text style={styles.ques}>You are ..?</Text>
               

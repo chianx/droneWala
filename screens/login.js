@@ -67,8 +67,11 @@ export default function Login( {navigation} ) {
       console.log(res);
       const isNewUser = res.additionalUserInfo.isNewUser;
       const userId = res.user.uid;
+      const phoneNum = res.user.phoneNumber;
+      console.log("Pno: "+phoneNum+" user: "+userId+" isnew: "+isNewUser);
       if(isNewUser) { 
         setIsLoading(false);
+        await AsyncStorage.setItem("PhoneNum", phoneNum);
         navigation.navigate("SignupStack");
         Toast.show('New User detected', {
           duration: Toast.durations.LONG,
@@ -176,7 +179,7 @@ export default function Login( {navigation} ) {
               Confirm Code
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setShowOTP(false)}><Text style={{color:'grey'}}>Chnage Phone Number</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => setShowOTP(false)}><Text style={{color:'grey'}}>Change Phone Number</Text></TouchableOpacity>
         </View> 
         }
         

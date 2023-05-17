@@ -49,7 +49,9 @@ export default function FreelanceForm({route, navigation}) {
             workDurationFrom: "",
             workDurationTo: "",
             timeFrame: "",
+            date: "",
             payload: "",
+            dateIsSet: false,
             categoryIsSet: false,
             titleIsSet: false,
             areaSizeIsSet: false,
@@ -208,6 +210,9 @@ export default function FreelanceForm({route, navigation}) {
                 }else if(!formData.workDurationToIsSet) {
                     errMsg = "Invalid To Work Duration";
                     formData.workDurationToIsSet = false;
+                }else if(!formData.dateIsSet){
+                    errMsg = "Select Date";
+                    formData.dateIsSet = false;
                 }else validate = true;
             }else if(formData.category === "Cinematography" || formData.category === "Others") {
                 if(!formData.titleIsSet) {
@@ -222,6 +227,9 @@ export default function FreelanceForm({route, navigation}) {
                 }else if(!formData.workDurationToIsSet) {
                     errMsg = "Invalid To Work Duration";
                     formData.workDurationToIsSet = false;
+                }else if(!formData.dateIsSet){
+                    errMsg = "Select Date";
+                    formData.dateIsSet = false;
                 }else validate = true;
             }else {
                 if(!formData.titleIsSet) {
@@ -236,6 +244,9 @@ export default function FreelanceForm({route, navigation}) {
                 }else if(!formData.workDurationToIsSet) {
                     errMsg = "Invalid To Work Duration";
                     formData.workDurationToIsSet = false;
+                }else if(!formData.dateIsSet){
+                    errMsg = "Select Date";
+                    formData.dateIsSet = false;
                 }else if(!formData.payloadIsSet) {
                     errMsg = "Invalid Payload";
                     formData.payloadIsSet = false;
