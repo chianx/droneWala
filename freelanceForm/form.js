@@ -139,7 +139,6 @@ export default function FreelanceForm({route, navigation}) {
                     set(refs, final);
                     var topic = "Freelance";
                     var data = JSON.stringify({
-                        data: {"Hello": "This is data"}, 
                         notification : {
                             body: 'New Freelance Project has been posted by '+ userJson.companyName +' company',
                             title: 'New Freelance Post'
@@ -157,9 +156,12 @@ export default function FreelanceForm({route, navigation}) {
                         data : data
                     };
                 
-                    axios(config).then(function (response) {
-                        console.log(JSON.stringify(response.data));
-                    }).catch(function (error) {
+                    var refNotification = push(ref(db, "notifications/"));
+                    var now = new Date();
+                    var notificationData = {id: refNotification.key, body: data.notification.body, title:data.notification.title, date:now, from:userJson.userId, type:"freelance",};
+                    set(refNotification ,notificationData)
+
+                    axios(config).catch(function (error) {
                         console.log(error);
                     });
                 })

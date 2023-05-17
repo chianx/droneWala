@@ -44,7 +44,7 @@ export default function Apply({ route, navigation }) {
     }
   };
 
-  const sendNotification = async (token) => {
+  const sendNotification = async (userJson, token) => {
     console.log(token);
     var data = JSON.stringify({
       data: {"data" : "this is data"},
@@ -66,9 +66,15 @@ export default function Apply({ route, navigation }) {
       data: data,
     };
 
+    var refNotification = push(ref(db, "notifications/"));
+    var now = new Date();
+    var notificationData = {id: refNotification.key, body: data.notification.body, title:data.notification.title, date:now, from:userJson.userId, type:job.companyId};
+    set(refNotification, notificationData)
+    
     axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
+        setIsLoading(false);
       })
       .catch(function (error) {
         console.log(error);
@@ -81,7 +87,7 @@ export default function Apply({ route, navigation }) {
     } else if (file === null) {
       setError("Upload your Resume before trying");
     } else {
-      // setIsLoading(true);
+      setIsLoading(true);
       const metadata = {
         contentType: "application/pdf",
       };
@@ -167,31 +173,31 @@ export default function Apply({ route, navigation }) {
                 }
                 return user
               });
-              
-              setIsLoading(false);
+
+              const starCountRef = fireBaseDatabase.ref(db, 'users/' + job.companyId + "/fcmToken");
+              fireBaseDatabase.onValue(starCountRef, (snapshot) => {
+                  const token = snapshot.val();
+                  console.log("fcmToken " + token)
+                  sendNotification(json, token);
+                  Toast.show('Application Submitted.', {
+                    backgroundColor:'#a0a0a0',
+                    duration: Toast.durations.LONG,
+                    position: -100,
+                    shadow: true,
+                    borderRadius: 100, 
+                    animation: true,
+                    opacity:1,
+                    hideOnPress: false,
+                    delay: 1000,
+                });
+
+              })
+              navigation.navigate("Jobs");
             }
           });
         }
       );
-      const starCountRef = fireBaseDatabase.ref(db, 'users/' + job.companyId + "/fcmToken");
-      fireBaseDatabase.onValue(starCountRef, (snapshot) => {
-          const token = snapshot.val();
-          console.log("fcmToken " + token)
-          sendNotification(token);
-          Toast.show('Application Submitted.', {
-            backgroundColor:'#a0a0a0',
-            duration: Toast.durations.LONG,
-            position: -100,
-            shadow: true,
-            borderRadius: 100, 
-            animation: true,
-            opacity:1,
-            hideOnPress: false,
-            delay: 1000,
-        });
-
-      })
-      navigation.navigate("Jobs");
+      
     }
   };
   return (

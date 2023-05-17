@@ -8,6 +8,7 @@ import HomeDrawer from './routes/homeDrawer';
 import SignupStack from './routes/signupStack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-root-toast';
+import Account from './screens/temporary'
 // do not remove gesture handler (important)
 // import 'react-native-gesture-handler';
 
@@ -49,14 +50,12 @@ export default function App() {
   }
 
   // requestUserPermission();
-  if (login)
+  if (!login)
   return (
-    <NavigationContainer>
-      <HomeDrawer />
-    </NavigationContainer>
-    // <View style={styles.container}>
-    // <JobForm />
-    // </View> 
+    // <NavigationContainer>
+    //   <HomeDrawer />      
+    // </NavigationContainer>
+    <Account/>
   );
   else return (
     <NavigationContainer>

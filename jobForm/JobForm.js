@@ -10,8 +10,6 @@ import Toast from 'react-native-root-toast';
 
 export default function JobForm({navigation}) {
     const [loading, setLoading] = useState(false);
-    const [alwaysTrue, setAlwaysTrue] = useState(true);
-    const [tokens, setTokens] = useState([]);
     const [screen, setScreen] = useState(0)
     const FormTitle = [
         "Precise Details",
@@ -46,34 +44,6 @@ export default function JobForm({navigation}) {
             whoApplyIsSet: false,
         }
     )
-
-    const sendNotifications = async topic => {
-        var data = JSON.stringify({
-            data: {"Hello": "This is data"}, 
-            notification : {
-                body: 'New job has been posted by XYZ company',
-                title: 'New Job Post'
-            },
-            to: "/topics/" + topic
-        });
-
-        var config = {
-            method:'post',
-            url: 'https://fcm.googleapis.com/fcm/send',
-            headers: {
-                Authorization: 
-                    'key=AAAAjoab_0Y:APA91bEsHKY-W-hT0iIH3NycyckJay3rdc8VAAUSYsDgrM3-5D-cHPlOWiNWXWkqAv8QEmfRS9QHc2_A9wC6X-p9na-wGQ4hNJrMyCJ3QYlmIsNaOcb8tC_pVP1Lc5XHWIlHqxFRKzos',
-                    'Content-Type': 'application/json',
-            },
-            data : data
-        };
-
-        axios(config).then(function (response) {
-            console.log(JSON.stringify(response.data));
-        }).catch(function (error) {
-            console.log(error);
-        });
-    }
 
     const ScreenDisplay = () => {
         if (screen === 0) {
@@ -113,14 +83,14 @@ export default function JobForm({navigation}) {
                         console.log("Job Form Posted Successfully!");
                     });
                     var topic = "Jobs";
-                    var data = JSON.stringify({
-                        data: {"Hello": "This is data"}, 
+                    const notificatioData = {
                         notification : {
                             body: 'New job has been posted by '+ userJson.companyName +' company',
                             title: 'New Job Post'
                         },
                         to: "/topics/" + topic
-                    });
+                    }
+                    var data = JSON.stringify(notificatioData);
             
                     var config = {
                         method:'post',
@@ -133,9 +103,12 @@ export default function JobForm({navigation}) {
                         data : data
                     };
             
-                    axios(config).then(function (response) {
-                        console.log(JSON.stringify(response.data));
-                    }).catch(function (error) {
+                    var refNotification = push(ref(db, "notifications/"));
+                    var now = new Date();
+                    var notificationData = {id: refNotification.key, body: notificatioData.notification.body, title: notificatioData.notification.title, date:now, from:userJson.userId, type:"jobs",};
+                    set(refNotification ,notificationData)
+
+                    axios(config).catch(function (error) {
                         console.log(error);
                     });
                     setFormData({});

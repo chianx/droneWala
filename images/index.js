@@ -17,5 +17,6 @@ const Images = {
     loading: require('../assets/giphy.gif'),
     companyCoral: require('./companyCoral.png'),
     institute: require('./institute.png'),
+    calender: require('./calendarOrange.png'),
 }
 export default Images;

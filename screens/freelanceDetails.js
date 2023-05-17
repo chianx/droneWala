@@ -15,19 +15,19 @@ export default function FreelanceDetails({ route, navigation, formData }) {
   const [userType, setUserType] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [bid, setBid] = useState('');
-  const [bidIsSet, setBidIsSet] = useState(false);
-  const [canApply, setCanAplly] = useState(true);
+  const [canApply, setCanApply] = useState(true);
   
-  const sendNotification = async (token) => {
+  const sendNotification = async (userJson, token) => {
     console.log(token);
-    var data = JSON.stringify({
+    var notificationJson = {
       data: {"data" : "this is data"},
       notification: {
         body: "Someone placed a bid on your freelance Project.",
         title: "A bid is placed!",
       },
       to: token,
-    });
+    };
+    var data = JSON.stringify(notificationJson);
 
     var config = {
       method: "post",
@@ -40,10 +40,12 @@ export default function FreelanceDetails({ route, navigation, formData }) {
       data: data,
     };
 
+    var refNotification = push(ref(db, "notifications/"));
+    var now = new Date();
+    var notificationData = {id: refNotification.key, body: notificationJson.notification.body, title: notificationJson.notification.title, date: now, from: userJson.userId, type:freelance.companyId};
+    set(refNotification, notificationData)
+
     axios(config)
-      .then(function (response) {
-        console.log(JSON.stringify(response.data));
-      })
       .catch(function (error) {
         console.log(error);
       });
@@ -62,54 +64,68 @@ export default function FreelanceDetails({ route, navigation, formData }) {
         opacity:1,
         hideOnPress: false,
         delay: 500,
-    });
+      });
     }
     
   };
 
   const submitBid = async() => {
-    console.log(bid)
-    const userdata = await AsyncStorage.getItem("userData");
-    const user = JSON.parse(userdata);
+    if(bid <= freelance.maximumBid) {
+        console.log(bid)
+        const userdata = await AsyncStorage.getItem("userData");
+        const user = JSON.parse(userdata);
 
-    var bidRef = ref(db, `bids/${freelance.id}/${user.userId}`)
-    var bidJson = {
-      id: bidRef.key,
-      amount: bid,
-      userId: user.userId,
+        var bidRef = ref(db, `bids/${freelance.id}/${user.userId}`)
+        var bidJson = {
+          id: bidRef.key,
+          amount: bid,
+          userId: user.userId,
+        }
+        set(bidRef, bidJson);
+        setIsModalVisible(!isModalVisible);
+        var freelanceRef = ref(db, "freelance/" + freelance.freelanceId)
+        runTransaction(freelanceRef, (freelance) => {
+          if(freelance.applied) {
+            var arr = Array.from(freelance.applied);
+            arr.push(user.userId);
+            freelance = {...freelance, applied: arr}
+          }else {
+            var arr = []
+            arr.push(user.userId);
+            freelance = {...freelance, applied: arr}
+          }
+          return freelance
+        });
+        Toast.show('Bid Placed Succesfully!', {
+          // backgroundColor:'#fda172',
+          duration: Toast.durations.LONG,
+          position: -130,
+          shadow: true,
+          animation: true,
+          opacity:1,
+          hideOnPress: false,
+          delay: 1000,
+        });
+        setCanApply(false);
+        const starCountRef = ref(db, 'users/' + freelance.companyId + "/fcmToken");
+        onValue(starCountRef, (snapshot) => {
+          const token = snapshot.val();
+          console.log("fcmToken " + token)
+          sendNotification(user, token);
+        })
+    }else {
+      Toast.show('Your bid should be less than ₹ ' + freelance.maximumBid + "" , {
+        // backgroundColor:'#fda172',
+        duration: Toast.durations.LONG,
+        position: -130,
+        shadow: true,
+        animation: true,
+        opacity:1,
+        hideOnPress: false,
+        delay: 500,
+      });
     }
-    set(bidRef, bidJson);
-    setIsModalVisible(!isModalVisible);
-    var freelanceRef = ref(db, "freelance/" + freelance.freelanceId)
-    runTransaction(freelanceRef, (freelance) => {
-      if(freelance.applied) {
-        var arr = Array.from(freelance.applied);
-        arr.push(user.userId);
-        freelance = {...freelance, applied: arr}
-      }else {
-        var arr = []
-        arr.push(user.userId);
-        freelance = {...freelance, applied: arr}
-      }
-      return freelance
-    });
-    Toast.show('Bid Placed Succesfully!', {
-      // backgroundColor:'#fda172',
-      duration: Toast.durations.LONG,
-      position: -130,
-      shadow: true,
-      animation: true,
-      opacity:1,
-      hideOnPress: false,
-      delay: 1000,
-    });
-    setCanAplly(false);
-    const starCountRef = ref(db, 'users/' + freelance.companyId + "/fcmToken");
-    onValue(starCountRef, (snapshot) => {
-      const token = snapshot.val();
-      console.log("fcmToken " + token)
-      sendNotification(token);
-  })
+    
   }
 
   const handleBid = (bid) => {
@@ -124,7 +140,7 @@ export default function FreelanceDetails({ route, navigation, formData }) {
     if(freelance.applied) {
       for(var index in freelance.applied) {
         if(freelance.applied[index] === userId) {
-          setCanAplly(false);
+          setCanApply(false);
           break;
         }
       }
