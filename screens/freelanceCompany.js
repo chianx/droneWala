@@ -48,7 +48,6 @@ export default function FreelanceCompanies({navigation}) {
             const lastDate = new Date(year, month, day);
   
             const currDate = new Date();
-            console.warn(`last: ${lastDate} curr: ${currDate} comp: ${lastDate.getTime() > currDate.getTime()}`)
   
             if(lastDate.getTime() < currDate.getTime()) {
                 continue;

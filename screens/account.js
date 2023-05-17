@@ -18,6 +18,7 @@ export default function Account({isClicked, setIsClicked, navigation}) {
   
   const [user, setUser] = useState({});
   const [drones, setDrones] = useState([]);
+  const [category, setCategory] = useState([]);
   const [accepted, setAccepted] = useState([]);
   const [rejected, setRejected] = useState([]);
   const [review, setReview] = useState([]);
@@ -30,6 +31,7 @@ export default function Account({isClicked, setIsClicked, navigation}) {
     const val = JSON.parse(userdata)
     setUser(val);
     setDrones(val.droneSelect);
+    setCategory(val.interests)
     console.log(val)
     // setCategory(val.category);
   }
@@ -38,7 +40,7 @@ export default function Account({isClicked, setIsClicked, navigation}) {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
-    }, 2000);
+    }, 1300);
   }, []);
 
   const fetchJobsApplied = async() => {
@@ -68,6 +70,8 @@ export default function Account({isClicked, setIsClicked, navigation}) {
           }else {
               console.log("pending " + application.jobId)
               get(ref(db, `jobs/${application.jobId}`)).then((jobSnap) => {
+                console.log("This is jobsnap")
+                console.log(jobSnap.val());
                 tempPending.push(jobSnap.val());
               })
           }
@@ -103,59 +107,84 @@ export default function Account({isClicked, setIsClicked, navigation}) {
         }>
 
         <View style={styles.container}>
-          <View style={styles.basic}>
-            <View style={{paddingHorizontal: 20, flex:1, justifyContent:'center'}}> 
-            <View style={{flexDirection:'row'}}>
-              <Image source={Images.profile} style={styles.avatar}/>
-                <View style={{flex:1, justifyContent:'center', paddingLeft: 15}}> 
-                  
-                  <Text style={{fontSize:20, color:'white'}}>{user.name}</Text>
-                  <Text style={{color: 'white'}}><Ionicons name='location-outline' size={16} color= 'white'/> {user.city +", " + user.state}</Text>
-                  <Text style={{color: 'white'}}><Ionicons name='ios-call-outline' size={16} color= 'white'/> {user.email}</Text>
+        <View style={styles.basic}>
+                <View style={{ paddingHorizontal: 20, justifyContent: 'center' }}>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Image source={{uri:user.profile}} style={styles.avatar} />
+                        <View style={{ flex: 1, justifyContent: 'center', paddingLeft: 15 }}>
+                            <Text style={{ fontSize: 21, color: 'white', fontWeight:500 }}>{user.name}</Text>
+                            <Text style={{fontSize: 16, color: 'white', fontWeight:400 }}><Ionicons name='location-outline' size={16} color='white' /> {user.city + ", " + user.state}</Text>
+                            <Text style={{ fontSize: 16, color: 'white', fontWeight:400 }}><Ionicons name='ios-mail-outline' size={16} color='white' /> {" " + user.email}</Text>
+                        </View>
+                    </View>
                 </View>
             </View>
-            </View>
-          </View>
 
-          <View style={styles.experienceBox}>
-            <View style={{flex:1, flexDirection:'row' ,justifyContent:'center'}}>
-              <View style={styles.experience}>
-                <Image source={Images.droneIcon} style={styles.icons}/>
-                <Text style={{textAlign:'center', color:'grey', paddingBottom:0, fontSize:17}}>{drones.length}</Text>
-              </View>
-              <View style={styles.experience}>
-                <Image source={Images.experience} style={styles.icons}/>
-                <Text style={{textAlign:'center', color:'grey', paddingBottom:3, fontSize:17}}>{user.experience}</Text>
-              </View>
-              <View style={styles.experience}>
-                <Image source={Images.certified} style={styles.icons}/>
-                <Text style={{textAlign:'center', color:'grey', paddingBottom:3, fontSize:17}}>{user.dcgaCertIsSet ? "Yes" : "No"}</Text>
-              </View>
-            </View>
-          </View>
-
-          <View style={styles.interests}>
-            <Text style={{ fontSize: 17, color: '#303030', paddingBottom: 5, width:'100%', paddingLeft:10, paddingTop:10}}>Area of interests</Text>
-            <View style={{flexDirection:'row', width:'100%', flex:1, flexWrap:'wrap'}}>
-              <Text style={{ color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>Cinematography</Text>
-              <Text style={{color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>Mining</Text>
-              <Text style={{color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>Agriculture</Text>
-            </View>
-          </View>
-
-          <View style={styles.drones}>
-            <Text style={{ fontSize: 17, color: '#303030', paddingBottom: 5, width:'100%', paddingLeft:10, paddingTop:10}}>My Drones</Text>
-            <View style={{flexDirection:'row', width:'100%', flex:1, flexWrap:'wrap'}}>
-            { drones.map((item, index) => {
-              return (
-                <View key = {index}>
-                <Text style={{color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>{item}</Text>
+              {/* Category Listing */}
+                <Text style={{ fontSize: 20, color: '#606060', paddingBottom: 5, width:'93%', paddingLeft:10, paddingTop:10, fontWeight:'bold'}}>Fields of Work</Text>
+                <View style={{flexDirection:'row', width:'93%', flex:1, flexWrap:'wrap'}}>
+                { category.map((item, index) => {
+                    return (
+                        <View key = {index}>
+                        <Text style={{fontSize:14, color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>{item}</Text>
+                        </View>
+                    )
+                    }) 
+                }
                 </View>
-              )
-            }) 
-            }
-            </View>
+
+                {/* Drones Listing */}
+                <Text style={{ fontSize: 20, color: '#606060', paddingBottom: 5, width:'93%', paddingLeft:10, paddingTop:10, fontWeight:'bold'}}>Drones</Text>
+                <View style={{flexDirection:'row', width:'93%', flex:1, flexWrap:'wrap'}}>
+                  { drones.map((item, index) => {
+                    return (
+                        <View key = {index}>
+                        <Text style={{fontSize:14 ,color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>{item}</Text>
+                        </View>
+                    )
+                  }) 
+                  }
+                </View>
+
+        <View style={{borderWidth:0.7, borderColor:'#FCD299', width:'95%', marginVertical:20}}></View>
+
+        <View style={{justifyContent:'flex-start', width:'80%'}}>
+
+          <Text style={{ fontSize: 20, color: '#606060', paddingBottom: 5, width:'93%', paddingLeft:10, paddingBottom:20, fontWeight:'bold'}}>More Info</Text>
+
+          <View style={{flexDirection:'row', justifyContent:'flex-start', paddingBottom:10, marginVertical:10, borderBottomWidth:0.5, borderColor:'#e0e0e0'}}>
+              <Image source={Images.experience} style={styles.icons}/>
+              <View style={{justifyContent:'center', paddingLeft:15}}>
+                  <Text style={{fontWeight:'bold', fontSize:17, color:"#808080"}}>Experience</Text>
+                  <Text style={{fontWeight:400, fontSize:15, color:"#808080"}}>{user.experience}</Text>
+              </View>
           </View>
+
+          <View style={{flexDirection:'row', justifyContent:'flex-start', paddingBottom:10, marginVertical:10, borderBottomWidth:0.5, borderColor:'#e0e0e0'}}>
+              <Image source={Images.droneIcon} style={styles.icons}/>
+              <View style={{justifyContent:'center', paddingLeft:15}}>
+                  <Text style={{fontWeight:'bold', fontSize:17, color:"#808080"}}>Number of Drones</Text>
+                  <Text style={{fontWeight:400, fontSize:15, color:"#808080"}}>{drones.length}</Text>
+              </View>
+          </View>
+
+          <View style={{flexDirection:'row', justifyContent:'flex-start', paddingBottom:10, marginVertical:10, borderBottomWidth:0.5, borderColor:'#e0e0e0'}}>
+              <Image source={Images.certified} style={styles.icons}/>
+              <View style={{justifyContent:'center', paddingLeft:15}}>
+                  <Text style={{fontWeight:'bold', fontSize:17, color:"#808080"}}>Certified</Text>
+                  <Text style={{fontWeight:400, fontSize:15, color:"#808080"}}>{user.dcgaCert? "Yes": "No"}</Text>
+              </View>
+          </View>
+
+          <View style={{flexDirection:'row', justifyContent:'flex-start', paddingBottom:10, marginVertical:10, borderBottomWidth:0.5, borderColor:'#e0e0e0'}}>
+              <Image source={Images.calender} style={styles.icons}/>
+              <View style={{justifyContent:'center', paddingLeft:15}}>
+                  <Text style={{fontWeight:'bold', fontSize:17, color:"#808080"}}>D.O.B.</Text>
+                  <Text style={{fontWeight:400, fontSize:15, color:"#808080"}}>{user.dob}</Text>
+              </View>
+          </View>
+
+      </View>
           
           <View style={styles.status}>
             <View style={{flexDirection:'row'}}>
@@ -174,17 +203,17 @@ export default function Account({isClicked, setIsClicked, navigation}) {
             
               {dataList.map((item, index) => {
                 return (
-                  <View key={item.key} style={styles.jobContainer}>
+                  <View key={index} style={styles.jobContainer}>
                     <View style={{flexDirection:'row'}}>
                       <View style={{paddingRight:20}}>
                         <Image source={{uri: item.logo}} style={styles.profilePic}/>
                       </View>
                       <View style={{paddingRight:20, width:200}}>
                         <Text style={styles.title}>{item.jobTitle}</Text>
-                        <Text style={{color:'#808080', paddingBottom:5}}>{item.company}</Text>
-                        <Text style={{color:'#808080'}}><Ionicons name="location-outline" size={14} color="#808080" />{item.location}</Text>
-                        <Text style={{color:'#808080'}}><Ionicons name="ios-cash-outline" size={14} color="#808080" />{' ₹' + item.salary}</Text>
-                        <Text style={{color:'#808080'}}><AntDesign name="calendar" size={14} color="#808080" />{' '+item.type}</Text>
+                        <Text style={{color:'#808080', paddingBottom:5}}>{item.companyName}</Text>
+                        <Text style={{color:'#808080'}}><Ionicons name="location-outline" size={14} color="#808080" />{' ' + item.location}</Text>
+                        <Text style={{color:'#808080'}}><Ionicons name="ios-cash-outline" size={14} color="#808080" />{' ₹' + item.salRange}</Text>
+                        <Text style={{color:'#808080'}}><AntDesign name="calendar" size={14} color="#808080" />{' '+item.ftORpt}</Text>
                       </View>
                     </View> 
                   </View>
@@ -214,16 +243,15 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
     width:'100%'
   },
-  basic : {
+  basic: {
     flex:1,
-    marginTop:10,
-    borderRadius:20,
-    backgroundColor:'#fda172',
-    height: 140,
-    width:'90%',
-    elevation:10,
+    backgroundColor: '#fda172',
+    paddingVertical:40,
+    marginBottom:10,
+    width: '100%',
+    elevation: 10,
     justifyContent:'center'
-  },
+},
   avatar : {
     height:75,
     width: 75,

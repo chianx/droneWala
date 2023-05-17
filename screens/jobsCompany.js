@@ -33,9 +33,8 @@ export default function JobsCompany({navigation}) {
                 tempJob.push(allJobs[element])
             }
         }
-        setIsLoading(false);
         setJobs(tempJob);
-
+        setIsLoading(false);
     });
   }
 
@@ -45,12 +44,7 @@ export default function JobsCompany({navigation}) {
     
   }, [])
 
-  // const details = [{key:1, jobTitle:'Job Title', company:'Company-Name', salary: '3,000-5,000/month', type:'Full Time', Location:'Jaipur'},
-  //          {key:2, jobTitle:'Lorem Ipsum dolor ebel candle jameesrirf', company:'Garud Survey', salary: '10,000-15,000/month', type:'Full Time',Location:'Jaipur'},
-  //          {key:3, jobTitle:'Job Title-2', company:'Garud Survey', salary: '10,000-15,000/month', type:'Full Time', Location:'Jaipur'},
-  //          {key:4, jobTitle:'Job Title-2', company:'Garud Survey', salary: '10,000-15,000/month', type:'Full Time', Location:'Jaipur'},
-  //           {key:5, jobTitle:'Job Title-3', company:'DronePilots Network', salary: '30,000-35,000/month', type:'Part Time', Location:'Jaipur'},
-  //           {key:6, jobTitle:'Drone Survey Job', company:'Fire Drone', type:'Full Time', salary:'20000/month', Location:'Jaipur'}]
+  
   return (
         
         <View style={styles.container}>
