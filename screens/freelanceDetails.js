@@ -14,7 +14,7 @@ export default function FreelanceDetails({ route, navigation, formData }) {
   const freelance = route.params.freelance;
   const [userType, setUserType] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [bid, setBid] = useState('');
+  const [bid, setBid] = useState(0);
   const [canApply, setCanApply] = useState(true);
   
   const sendNotification = async (userJson, token) => {
@@ -70,8 +70,9 @@ export default function FreelanceDetails({ route, navigation, formData }) {
   };
 
   const submitBid = async() => {
-    if(bid <= freelance.maximumBid) {
-        console.log(bid)
+    // console.log(parseInt(bid) <= parseInt(freelance.maximumBid));
+    if(bid <= parseInt(freelance.maximumBid)) {
+        console.log("placed: "+bid.toString())
         const userdata = await AsyncStorage.getItem("userData");
         const user = JSON.parse(userdata);
 
@@ -220,7 +221,7 @@ export default function FreelanceDetails({ route, navigation, formData }) {
           <View style={{ backgroundColor: '#f0f0f0', borderColor:'coral', position:'absolute', bottom:'7%', width: '100%', borderTopLeftRadius:20, borderTopRightRadius:20, borderWidth: 1, padding: 20}}>
 
           <View style={{flexDirection: "row", marginBottom: 20,}}>
-          <TouchableOpacity style={[styles.modalBackground, styles.button, {left: 0,}]} onPress={() => {toggleModal(); setBid("");}}>
+          <TouchableOpacity style={[styles.modalBackground, styles.button, {left: 0,}]} onPress={() => {setIsModalVisible(!isModalVisible); setBid("");}}>
               <Text><AntDesign name="closecircleo" size={24} color="#404040" /></Text>
             </TouchableOpacity>
           </View>
@@ -232,7 +233,7 @@ export default function FreelanceDetails({ route, navigation, formData }) {
                 placeholder="Enter bid"
                 value={bid}
                 keyboardType='numeric'
-                onChangeText={handleBid}
+                onChangeText={(bid) => {setBid(bid); console.log(bid);}}
               />
             <TouchableOpacity style={{width:'100%', backgroundColor:'coral', height:40, borderRadius:10, textAlign:'center', justifyContent:'center'}} onPress={() => {submitBid()}}>
               <Text style={{color:'white', fontSize:20, textAlign:'center'}}>Submit</Text>
