@@ -24,11 +24,11 @@ const CustomDrawer = ({prop, navigation}) => {
 
     const [launch , setLaunch] = useState(false)
     const signout =() => {
-        AsyncStorage.setItem("login", ""+false);
+        AsyncStorage.setItem("login", "false");
+        AsyncStorage.setItem("userData", "");
         AsyncStorage.setItem("userType", "");
         AsyncStorage.setItem("userId", "");
-        AsyncStorage.setItem("userData", "");
-
+        
         prop.navigation.navigate("Login")
     }
     const myCustomShare = async () => {

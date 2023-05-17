@@ -49,7 +49,7 @@ export default function ViewProfile({route, navigation}) {
                             <Text style={{fontSize: 16, color: 'white', fontWeight:400 }}><Ionicons name='location-outline' size={16} color='white' /> {user.city + ", " + user.state}</Text>
                             <Text style={{ fontSize: 16, color: 'white', fontWeight:400 }}><Ionicons name='ios-mail-outline' size={16} color='white' /> {" " + user.email}</Text>
                             <TouchableOpacity onPress={() => Linking.openURL(user.website)}>
-                                <Text style={{ color: 'white' }}><MaterialCommunityIcons name="web" size={17} color="white" /> {user.website} <Feather name="external-link" size={16} color="white" /></Text>
+                                <Text style={{fontSize: 16, fontWeight:400, color: 'white' }}><MaterialCommunityIcons name="web" size={17} color="white" /> {user.website} <Feather name="external-link" size={16} color="white" /></Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -59,7 +59,7 @@ export default function ViewProfile({route, navigation}) {
         {/* Category Listing */}
         <Text style={{ fontSize: 20, color: '#606060', paddingBottom: 5, width:'93%', paddingLeft:10, paddingTop:10, fontWeight:'bold'}}>Fields of Work</Text>
                 <View style={{flexDirection:'row', width:'93%', flex:1, flexWrap:'wrap'}}>
-                { category.map((item, index) => {
+                { category!= null && category.map((item, index) => {
                     return (
                         <View key = {index}>
                         <Text style={{fontSize:14, color: 'white', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>{item}</Text>
@@ -114,8 +114,8 @@ export default function ViewProfile({route, navigation}) {
             <Text style={styles.dividerText}>About us</Text>
             <View style={[styles.dividerView, {marginRight:20, marginLeft:20}]}></View>
         </View>
-        <View style={{width:'90%', marginTop:10}}>
-            <Text style={{color:'grey', fontSize:15}}>{user.about}</Text>
+        <View style={{width:'90%', marginTop:10, marginBottom:30}}>
+            <Text style={{color:'grey', fontSize:17}}>{user.about}</Text>
         </View>
     </View>
     }
@@ -133,11 +133,10 @@ const styles = StyleSheet.create({
     },
     basic: {
         flex:1,
-        marginTop: 10,
-        borderRadius: 20,
         backgroundColor: '#fda172',
         paddingVertical:40,
-        width: '90%',
+        marginBottom:10,
+        width: '100%',
         elevation: 10,
         justifyContent:'center'
     },
