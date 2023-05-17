@@ -28,16 +28,34 @@ export default function FreelanceCompanies({navigation}) {
         setUserType(user.userType);
         
         if(user.userType === "company") {
-          var tempJob = [];
+          var tempFreelance = [];
           for(var element in allJobs) {
               if(allJobs[element].companyId != user.userId) {
                   continue;
               }
-              tempJob.push(allJobs[element])
+              tempFreelance.push(allJobs[element])
           }
-          setFreelance(tempJob);
+          setFreelance(tempFreelance);
         }else {
-          setFreelance(allJobs);
+          var tempFreelance = [];
+          for(var element in allJobs) {
+            var job = allJobs[element];
+            console.log(job.date);
+            const date = new String(job.date)
+            const year = parseInt(date.slice(0, 4));
+            const month = parseInt(date.slice(5,7))-1;
+            const day = parseInt(date.slice(8,10));
+            const lastDate = new Date(year, month, day);
+  
+            const currDate = new Date();
+            console.warn(`last: ${lastDate} curr: ${currDate} comp: ${lastDate.getTime() > currDate.getTime()}`)
+  
+            if(lastDate.getTime() < currDate.getTime()) {
+                continue;
+            }
+            tempFreelance.push(job)
+          }
+          setFreelance(tempFreelance);
         }
         setIsLoading(false);
       });

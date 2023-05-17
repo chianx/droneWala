@@ -176,7 +176,7 @@ export default function Login( {navigation} ) {
               Confirm Code
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setShowOTP(false)}><Text style={{color:'grey'}}>Chnage Phone Number</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => setShowOTP(false)}><Text style={{color:'grey'}}>Change Phone Number</Text></TouchableOpacity>
         </View> 
         }
         
