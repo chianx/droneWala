@@ -121,7 +121,11 @@ export default function StepTwo({ formData, setFormData }) {
   }
 
   const handleMaxBid = (maximumBid) => {
-    setFormData({ ...formData, maximumBid:maximumBid, maximumBidIsSet: true });
+    if(parseInt(maximumBid.trim()) > 0) {
+      setFormData({ ...formData, maximumBid:maximumBid.trim(), maximumBidIsSet: true });
+    }else {
+      setFormData({ ...formData, maximumBid:maximumBid.trim(), maximumBidIsSet: false });
+    }
 }
 
   return (
