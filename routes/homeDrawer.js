@@ -8,6 +8,7 @@ import About from '../screens/about'
 import Contact from '../screens/contact'
 import CustomDrawer from './customDrawer'
 import LoginStack from './loginStack';
+import TermsAndConditions from '../screens/termsAndConditions'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -53,6 +54,10 @@ export default function HomeDrawer({navigation}) {
               <Ionicons name="information-circle-outline" size={22} color={color}/>}}
           />
           <Drawer.Screen name="Contact" component={Contact} 
+            options={{drawerIcon: ({color}) => 
+              <Ionicons name="ios-call-outline" size={22} color={color}/>}}
+          />
+          <Drawer.Screen name="Terms and Conditions" component={TermsAndConditions} 
             options={{drawerIcon: ({color}) => 
               <Ionicons name="ios-call-outline" size={22} color={color}/>}}
           />
