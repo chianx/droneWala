@@ -4,11 +4,13 @@ import { AntDesign } from '@expo/vector-icons';
 import { SelectList } from 'react-native-dropdown-select-list'
 import DatePicker from 'react-native-modern-datepicker';
 import { MultipleSelectList } from 'react-native-dropdown-select-list'
-import { db, auth } from '../firebase/databaseConfig'
+import { db } from '../firebase/databaseConfig'
+import validator from 'validator';
 import { ref, update} from 'firebase/database'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-root-toast';
 
-const EditProfileModalComp = ({ visible, onClose, onSave }) => {
+const EditProfileModalComp = ({ visible, onClose, setUserPrev }) => {
 
   const [user, setUser] = useState({});
   const mount = async () => {
@@ -27,14 +29,34 @@ const EditProfileModalComp = ({ visible, onClose, onSave }) => {
   const handleSave = () => {
     if (user.dateIsSet && user.emailIsSet && user.addressIsSet && user.stateIsSet && user.cityIsSet && user.pinIsSet && user.categoryIsSet && user.websiteIsSet && user.aboutIsSet) {
 
-      update(ref(db, 'users/' + 'suFsqbl4lEMA3ognIgDAZLD1vnr1'), user).then(() => {
+      update(ref(db, `users/${user.userId}`), user).then(() => {
         // Add loading icon.
         AsyncStorage.setItem("userData", JSON.stringify(user));
-        console.log(user)
+        Toast.show('Profile Updated!!', {
+          backgroundColor:'#fda172',
+          duration: Toast.durations.LONG,
+          position: -100,
+          shadow: true,
+          borderRadius: 50, 
+          animation: true,
+          opacity: 100,
+          hideOnPress: false
+        });
       }).catch((error) => {
         // Correct this.
         setErrorMessage(error.toString);
+        Toast.show('No Internet. Unable to update!!', {
+          backgroundColor:'#fda172',
+          duration: Toast.durations.LONG,
+          position: -100,
+          shadow: true,
+          borderRadius: 50, 
+          animation: true,
+          hideOnPress: false
+        });
       })
+      console.log("DATA SAVED")
+      setUserPrev(user);
       onClose();
     }
   };

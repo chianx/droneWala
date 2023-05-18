@@ -27,6 +27,7 @@ export default function Account({isClicked, setIsClicked, navigation }) {
     
     const handleSaveProfile =() => {
        setIsClicked(!isClicked);
+        mount()
     };
     
     const handleCancelEdit = () => {
@@ -120,8 +121,8 @@ export default function Account({isClicked, setIsClicked, navigation }) {
         </View>
         <EditProfileModalComp
             visible={isClicked}
-            onSave={handleSaveProfile}
             onClose={handleCancelEdit}
+            setUserPrev={setUser}
             user={user}
         />
         </ScrollView>

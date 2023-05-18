@@ -138,13 +138,14 @@ export default function FreelanceForm({route, navigation}) {
                     var final =  {...formData, companyName:userJson.companyName, logo:userJson.logo, companyId:userJson.userId, aboutCompany:userJson.about, freelanceId:refs.key}; 
                     set(refs, final);
                     var topic = "Freelance";
-                    var data = JSON.stringify({
+                    const temp = {
                         notification : {
                             body: 'New Freelance Project has been posted by '+ userJson.companyName +' company',
                             title: 'New Freelance Post'
                         },
                         to: "/topics/" + topic
-                    });
+                    }
+                    var data = JSON.stringify(temp);
                     var config = {
                         method:'post',
                         url: 'https://fcm.googleapis.com/fcm/send',
@@ -158,7 +159,7 @@ export default function FreelanceForm({route, navigation}) {
                 
                     var refNotification = push(ref(db, "notifications/"));
                     var now = new Date();
-                    var notificationData = {id: refNotification.key, body: data.notification.body, title:data.notification.title, date:now, from:userJson.userId, type:"freelance",};
+                    var notificationData = {id: refNotification.key, body: temp.notification.body, title: temp.notification.title, date:now, from:userJson.userId, type:"freelance",};
                     set(refNotification ,notificationData)
 
                     axios(config).catch(function (error) {
@@ -176,9 +177,8 @@ export default function FreelanceForm({route, navigation}) {
                     shadow: true,
                     borderRadius: 100, 
                     animation: true,
-                    opacity:1,
-                    hideOnPress: false,
-                    delay: 1000,
+                    opacity:100,
+                    hideOnPress: false
                 });
                 navigation.navigate("Home");
             }

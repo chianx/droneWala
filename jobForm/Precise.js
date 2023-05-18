@@ -35,25 +35,24 @@ export default function Precise({ formData, setFormData }) {
     }
     const handlesalRangeFrom = (salRangeFrom) => {
        
-        if(salRangeFrom.trim().length >= 2) {
-            setFormData({ ...formData, salRangeFrom:salRangeFrom, salRangeFromIsSet: true });
+        if(parseInt(salRangeFrom.trim()) > 0) {
+            setFormData({ ...formData, salRangeFrom:salRangeFrom.trim(), salRangeFromIsSet: true });
         }else {
-            setFormData({ ...formData, salRangeFrom:salRangeFrom, salRangeFromIsSet: false });
+            setFormData({ ...formData, salRangeFrom:salRangeFrom.trim(), salRangeFromIsSet: false });
         }
     }
     const handlesalRangeTo = (salRangeTo) => {
-       
-        if(salRangeTo.trim().length >= 2) {
-            setFormData({ ...formData, salRangeTo:salRangeTo, salRangeToIsSet: true });
+        if(parseInt(salRangeTo.trim()) > 0 && parseInt(salRangeTo) > parseInt(formData.salRangeFrom)) {
+            setFormData({ ...formData, salRangeTo:salRangeTo.trim(), salRangeToIsSet: true });
         }else {
-            setFormData({ ...formData, salRangeTo:salRangeTo, salRangeToIsSet: false });
+            setFormData({ ...formData, salRangeTo:salRangeTo.trim(), salRangeToIsSet: false });
         }
     }
     const handlenumOpen = (numOpen) => {
-        if(numOpen >= 1) {
-            setFormData({ ...formData, numOpen:numOpen, numOpenIsSet: true });
+        if(parseInt(numOpen.trim()) > 0) {
+            setFormData({ ...formData, numOpen:numOpen.trim(), numOpenIsSet: true });
         }else {
-            setFormData({ ...formData, numOpen:numOpen, numOpenIsSet: false });
+            setFormData({ ...formData, numOpen:numOpen.trim(), numOpenIsSet: false });
         }
     }
     const handleJobLoaction = (location) => {
@@ -147,7 +146,7 @@ export default function Precise({ formData, setFormData }) {
                         <TextInput
                             editable={false}
                             placeholderTextColor="grey"
-                            placeholder='Apply by *'
+                            placeholder='Last date to apply *'
                             value={formData.date}
                             style={{ width: 280, fontSize: 17, height: 55, color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', borderColor: formData.dateIsSet ? 'grey' : 'red', marginRight: 20, marginBottom: 15 }}
                         />

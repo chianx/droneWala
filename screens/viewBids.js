@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import Images from '../images/index'
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
@@ -56,7 +56,7 @@ export default function ViewBids({route, navigation}) {
         <View style={styles.container}>
           {isLoading? <View style={{backgroundColor: '#e0e0e0aa', flex:1, justifyContent:'center'}}><ActivityIndicator size="large" color="coral" /></View> 
         :
-        users.length === 0 ? 
+        users.length == 0 ? 
         <View style={[styles.container, {alignItems: 'center', justifyContent: 'center'}]}>
         <View style={{alignSelf: 'center', marginVertical: 'auto'}}>
         <Text style={{fontSize: 20, alignContent: 'center', color: 'coral', fontWeight: 'bold', textShadowColor: 'grey', textShadowOffset: { width: -1.5, height: 1 }, textShadowRadius: 1,}}>No Bids Placed Yet</Text>
@@ -75,7 +75,7 @@ export default function ViewBids({route, navigation}) {
                 <View key={item.key} style={styles.jobContainer}>
                   <View style={{flexDirection:'row'}}>
                     <View style={{paddingRight:20}}>
-                      <Image source={item.profile} style={styles.profilePic}/>
+                      <Image source={{uri: item.user.profile}} style={styles.profilePic}/>
                     </View>
                     <View style={{paddingRight:20, width:200}}>
                       <Text style={styles.title}>{item.user.name}</Text>
@@ -84,7 +84,7 @@ export default function ViewBids({route, navigation}) {
                       <Text style={{color:'#808080', paddingBottom:6}}>Certified: {item.user.dgcaCert? "Yes" : "No"}</Text>
                     </View>
                   </View> 
-                  <Text style={{fontSize:16, fontWeight:'bold', color:'grey'}}>Bid Placed: ₹ {item.bid}</Text>
+                  <Text style={{fontSize:16, fontWeight:'bold', color:'grey'}}>Bid Placed: ₹ {item.answer.amount}</Text>
                 </View>
                 </TouchableOpacity>
               )}
