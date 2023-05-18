@@ -39,6 +39,7 @@ export default function Form({navigation}) {
             state: "",
             pincode: "",
             addressIsSet:false,
+            categoryIsSet: false,
             cityIsSet:false,
             stateIsSet:false,
             pinIsSet:false,
