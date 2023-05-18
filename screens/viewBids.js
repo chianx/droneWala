@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import Images from '../images/index'
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
@@ -56,7 +56,7 @@ export default function ViewBids({route, navigation}) {
         <View style={styles.container}>
           {isLoading? <View style={{backgroundColor: '#e0e0e0aa', flex:1, justifyContent:'center'}}><ActivityIndicator size="large" color="coral" /></View> 
         :
-        users.length === 0 ? 
+        users.length == 0 ? 
         <View style={[styles.container, {alignItems: 'center', justifyContent: 'center'}]}>
         <View style={{alignSelf: 'center', marginVertical: 'auto'}}>
         <Text style={{fontSize: 20, alignContent: 'center', color: 'coral', fontWeight: 'bold', textShadowColor: 'grey', textShadowOffset: { width: -1.5, height: 1 }, textShadowRadius: 1,}}>No Bids Placed Yet</Text>
