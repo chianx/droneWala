@@ -23,24 +23,32 @@ export default function StepOne({ formData, setFormData }) {
         }
     }
     const handleAreaSize = (areaSize) => {
-        if (areaSize >= 2) {
+        if (parseInt(areaSize.trim()) > 0) {
             setFormData({ ...formData, areaSize: areaSize, areaSizeIsSet: true });
         } else {
             setFormData({ ...formData, areaSize: areaSize, areaSizeIsSet: false });
         }
     }
     const handleAreaLocation = (areaLoc) => {
-        if (areaLoc.trim().length >= 2) {
+        if (parseInt(areaLoc.trim()) > 0) {
             setFormData({ ...formData, areaLoc: areaLoc, areaLocIsSet: true });
         } else {
             setFormData({ ...formData, areaLoc: areaLoc, areaLocIsSet: false });
         }
     }
     const handleWorkDurationFrom = (workDuration) => {
-        setFormData({ ...formData, workDurationFrom: workDuration, workDurationFromIsSet: true });
+        if(parseInt(workDuration.trim()) > 0 && parseInt(workDuration.trim()) < formData.workDurationToIsSet ? formData.workDurationTo : 9007199254740991) {
+            setFormData({ ...formData, workDurationFrom: workDuration.trim(), workDurationFromIsSet: true });
+        }else {
+            setFormData({ ...formData, workDurationFrom: workDuration.trim(), workDurationFromIsSet: false });
+        }
     }
     const handleWorkDurationTo = (workDuration) => {
-        setFormData({ ...formData, workDurationTo: workDuration, workDurationToIsSet: true });
+        if(parseInt(workDuration.trim()) > 0 && parseInt(workDuration.trim()) > formData.workDurationFrom) {
+            setFormData({ ...formData, workDurationTo: workDuration.trim(), workDurationToIsSet: true });
+        }else {
+            setFormData({ ...formData, workDurationTo: workDuration.trim(), workDurationToIsSet: false });
+        }
     }
     const handlePayload = (payload) => {
         setFormData({ ...formData, payload: payload, payloadIsSet: true });
@@ -151,7 +159,7 @@ export default function StepOne({ formData, setFormData }) {
                                 setOpen(!open);
                             }}
                             mode="calendar"
-                            maximumDate={todaysDate}
+                            minimumDate={todaysDate}
                         />
                     ) : (
                         <></>

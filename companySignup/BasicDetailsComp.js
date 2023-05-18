@@ -9,6 +9,9 @@ export default function BasicDetails({ formData, setFormData }) {
   const [state, setState] = useState(formData.city);
   const [city, setCity] = useState(formData.state);
   const [pincode, setPincode] = useState(formData.pincode);
+  const [selectedCategory, setSelectedCategory] = useState([]);
+  const [t, setT] = useState(false);
+
   const category = [
     { key: '1', value: 'Agriculture' },
     { key: '2', value: 'Delivery' },
@@ -148,7 +151,7 @@ export default function BasicDetails({ formData, setFormData }) {
       </View>
       <View style={{ marginBottom: 20, width: 280 }}>
       <MultipleSelectList
-          style={[formData.selectedDroneIsSet ? null : {borderColor: "red"}]}
+          style={[formData.categoryIsSet ? null : {borderColor: "red"}]}
           placeholder='Select Category *'
           setSelected={(val) => {
             setSelectedCategory(val)
@@ -157,10 +160,10 @@ export default function BasicDetails({ formData, setFormData }) {
           search={false}
           data={category}
           save="value"
-          value={formData.droneSelect}
-          boxStyles={[formData.selectedDroneIsSet ? null : { borderColor: "red" }, { backgroundColor: "white" }]}
+          value={formData.categoryIsSet}
+          boxStyles={[formData.categoryIsSet ? null : { borderColor: "red" }, { backgroundColor: "white" }]}
           onSelect={() => {
-            setFormData({ ...formData, droneSelect:selectedDrone, selectedDroneIsSet: t });
+            setFormData({ ...formData, category:selectedCategory, categoryIsSet: t });
           }}
           label="Category"
         />

@@ -7,6 +7,8 @@ import * as OpenAnything from 'react-native-openanything'
 import {db} from '../firebase/databaseConfig'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {  
+  push,
+  set,
   ref,
   update,
 } from 'firebase/database';

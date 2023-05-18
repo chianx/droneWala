@@ -47,7 +47,7 @@ export default function Applicants({route, navigation}) {
       <View style={{backgroundColor: '#e0e0e0aa', height:300, justifyContent:'center'}}><ActivityIndicator size="large" color="coral" /></View>
     )
   }else  {
-    if(applied.length === 0) {
+    if(applied == 0) {
       return (<View style={[styles.container, {alignItems: 'center', justifyContent: 'center'}]}>
         <View style={{alignSelf: 'center', marginVertical: 'auto'}}>
         <Text style={{fontSize: 20, alignContent: 'center', color: 'coral', fontWeight: 'bold', textShadowColor: 'grey', textShadowOffset: { width: -1.5, height: 1 }, textShadowRadius: 1,}}>No Applications Found</Text>

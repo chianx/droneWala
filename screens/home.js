@@ -7,7 +7,7 @@ import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { db } from '../firebase/databaseConfig'
 import { ref, onValue, query, orderByChild, limitToLast, limitToFirst, push, set } from 'firebase/database';
-import axios from 'axios';
+import axios, { all } from 'axios';
 
 export default function Home({ navigation }) {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -47,16 +47,22 @@ export default function Home({ navigation }) {
       
     }
     setArticles(temp);
+    console.log(temp);
     if(val.userType === 'company') {
       console.log("usertype company selected");
       const starCountRef = ref(db, 'jobs/');
+      console.log(starCountRef)
       onValue(starCountRef, (snapshot) => {
         const data = snapshot.val();
         let allJobs =[];
-        allJobs = Object.keys(data).map(key => ({
-          key: key,
-          ...data[key]
-        }))
+        if(data) {
+          allJobs = Object.keys(data).map(key => ({
+            key: key,
+            ...data[key]
+          }))
+        }
+        
+        console.log("Jobs: " + allJobs)
         var tempJob = [];
         for(var element in allJobs) {
             if(allJobs[element].companyId != val.userId) {
