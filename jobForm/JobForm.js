@@ -143,7 +143,7 @@ export default function JobForm({navigation}) {
                 errMsg = "Invalid Job Title"
                 formData.jobTitleIsSet = false
             }else if(!formData.salRangeFromIsSet && !formData.salRangeToIsSet) {
-                errMsg = "Check Salary Range"
+                errMsg = "Check Salary Range, [From < To] "
                 formData.salRangeFromIsSet = false
                 formData.salRangeToIsSet = false
             }else if (!formData.ftORptIsSet) {
