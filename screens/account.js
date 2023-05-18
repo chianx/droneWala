@@ -229,6 +229,7 @@ export default function Account({isClicked, setIsClicked, navigation}) {
           visible={isClicked}
           onSave={handleSaveProfile}
           onClose={handleCancelEdit}
+          setUserPrev={setUser}
           user={user}
       />
         </ScrollView>
