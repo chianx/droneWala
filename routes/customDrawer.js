@@ -23,11 +23,11 @@ const CustomDrawer = ({prop, navigation}) => {
     }, []);
 
     const [launch , setLaunch] = useState(false)
-    const signout =() => {
-        AsyncStorage.setItem("login", "false");
-        AsyncStorage.setItem("userData", "");
-        AsyncStorage.setItem("userType", "");
-        AsyncStorage.setItem("userId", "");
+    const signout = async() => {
+        await AsyncStorage.setItem("login", "false");
+        await AsyncStorage.setItem("userData", "");
+        await AsyncStorage.setItem("userType", "");
+        await AsyncStorage.setItem("userId", "");
         
         prop.navigation.navigate("Login")
     }
