@@ -45,7 +45,7 @@ export default function Jobs({navigation}) {
           const date = new String(job.date)
           const year = parseInt(date.slice(0, 4));
           const month = parseInt(date.slice(5,7))-1;
-          const day = parseInt(date.slice(8,10));
+          const day = parseInt(date.slice(8,10)) + 1;
           const lastDate = new Date(year, month, day);
 
           const currDate = new Date();

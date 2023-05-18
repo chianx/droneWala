@@ -31,13 +31,14 @@ export default function Application({route, navigation}) {
       var userJson = JSON.parse(result);
       var token = pilot.fcmToken;
       console.log(token);
-        var data = JSON.stringify({
+        const temp = {
           notification: {
             body: "You have been selected by "+ userJson.companyName +" company for their job",
             title: "Congratulations! You got it.",
           },
           to: token,
-        });
+        }
+        var data = JSON.stringify(temp);
     
         var config = {
           method: "post",
@@ -52,7 +53,7 @@ export default function Application({route, navigation}) {
     
         var refNotification = push(ref(db, "notifications/"));
         var now = new Date();
-        var notificationData = {id: refNotification.key, body: data.notification.body, title:data.notification.title, date:now, from:userJson.userId, type:pilot.userId};
+        var notificationData = {id: refNotification.key, body: temp.notification.body, title: temp.notification.title, date:now, from:userJson.userId, type:pilot.userId};
         set(refNotification, notificationData);
 
         axios(config)
