@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import Images from '../images/index'
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
@@ -7,12 +7,20 @@ import { MaterialIcons } from '@expo/vector-icons';
 import {db} from '../firebase/databaseConfig'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ref,onValue,push,update,remove } from 'firebase/database';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function FreelanceCompanies({navigation}) {
 
     const [freelance, setFreelance] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [userType, setUserType] = useState("");
+    const [refreshing, setRefreshing] = React.useState(false);
+
+    const onRefresh = React.useCallback(async () => {
+      setRefreshing(true);
+      await fetchData();
+      setRefreshing(false);
+    }, [refreshing]);
 
     const fetchData = async() => {
       const starCountRef = ref(db, 'freelance/');
@@ -44,7 +52,7 @@ export default function FreelanceCompanies({navigation}) {
             const date = new String(job.date)
             const year = parseInt(date.slice(0, 4));
             const month = parseInt(date.slice(5,7))-1;
-            const day = parseInt(date.slice(8,10));
+            const day = parseInt(date.slice(8,10)) + 1;
             const lastDate = new Date(year, month, day);
   
             const currDate = new Date();
@@ -52,7 +60,7 @@ export default function FreelanceCompanies({navigation}) {
             if(lastDate.getTime() < currDate.getTime()) {
                 continue;
             }
-            tempFreelance.push(job)
+            tempFreelance.push(job);
           }
           setFreelance(tempFreelance);
         }
@@ -90,7 +98,6 @@ export default function FreelanceCompanies({navigation}) {
 
 
     return (
-        
         <View style={styles.container}>
         {isLoading? <View style={{backgroundColor: '#e0e0e0aa', flex:1, justifyContent:'center'}}><ActivityIndicator size="large" color="coral" /></View> 
         :
@@ -113,6 +120,7 @@ export default function FreelanceCompanies({navigation}) {
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id.toString()}
                 contentContainerStyle={styles.flatListContentContainer}
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
             />
             {userType === "company"? 
               <TouchableOpacity style={{alignItems:'flex-end', position:'absolute', bottom:0, width:'100%'}} onPress={() => navigation.navigate("Post a Project")}>

@@ -59,7 +59,7 @@ export default function HomeDrawer({navigation}) {
           />
           <Drawer.Screen name="Terms and Conditions" component={TermsAndConditions} 
             options={{drawerIcon: ({color}) => 
-              <Ionicons name="ios-call-outline" size={22} color={color}/>}}
+            <Ionicons name="newspaper-outline" size={22} color={color} />}}
           />
           <Drawer.Screen name="Login" component={LoginStack} 
             options={{
