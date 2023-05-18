@@ -170,7 +170,7 @@ export default function JobForm({navigation}) {
         
     }else 
     return (
-        <View style={{flex:1, opacity: loading ? 0.5 : 1, zIndex: loading ?0:1}}>
+        <View style={{flex:1, opacity: loading ? 0.5 : 1, zIndex: loading ?0:1, backgroundColor: 'white'}}>
         {loading? <View>
             <View style={{backgroundColor:"#d3d3d3aa", position: "absolute", flex: 1, zIndex: 2, width:'100%', height:630, justifyContent:'center'}}>
                 <ActivityIndicator size="large" color="coral" />

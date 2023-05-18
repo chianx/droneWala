@@ -14,7 +14,7 @@ export default function FreelanceDetails({ route, navigation, formData }) {
   const freelance = route.params.freelance;
   const [userType, setUserType] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [bid, setBid] = useState('');
+  const [bid, setBid] = useState(0);
   const [canApply, setCanApply] = useState(true);
   
   const sendNotification = async (userJson, token) => {
@@ -71,8 +71,9 @@ export default function FreelanceDetails({ route, navigation, formData }) {
   };
 
   const submitBid = async() => {
-    if(bid <= freelance.maximumBid) {
-        console.log(bid)
+    // console.log(parseInt(bid) <= parseInt(freelance.maximumBid));
+    if(bid > 0 && bid <= parseInt(freelance.maximumBid)) {
+        console.log("placed: "+bid.toString())
         const userdata = await AsyncStorage.getItem("userData");
         const user = JSON.parse(userdata);
 
@@ -114,14 +115,22 @@ export default function FreelanceDetails({ route, navigation, formData }) {
           console.log("fcmToken " + token)
           sendNotification(user, token);
         })
-    }else {
-      console.log('Your bid should be less than ₹ ' + freelance.maximumBid + "" );
-      setIsModalVisible(!isModalVisible);
-      setBid();
-      Toast.show('Your bid should be less than ₹ ' + freelance.maximumBid, {
-        backgroundColor:'#ff474c',
+    }else if(bid == 0) {
+      Toast.show('Place Bid Less Than ₹ ' + freelance.maximumBid + " and not equal to" , {
+        // backgroundColor:'#fda172',
         duration: Toast.durations.LONG,
-        position: -130,
+        position: -330,
+        shadow: true,
+        animation: true,
+        opacity:1,
+        hideOnPress: false,
+        delay: 500,
+      });
+    }else {
+      Toast.show('Your bid should be less than ₹ ' + parseInt(freelance.maximumBid) + "" , {
+        // backgroundColor:'#fda172',
+        duration: Toast.durations.LONG,
+        position: -330,
         shadow: true,
         animation: true,
         opacity:1,
@@ -133,6 +142,7 @@ export default function FreelanceDetails({ route, navigation, formData }) {
   }
 
   const handleBid = (bid) => {
+
     setBid(bid);
   };
 
@@ -236,7 +246,7 @@ export default function FreelanceDetails({ route, navigation, formData }) {
                 placeholder="Enter bid"
                 value={bid}
                 keyboardType='numeric'
-                onChangeText={handleBid}
+                onChangeText={(bid) => {setBid(bid); console.log(bid);}}
               />
             <TouchableOpacity style={{width:'100%', backgroundColor:'coral', height:40, borderRadius:10, textAlign:'center', justifyContent:'center'}} onPress={() => {submitBid()}}>
               <Text style={{color:'white', fontSize:20, textAlign:'center'}}>Submit</Text>
