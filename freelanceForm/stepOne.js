@@ -30,7 +30,7 @@ export default function StepOne({ formData, setFormData }) {
         }
     }
     const handleAreaLocation = (areaLoc) => {
-        if (parseInt(areaLoc.trim()) > 0) {
+        if (areaLoc.trim().length >= 4) {
             setFormData({ ...formData, areaLoc: areaLoc, areaLocIsSet: true });
         } else {
             setFormData({ ...formData, areaLoc: areaLoc, areaLocIsSet: false });

@@ -1,9 +1,42 @@
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
+import { db } from '../firebase/databaseConfig'
+import { ref, set, push} from 'firebase/database'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-root-toast';
 
 export default function Contact({navigation}) {
   const [suggestions, setSuggestions] = useState("")
+
+  const submitSuggestions = async () => {
+    const userdata = await AsyncStorage.getItem("userData");
+    const val = JSON.parse(userdata)
+
+    const data = {
+        uid: val.userId,
+        name: val.name,
+        email: val.email,
+        suggestion: suggestions
+    }
+
+    const suggestionRefs = push(ref(db, `suggestions/`));
+    set(suggestionRefs, data);
+
+    Toast.show('Thanks for your valuable feedback!!', {
+        backgroundColor:'#fda172',
+        duration: Toast.durations.LONG,
+        position: -100,
+        shadow: true,
+        borderRadius: 100, 
+        animation: true,
+        opacity:100,
+        hideOnPress: false
+    });
+
+    navigation.navigate("Home")
+  }
+
   return (
         <View style={styles.container}>
             <View style={{ alignItems:'center', padding:15, backgroundColor:'coral', elevation:15}}>
@@ -25,7 +58,7 @@ export default function Contact({navigation}) {
                 value={suggestions}  
                 style={styles.textArea}
               />
-              <TouchableOpacity style={styles.submitBtn} onPress={()=> console.log(suggestions)}><Text style={{color:'white', fontSize:17}}>Submit</Text></TouchableOpacity>
+              <TouchableOpacity style={styles.submitBtn} onPress={()=> submitSuggestions()}><Text style={{color:'white', fontSize:17}}>Submit</Text></TouchableOpacity>
             </View>
           </View>
         </View>
@@ -34,7 +67,6 @@ export default function Contact({navigation}) {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop:35,
     flex: 1,
     backgroundColor: '#fff',
     // alignItems: 'center',

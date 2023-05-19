@@ -28,7 +28,7 @@ const CustomDrawer = ({prop, navigation}) => {
         await AsyncStorage.setItem("userData", "");
         await AsyncStorage.setItem("userType", "");
         await AsyncStorage.setItem("userId", "");
-        
+        await AsyncStorage.setItem("phoneNum", "")
         prop.navigation.navigate("Login")
     }
     const myCustomShare = async () => {
