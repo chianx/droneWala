@@ -177,9 +177,8 @@ export default function FreelanceForm({route, navigation}) {
                     shadow: true,
                     borderRadius: 100, 
                     animation: true,
-                    opacity:1,
-                    hideOnPress: false,
-                    delay: 1000,
+                    opacity:100,
+                    hideOnPress: false
                 });
                 navigation.navigate("Home");
             }

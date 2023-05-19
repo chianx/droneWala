@@ -13,6 +13,7 @@ import ViewProfile from '../screens/viewProfile';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios'
 const Stack = createNativeStackNavigator();
+import Toast from 'react-native-root-toast';
 
 export default function FreelanceStack({navigation}) {
     const [userType, setUserType] = useState("");
@@ -36,6 +37,17 @@ export default function FreelanceStack({navigation}) {
                 }
                 axios(configFreelance).then(function (response) {
                     console.log(JSON.stringify(response));
+                    Toast.show('Freelance Notification Enabled!', {
+                        backgroundColor:'#fda172',
+                        duration: Toast.durations.LONG,
+                        position: -100,
+                        shadow: true,
+                        borderRadius: 100, 
+                        animation: true,
+                        opacity:1,
+                        hideOnPress: false,
+                        delay: 1000,
+                    });
                     console.log("Subscribed to topic")
                 }).catch(function (error) {
                     console.log(error);
@@ -56,6 +68,17 @@ export default function FreelanceStack({navigation}) {
                 }
                 axios(configFreelance).then(function (response) {
                     console.log(JSON.stringify(response));
+                    Toast.show('Freelance Notification Disabled!', {
+                        backgroundColor:'#fda172',
+                        duration: Toast.durations.LONG,
+                        position: -100,
+                        shadow: true,
+                        borderRadius: 100, 
+                        animation: true,
+                        opacity:1,
+                        hideOnPress: false,
+                        delay: 1000,
+                    });
                     console.log("Unsubscribed to topic")
                 }).catch(function (error) {
                     console.log(error);

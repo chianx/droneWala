@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
         height:2,
         backgroundColor:'#8e8e8e',
         width:'25%',
-        opacity: 0.6
+        opacity: 100
     },
     dividerText: {
         fontSize: 22,

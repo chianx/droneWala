@@ -6,8 +6,11 @@ import DatePicker from 'react-native-modern-datepicker';
 import { MultipleSelectList } from 'react-native-dropdown-select-list'
 import { configureProps } from 'react-native-reanimated/lib/reanimated2/core';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { db } from '../firebase/databaseConfig'
+import { ref, update} from 'firebase/database'
+import Toast from 'react-native-root-toast';
 
-const EditProfileModal = ({ visible, onClose, onSave }) => {
+const EditProfileModal = ({ visible, onClose, setUserPrev }) => {
 
   const [user, setUser] = useState({});
     const mount = async() => {
@@ -25,8 +28,34 @@ const EditProfileModal = ({ visible, onClose, onSave }) => {
 
   const handleSave = () => {
     if(user.nameIsSet && user.dateIsSet && user.addressIsSet && user.stateIsSet && user.cityIsSet && user.pinIsSet) {
-      // onSave({name, address, state, city, pincode, date, experience, drones, interests,});
-      console.log(user.name, user.address, user.state, user.city, user.pincode, user.dob, user.experience, user.droneSelect, user.interests,)
+      
+      update(ref(db, `users/${user.userId}`), user).then(() => {
+        // Add loading icon.
+        AsyncStorage.setItem("userData", JSON.stringify(user));
+        Toast.show('Profile Updated!!', {
+          backgroundColor:'#fda172',
+          duration: Toast.durations.LONG,
+          position: -100,
+          shadow: true,
+          borderRadius: 50, 
+          animation: true,
+          opacity: 100,
+          hideOnPress: false
+        });
+      }).catch((error) => {
+        // Correct this.
+        setErrorMessage(error.toString);
+        Toast.show('No Internet. Unable to update!!', {
+          backgroundColor:'#fda172',
+          duration: Toast.durations.LONG,
+          position: -100,
+          shadow: true,
+          borderRadius: 50, 
+          animation: true,
+          hideOnPress: false
+        });
+      })
+      setUserPrev(user);
       onClose();
     }
   };

@@ -108,7 +108,7 @@ export default function Form({navigation}) {
                     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
                 setLoading(true);
                 if(enabled) {
-                    messaging().getToken().then(token => {
+                    messaging().getToken().then( async(token) => {
                         console.log(token);
                         fcmToken = token;
                         // -------------------------------------------------
@@ -141,8 +141,9 @@ export default function Form({navigation}) {
                         //     setErrorMessage("Something went wrong, Please try again.");
                         //     setLoading(false);
                         // })
+                        const phoneNum = await AsyncStorage.getItem("PhoneNum");
+                        var final =  {...formData, userId: uid, fcmToken:fcmToken, phone:phoneNum};
 
-                        var final =  {...formData, userId: uid, fcmToken:fcmToken};
                         set(ref(db, 'users/' + uid), final).then(async() => {
                             // Add loading icon.
                             setLoading(false);
