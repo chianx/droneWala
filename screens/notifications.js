@@ -54,7 +54,7 @@ export default function Notifications({navigation}) {
         })
       }
 
-      setNotifications(tempNotificaitons);
+      setNotifications(tempNotificaitons.reverse());
       setIsLoading(false);
     })
   }

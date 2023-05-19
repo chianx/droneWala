@@ -285,13 +285,13 @@ export default function Home({ navigation }) {
         :
         <View style={{ flexDirection: 'row', width: '90%', justifyContent: 'space-between', marginTop:20 }}>
           <View>
-            <TouchableOpacity onPress={() => {navigation.navigate("My Jobs", {screen : 'Post a Job'})}}>
+            <TouchableOpacity onPress={() => {navigation.navigate("Job Post")}}>
               <Image style={styles.icons} source={Images.searchJobs} />
               <Text style={{ textAlign: 'center', marginVertical: 7, color: '#696969' }}>Post a Job</Text>
             </TouchableOpacity>
           </View>
           <View>
-            <TouchableOpacity onPress={() => {navigation.navigate("My Projects", {screen : "Post a Project"})}}>
+            <TouchableOpacity onPress={() => {navigation.navigate("Freelance Post")}}>
               <Image style={styles.icons} source={Images.learnDrone} />
               <Text style={{ textAlign: 'center', marginVertical: 7, color: '#696969' }}>Post a Project</Text>
             </TouchableOpacity>

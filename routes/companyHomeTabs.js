@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../screens/home'
 import Images from '../images/index';
+import HomeStack from './homeStack';
 import FreelanceStack from './freelanceStack';
 import Account from '../screens/companyAccount';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -53,9 +54,8 @@ export default function CompanyHomeTab({navigation}) {
           tabBarInactiveTintColor: 'gray',
         })}
       >
-        <Tab.Screen name="Home" component={Home}
+        <Tab.Screen name="Home" component={HomeStack}
           options ={{
-            headerShown:true,
             headerTitle: () => <Text style={{ fontSize: 26, color: 'grey', fontWeight: 'bold' }}>Drone<Text style={{ fontWeight: 'bold', fontSize: 26, color: 'coral' }}>Walas</Text></Text> ,
             headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.openDrawer()}>
@@ -118,18 +118,6 @@ export default function CompanyHomeTab({navigation}) {
           }}
         />
         <Tab.Screen name="Freelance Details" component={FreelanceDetails} 
-          options={{
-            headerShown:true,
-            tabBarButton: () => null,
-            tabBarVisible: false,
-            headerLeft: () => (
-            <TouchableOpacity style={{paddingLeft:15, paddingRight:15}} onPress={() => navigation.navigate("My Jobs")}>
-              <Ionicons name="arrow-back" size={26} color="black" />
-            </TouchableOpacity>
-          )
-          }}
-        />
-        <Tab.Screen name="Notifications" component={Notifications} 
           options={{
             headerShown:true,
             tabBarButton: () => null,

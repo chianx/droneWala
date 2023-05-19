@@ -14,6 +14,7 @@ import JobDetails from '../screens/jobDetails';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Notifications from '../screens/notifications';
+import HomeStack from './homeStack'; 
 
 const Tab = createBottomTabNavigator();
 
@@ -56,9 +57,9 @@ export default function HomeTab({navigation}) {
           
         })}
       >
-        <Tab.Screen name="Home" component={Home} 
+        <Tab.Screen name="Home" component={HomeStack} 
           options ={{
-            headerShown:true,
+            headerShown: false,
             headerTitle: () => <Text style={{ fontSize: 26, color: 'grey', fontWeight: 'bold' }}>Drone<Text style={{ fontWeight: 'bold', fontSize: 26, color: 'coral' }}>Walas</Text></Text> ,
             headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.openDrawer()}>
@@ -139,18 +140,7 @@ export default function HomeTab({navigation}) {
           }}
         />
 
-        <Tab.Screen name="Notifications" component={Notifications} 
-          options={{
-            headerShown:true,
-            tabBarButton: () => null,
-            tabBarVisible: false,
-            headerLeft: () => (
-            <TouchableOpacity style={{paddingLeft:15, paddingRight:15}} onPress={() => navigation.navigate("Jobs")}>
-              <Ionicons name="arrow-back" size={26} color="black" />
-            </TouchableOpacity>
-          )
-          }}
-        />
+        
       </Tab.Navigator>
       // </NavigationContainer>
   );
