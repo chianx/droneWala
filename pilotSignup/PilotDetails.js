@@ -74,9 +74,10 @@ export default function PilotDetails({ formData, setFormData }) {
             (
               <View style={[styles.button_inp]}>
                 <Pressable
+                style={styles.pressable}
                   onPress={() => {
                     setshouldShow((prev) => !prev)
-
+                    // setFormData({ ...formData, dcgaCert:true });
                   }}>
                   <Text style={styles.button}>Press if you have DCGA Certification!</Text>
                 </Pressable>
@@ -158,7 +159,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 10,
     fontSize: 15,
-    color: 'grey'
+    color: 'black'
   },
   errorTextInput: {
     backgroundColor: "white",
@@ -184,7 +185,13 @@ const styles = StyleSheet.create({
     flexDirection: "column"
   },
   pressable: {
-    padding: 10
+    padding: 10,
+    backgroundColor: 'white',
+    borderColor: 'black',
+    borderWidth: 1,
+    marginBottom: 5,
+    width: 270,
+    borderRadius: 7
   },
   containerT: {
     flex: 1,
