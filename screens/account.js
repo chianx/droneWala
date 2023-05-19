@@ -4,7 +4,6 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, ScrollView, 
 import Images from '../images/index';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
 import EditProfileModal from './editProfile';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {db} from '../firebase/databaseConfig'
@@ -31,8 +30,7 @@ export default function Account({isClicked, setIsClicked, navigation}) {
     const val = JSON.parse(userdata)
     setUser(val);
     setDrones(val.droneSelect);
-    setCategory(val.interests)
-    console.log(val)
+    setCategory(val.interests);
     // setCategory(val.category);
   }
 
@@ -48,11 +46,14 @@ export default function Account({isClicked, setIsClicked, navigation}) {
     const tempRejected = [];
     const tempPending = [];
     // Fetch the user applied job with status...
-    const userdata = await AsyncStorage.getItem("userData");
-    var user = JSON.parse(userdata)
-    var userRef = ref(db, `users/${user.userId}`);
+    var userRef = ref(db, `users/${user.userId}/applied`);
     onValue(userRef, (userSnap) => {
-      var appliedArr = Array.from(userSnap.val().applied);
+      if(!userSnap.exists()) {
+        // TODO: Hide the peding, complete status
+        return;
+      }
+      const applied = userSnap.val();
+      var appliedArr = Array.from(applied);
       for(var index in appliedArr) {
         var applicationRef = ref(db, `applications/${appliedArr[index]}/${user.userId}`);
         onValue(applicationRef, (snap) => {

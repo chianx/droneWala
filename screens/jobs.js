@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import Images from '../images/index'
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
@@ -14,6 +14,7 @@ export default function Jobs({navigation}) {
   const [jobs, setJobs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [userType, setUserType] = useState("pilot");
+  const [refreshing, setRefreshing] = React.useState(false);
   useEffect (() => {
     // isLoading = true;
     const starCountRef = ref(db, 'jobs/');
@@ -49,7 +50,7 @@ export default function Jobs({navigation}) {
           const lastDate = new Date(year, month, day);
 
           const currDate = new Date();
-          console.warn(`last: ${lastDate} curr: ${currDate} comp: ${lastDate.getTime() > currDate.getTime()}`)
+          console.log(`last: ${lastDate} curr: ${currDate} comp: ${lastDate.getTime() > currDate.getTime()}`)
 
           if(lastDate.getTime() < currDate.getTime()) {
               continue;
@@ -65,6 +66,59 @@ export default function Jobs({navigation}) {
     });
   }, [])
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    console.log("refreshing...");
+    const starCountRef = ref(db, 'jobs/');
+    onValue(starCountRef, async(snapshot) => {
+      const data = snapshot.val();
+      const allJobs = Object.keys(data).map(key => ({
+        id: key,
+        ...data[key]
+      })).reverse()
+
+      const userdata = await AsyncStorage.getItem("userData");
+      const user = JSON.parse(userdata);
+
+      if(user.userType === "company") {
+        var tempJob = [];
+        for(var element in allJobs) {
+          console.log(allJobs[element]);
+          if(allJobs[element].companyId != user.userId) {
+              continue;
+          }
+          tempJob.push(allJobs[element])
+      }
+        setRefreshing(false);
+        setJobs(tempJob);
+      }else {
+        var tempJob = [];
+        for(var element in allJobs) {
+          var job = allJobs[element];
+          const date = new String(job.date)
+          const year = parseInt(date.slice(0, 4));
+          const month = parseInt(date.slice(5,7))-1;
+          const day = parseInt(date.slice(8,10)) + 1;
+          const lastDate = new Date(year, month, day);
+
+          const currDate = new Date();
+          console.log(`last: ${lastDate} curr: ${currDate} comp: ${lastDate.getTime() > currDate.getTime()}`)
+
+          if(lastDate.getTime() < currDate.getTime()) {
+              continue;
+          }
+          tempJob.push(job)
+        }
+        setRefreshing(false);
+        setJobs(tempJob);
+        
+      }
+      
+      
+    });
+    
+  }, []);
+
   return (
         
         <View style={styles.container}>
@@ -78,6 +132,9 @@ export default function Jobs({navigation}) {
             : 
             <FlatList 
               data={jobs}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
               renderItem={({item}) => (
                 <TouchableOpacity onPress={() => navigation.navigate('Job Details', {job: item})}>
                 <View key={item.key} style={styles.jobContainer}>
