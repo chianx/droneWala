@@ -130,19 +130,19 @@ export default function BasicDetails({ formData, setFormData }) {
             <View style={{ marginBottom: 20 }}>
                 <View style={{ flexDirection: 'column' }}>
                     
-                    <Text style={{paddingBottom: 10}}>Founded In: *</Text>
+                    <Text style={{paddingBottom: 10}}>Date of Birth: *</Text>
                     {open ? <TouchableOpacity onPress={handleButtonOpen} style={{ padding: 0 }}><TextInput
                         editable={false}
                         placeholderTextColor="grey"
-                        placeholder='Date of Founding *'
-                        value={formData.foundedin}
+                        placeholder='Date of Birth *'
+                        value={formData.dob}
                         style={{ width: 280, fontSize: 17, height: 55, color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', borderColor: formData.dateIsSet ? 'grey' : 'red', marginRight: 20, marginBottom: 15 }}
                     /></TouchableOpacity> :
                         <TouchableOpacity onPress={() => { setOpen(!open) }} style={{ padding: 0 }}><TextInput
                         editable={false}
                         placeholderTextColor="grey"
-                        placeholder='Date of Founding *'
-                        value={formData.foundedin}
+                        placeholder='Date of Birth *'
+                        value={formData.dob}
                         style={{ width: 280, fontSize: 17, height: 55, color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', borderColor: formData.dateIsSet ? 'grey' : 'red', marginRight: 20, marginBottom: 15 }}
                     /></TouchableOpacity>
                     }
@@ -150,7 +150,8 @@ export default function BasicDetails({ formData, setFormData }) {
                 <View>
                     {open ? <DatePicker
                         onSelectedChange={(date) => {
-                            setDate(date)
+                          setFormData({ ...formData, dob: date, dateIsSet: true });
+                          setOpen(!open);
                         }}
                         mode="calendar"
                         maximumDate={todaysDate}

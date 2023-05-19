@@ -88,6 +88,7 @@ export default function Notifications({navigation}) {
   return (
         
         <View style={styles.container}>
+
         {isLoading? <View style={{backgroundColor: '#e0e0e0', position:'absolute', flex:1, height:'100%', width:'100%', justifyContent:'center'}}><ActivityIndicator size="large" color="coral" /></View> :<></>}
         {noNotification? <View style={{justifyContent:'center'}}><Text style={{fontSize:20, fontWeight:400, textAlign:'center'}}>No Notifications available at the moment.</Text></View> : <View>
             <FlatList 
