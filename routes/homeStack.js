@@ -3,12 +3,9 @@ import { Text, View, TouchableOpacity, Image } from 'react-native';
 import CourseDetails from '../screens/courseDetails';
 import Learning from '../screens/learning'
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { NavigationContainer } from '@react-navigation/native';
 import ChooseCategory from '../freelanceForm/choose';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Images from '../images/index'
-import JobDetails from '../screens/jobDetails';
-import Jobs from '../screens/jobs';
 import Home from '../screens/home'
 import JobForm from '../jobForm/JobForm';
 import Notifications from '../screens/notifications';
@@ -37,7 +34,7 @@ export default function HomeStack({ navigation }) {
                         </TouchableOpacity>
                     ),
                     headerRight: () => (
-                        <TouchableOpacity style={{ marginRight: '10%' }} onPress={() => navigation.navigate("Notifications")}>
+                        <TouchableOpacity onPress={() => navigation.navigate("Notifications")}>
                             <Ionicons name="notifications" size={24} color="grey" />
                         </TouchableOpacity>
                     )
