@@ -17,9 +17,29 @@ export default function ViewBids({route, navigation}) {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    setTimeout(() => {
+    const freelanceRef = query(
+      ref(db, `bids/${freelance.freelanceId}`),
+      orderByChild('amount'),
+      limitToLast(3)
+    );
+    let applicants = [];
+    get(freelanceRef).then((snap) => {
+      const applications = snap.val()
+      console.log("Applications: " + applications);
+
+      for(var index in applications) {
+        console.log(`users/${applications[index].userId}  ${applications[index].amount}`)
+        const xRef = ref(db, `users/${applications[index].userId}`);
+            onValue(xRef, (snaps) => {
+              const x = snaps.val();
+              console.log(x);
+              applicants.push({answer: applications[index], user:x});
+              console.log(applicants);
+        })
+      }
+      setApplied(applicants);
       setRefreshing(false);
-    }, 2000);
+    })
   }, []);
 
   useEffect(() => {
@@ -45,10 +65,11 @@ export default function ViewBids({route, navigation}) {
         })
       }
       setApplied(applicants);
+      setIsLoading(false);
     })
     // console.log(applicants);
     
-    setIsLoading(false);
+    
   }, [])
 
   return (
@@ -65,9 +86,8 @@ export default function ViewBids({route, navigation}) {
         : 
             <FlatList 
               refreshControl={<RefreshControl
-                colors={["#9Bd35A", "#689F38"]}
                 refreshing={refreshing}
-                onRefresh={onRefresh.bind(this)} 
+                onRefresh={onRefresh} 
               />}
               data={users}
               renderItem={({item}) => (
