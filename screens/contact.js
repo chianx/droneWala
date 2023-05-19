@@ -67,7 +67,6 @@ export default function Contact({navigation}) {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop:35,
     flex: 1,
     backgroundColor: '#fff',
     // alignItems: 'center',

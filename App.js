@@ -8,7 +8,6 @@ import HomeDrawer from './routes/homeDrawer';
 import SignupStack from './routes/signupStack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-root-toast';
-import Account from './screens/temporary'
 // do not remove gesture handler (important)
 // import 'react-native-gesture-handler';
 

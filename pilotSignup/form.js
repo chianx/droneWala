@@ -94,7 +94,7 @@ export default function PilotForm({navigation}) {
                 setLoading(true);
                 if(enabled) {
                     console.log('AUthorization Status: ', authStatus);
-                    messaging().getToken().then(token => {
+                    messaging().getToken().then( async(token) => {
                         console.log(token);
                         fcmToken = token;
                         
@@ -132,8 +132,8 @@ export default function PilotForm({navigation}) {
                         }
                         // subscribe ends here
                         // ---------------------------------------------------
-
-                        var final = {...formData, userId: uid, fcmToken: fcmToken}
+                        const phoneNum = await AsyncStorage.getItem("PhoneNum");
+                        var final = {...formData, userId: uid, fcmToken: fcmToken, phone: phoneNum}
 
                         set(ref(db, 'users/' + uid), final).then(async () => {
                             // Add loading icon.
