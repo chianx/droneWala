@@ -75,7 +75,7 @@ export default function Notifications({navigation}) {
   return (
         
         <View style={styles.container}>
-        
+        {isLoading? <View style={{backgroundColor: '#e0e0e0aa', flex:1, justifyContent:'center'}}><ActivityIndicator size="large" color="coral" /></View> : 
             <FlatList 
               data={notifications}
               renderItem={({item}) => (
@@ -95,6 +95,7 @@ export default function Notifications({navigation}) {
                 </TouchableOpacity>
               )}
             />
+          }
         </View>
     )
 }
