@@ -3,16 +3,9 @@ import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native';
 import Images from '../images/index';
 import { Ionicons } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
 import EditProfileModalComp from './editProfileComp';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {db} from '../firebase/databaseConfig'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import {  
-  ref,
-  onValue,
-} from 'firebase/database';
 
 export default function Account({isClicked, setIsClicked, navigation }) {
 
@@ -27,12 +20,13 @@ export default function Account({isClicked, setIsClicked, navigation }) {
     
     const handleSaveProfile =() => {
        setIsClicked(!isClicked);
-        mount()
+       mount()
     };
     
     const handleCancelEdit = () => {
        setIsClicked(!isClicked);
     };
+    
     useEffect(() => {
         mount();
     }, [])
