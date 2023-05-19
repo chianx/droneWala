@@ -27,7 +27,7 @@ export default function HomeDrawer({navigation}) {
     useEffect(() => {
       mount();
       
-    }, [userType]);
+    }, []);
     
     console.log("userType in homeDrawer = " + userType);
     return (

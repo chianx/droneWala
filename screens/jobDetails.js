@@ -56,7 +56,10 @@ export default function JobDetails({route, navigation}) {
           <View style={styles.basic}>
             <View style={{width:'70%'}}>
               <Text style={styles.title}>{job.jobTitle}</Text>
-              <Text style={{color:'#808080', fontSize:16, paddingBottom:5}}><Ionicons name="location-outline" size={16} color="#808080" />{' ' + job.location}</Text>
+              <TouchableOpacity onPress={() => {navigation.navigate("View Profile", {userType:"company", userId:job.companyId})}}>
+              <Text style={{color:'#808080', paddingBottom:15, fontWeight:'bold', fontSize:17}}>{job.companyName} <Entypo name="link" size={18} color="#808080" /></Text>
+            </TouchableOpacity>
+              <Text style={{color:'#808080', fontSize:16, paddingBottom:5}}><Ionicons name="location-outline" size={16} color="#808080" />{' ' + user.city + ", " + user.state}</Text>
               <Text style={{color:'#808080', fontSize:16, paddingBottom:5}}><Ionicons name="ios-cash-outline" size={16} color="#808080" />{' ₹' + job.salRange}</Text>
               <Text style={{color:'#808080', fontSize:16, paddingBottom:5}}><AntDesign name="calendar" size={16} color="#808080" />{' '+job.ftORpt}</Text>
             </View>
