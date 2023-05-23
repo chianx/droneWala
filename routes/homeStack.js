@@ -9,6 +9,7 @@ import Images from '../images/index'
 import Home from '../screens/home'
 import JobForm from '../jobForm/JobForm';
 import Notifications from '../screens/notifications';
+import JobDetails from '../screens/jobDetails';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,8 +22,8 @@ export default function HomeStack({ navigation }) {
             }}
         >
             <Stack.Screen
-                name="home" //Pehle bane
-                component={Home} //To
+                name="home"
+                component={Home} 
                 options={{
                     headerTitle: () => <Text style={{ fontSize: 26, color: 'grey', fontWeight: 'bold' }}>Drone<Text style={{ fontWeight: 'bold', fontSize: 26, color: 'coral' }}>Walas</Text></Text>,
                     headerLeft: () => (
@@ -88,6 +89,18 @@ export default function HomeStack({ navigation }) {
                     headerShown: true,
                     headerLeft: () => (
                         <TouchableOpacity style={{ paddingLeft: 15, paddingRight: 15 }} onPress={() => navigation.navigate("home")}>
+                            <Ionicons name="arrow-back" size={26} color="black" />
+                        </TouchableOpacity>
+                    ),
+                }}
+            />
+            <Stack.Screen
+                name="Job Details"
+                component={JobDetails}
+                options={{
+                    headerShown: true,
+                    headerLeft: () => (
+                        <TouchableOpacity style={{ paddingRight: 25 }} onPress={() => navigation.navigate("home")}>
                             <Ionicons name="arrow-back" size={26} color="black" />
                         </TouchableOpacity>
                     ),

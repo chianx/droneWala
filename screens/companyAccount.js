@@ -106,7 +106,7 @@ export default function Account({isClicked, setIsClicked, navigation }) {
                 <Text style={styles.dividerText}>About us</Text>
                 <View style={[styles.dividerView, {marginRight:20, marginLeft:20}]}></View>
             </View>
-            <View style={{width:'90%', marginTop:10, marginBottom:30}}>
+            <View style={{width:'95%', marginTop:10, marginBottom:30}}>
                 <Text style={{color:'grey', fontSize:17}}>{user.about}</Text>
             </View>
             

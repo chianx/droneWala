@@ -31,7 +31,6 @@ export default function Jobs({navigation}) {
       if(user.userType === "company") {
         var tempJob = [];
         for(var element in allJobs) {
-          console.log(allJobs[element]);
           if(allJobs[element].companyId != user.userId) {
               continue;
           }
@@ -50,7 +49,7 @@ export default function Jobs({navigation}) {
           const lastDate = new Date(year, month, day);
 
           const currDate = new Date();
-          console.log(`last: ${lastDate} curr: ${currDate} comp: ${lastDate.getTime() > currDate.getTime()}`)
+          // console.log(`last: ${lastDate} curr: ${currDate} comp: ${lastDate.getTime() > currDate.getTime()}`)
 
           if(lastDate.getTime() < currDate.getTime()) {
               continue;

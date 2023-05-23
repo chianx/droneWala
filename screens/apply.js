@@ -66,7 +66,7 @@ export default function Apply({ route, navigation }) {
       data: data,
     };
 
-    var refNotification = push(ref(db, "notifications/"));
+    var refNotification = push(dbRefs(db, "notifications/"));
     var now = new Date();
     var notificationData = {id: refNotification.key, body: data.notification.body, title:data.notification.title, date:now, from:userJson.userId, type:job.companyId};
     set(refNotification, notificationData)
@@ -131,8 +131,8 @@ export default function Apply({ route, navigation }) {
             if (downloadURL != null) {
               // Add the answer to the firebase database.
               const userdata = await AsyncStorage.getItem("userData");
-              var json = JSON.parse(userdata)
-              console.log("userdata " + userdata)
+              var json = await JSON.parse(userdata);
+              console.log("userdata id " + json.userId);
               var refs = dbRefs(db, `applications/${job.jobId}/${json.userId}`)
               var final =  {
                 id: refs.key,
@@ -148,6 +148,7 @@ export default function Apply({ route, navigation }) {
               // Link application to job post. 
               var jobRef = dbRefs(db, "jobs/" + job.jobId)
               runTransaction(jobRef, (job) => {
+                console.log("This is job", job);
                 if(job.applied) {
                   var arr = Array.from(job.applied);
                   arr.push(json.userId);
@@ -162,6 +163,7 @@ export default function Apply({ route, navigation }) {
 
               var userRef = dbRefs(db, "users/" + json.userId)
               runTransaction(userRef, (user) => {
+                console.log("This is user", user);
                 if(user.applied) {
                   var arr = Array.from(user.applied);
                   arr.push(job.jobId);
@@ -192,6 +194,7 @@ export default function Apply({ route, navigation }) {
                 });
 
               })
+              setIsLoading(false);
               navigation.navigate("Jobs");
             }
           });

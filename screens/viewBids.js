@@ -57,9 +57,9 @@ export default function ViewBids({route, navigation}) {
               applicants.push({answer: applications[index], user:x});
         })
       }
-      setApplied(applicants);
       const temp = applicants.sort(function(a, b) {return b.answer.amount -a.answer.amount}).slice(0,3)
       setApplied(temp);
+      setIsLoading(false);
     })
     // console.log(applicants);
     
