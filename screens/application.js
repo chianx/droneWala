@@ -6,6 +6,7 @@ import { AntDesign } from '@expo/vector-icons';
 import * as OpenAnything from 'react-native-openanything'
 import {db} from '../firebase/databaseConfig';
 import { Entypo } from '@expo/vector-icons';
+import Toast from "react-native-root-toast";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {  
   push,
@@ -20,11 +21,11 @@ export default function Application({route, navigation}) {
   console.log("pilot",pilot)
   
   const jobApplicant = route.params.answer;
-  console.log("jobApplicat", jobApplicant)
+  console.log("jobApplicant", jobApplicant)
 
   const acceptRequest = async() => {
     // Change the applicant job status to applied...
-    var refs = ref(db, `applications/${jobApplicant.jobId}/${jobApplicant.id}`)
+    var refs = ref(db, `applications/${jobApplicant.jobId}/${pilot.userId}`)
     var final =  {
       status: "accepted" // rejected, review, accepted.
     }
@@ -65,18 +66,40 @@ export default function Application({route, navigation}) {
           });
     })
     console.log("application accepted.")
-
+    Toast.show('Application Accepted. You may now contact this candidate', {
+      backgroundColor:'#a0a0a0',
+      duration: Toast.durations.LONG,
+      position: -100,
+      shadow: true,
+      borderRadius: 100, 
+      animation: true,
+      opacity:1,
+      hideOnPress: false,
+      delay: 1000,
+  });
 
   }
 
   const rejectRequest = () => {
     // Change the applicant job status to applied...
-    var refs = ref(db, `applications/${jobApplicant.jobId}/${jobApplicant.id}`)
+    var refs = ref(db, `applications/${jobApplicant.jobId}/${pilot.userId}`)
     var final =  {
       status: "rejected" // rejected, review, accepted.
     }
     update(refs, final);
     console.log("application rejected.")
+
+    Toast.show('Application Rejected.', {
+      backgroundColor:'#a0a0a0',
+      duration: Toast.durations.LONG,
+      position: -100,
+      shadow: true,
+      borderRadius: 100, 
+      animation: true,
+      opacity:1,
+      hideOnPress: false,
+      delay: 1000,
+  });
   }
 
   return (

@@ -20,9 +20,9 @@ export default function Account({isClicked, setIsClicked, navigation}) {
   const [category, setCategory] = useState([]);
   const [accepted, setAccepted] = useState([]);
   const [rejected, setRejected] = useState([]);
-  const [review, setReview] = useState([]);
-  const [active, setActive] = useState('Pending');
-  const [dataList, setDataList] = useState([...accepted]);
+  const [all, setAll] = useState([]);
+  const [active, setActive] = useState('Applied');
+  const [dataList, setDataList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
   const mount = async() => {
@@ -31,23 +31,25 @@ export default function Account({isClicked, setIsClicked, navigation}) {
     setUser(val);
     setDrones(val.droneSelect);
     setCategory(val.interests);
-    // setCategory(val.category);
+    fetchJobsApplied(val);
+    
   }
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
+      fetchJobsApplied(user);
       setRefreshing(false);
     }, 1300);
   }, []);
 
-  const fetchJobsApplied = async() => {
-    const tempApplied = [];
-    const tempRejected = [];
-    const tempPending = [];
+  const fetchJobsApplied = async(user) => {
+    var tempApplied = [];
+    var tempAccepted = [];
+    var tempRejected = [];
     // Fetch the user applied job with status...
     var userRef = ref(db, `users/${user.userId}/applied`);
-    onValue(userRef, (userSnap) => {
+    onValue(userRef, async (userSnap) => {
       if(!userSnap.exists()) {
         // TODO: Hide the peding, complete status
         return;
@@ -59,39 +61,40 @@ export default function Account({isClicked, setIsClicked, navigation}) {
         onValue(applicationRef, (snap) => {
           var application = snap.val();
           if(application.status == "accepted") {
-              console.log("applied " + application.jobId.jobId)
+              console.log("accepted " + application.jobId)
               get(ref(db, `jobs/${application.jobId}`)).then((jobSnap) => {
-                tempApplied.push(jobSnap.val());
+                tempAccepted.push(jobSnap.val());
               })
           }else if(application.status == "rejected") {
               console.log("rejected " + application.jobId)
               get(ref(db, `jobs/${application.jobId}`)).then((jobSnap) => {
                 tempRejected.push(jobSnap.val());
               })
-          }else {
-              console.log("pending " + application.jobId)
-              get(ref(db, `jobs/${application.jobId}`)).then((jobSnap) => {
-                console.log("This is jobsnap")
-                console.log(jobSnap.val());
-                tempPending.push(jobSnap.val());
-              })
           }
+          // else {
+              console.log("Applied " + application.jobId)
+              get(ref(db, `jobs/${application.jobId}`)).then((jobSnap) => {
+                tempApplied.push(jobSnap.val());
+              })
+          // }
         })
       }
 
-      console.log("applied ", tempApplied);
-      console.log("rejected ", tempRejected);
-      console.log("pending ", tempPending);
-    })
-    
-    setAccepted(tempApplied);
-    setRejected(tempRejected);
-    setReview(tempPending);
+      setTimeout(() => {
+        setAccepted(tempAccepted);
+        setRejected(tempRejected);
+        setAll(tempApplied);
+        setDataList(tempApplied);
+        console.log("applied ", tempApplied);
+        console.log("rejected ", tempRejected);
+        console.log("Accepted ", tempAccepted);
+      }, 1300);
+      
+      })
   }
 
   useEffect(() => {
     mount();
-    fetchJobsApplied()
   }, []);
 
   const handleSaveProfile =() => {
@@ -189,15 +192,15 @@ export default function Account({isClicked, setIsClicked, navigation}) {
           
           <View style={styles.status}>
             <View style={{flexDirection:'row'}}>
-              <View style={[styles.tab, active==='Pending' && styles.btnActive]}>
-                <TouchableOpacity onPress={() => (setActive('Pending') & setDataList(review) )} ><Text style={[active==='Pending' && {color:'white'}]}>Pending</Text></TouchableOpacity>
+              <View style={[styles.tab, active==='Applied' && styles.btnActive]}>
+                <TouchableOpacity onPress={() => (setActive('Applied') & setDataList(all) )} ><Text style={[active==='Applied' && {color:'white'}]}>Applied</Text></TouchableOpacity>
               </View>
-              <View style={[styles.tab, active==='Completed' && styles.btnActive]}>
-                <TouchableOpacity onPress={() => setActive('Completed') & setDataList(accepted)} ><Text style={[active==='Completed' && {color:'white'}]}>Completed</Text></TouchableOpacity>
+              <View style={[styles.tab, active==='Accepted' && styles.btnActive]}>
+                <TouchableOpacity onPress={() => setActive('Accepted') & setDataList(accepted)} ><Text style={[active==='Accepted' && {color:'white'}]}>Accepted</Text></TouchableOpacity>
               </View>
-              <View style={[styles.tab, active==='Rejected' && styles.btnActive]}>
+              {/* <View style={[styles.tab, active==='Rejected' && styles.btnActive]}>
                 <TouchableOpacity onPress={() => setActive('Rejected') & setDataList(rejected)}><Text style={[active==='Rejected' && {color:'white'}]}>Rejected</Text></TouchableOpacity>
-              </View>
+              </View> */}
             </View>
             
             <View style={styles.listing}>
@@ -321,7 +324,8 @@ const styles = StyleSheet.create({
     borderWidth:1,
     borderColor:'#ccc',
     borderBottomRightRadius:10,
-    borderBottomLeftRadius:10
+    borderBottomLeftRadius:10,
+    marginTop:15,
   },
   profilePic: {
     width:70,

@@ -68,7 +68,7 @@ export default function Apply({ route, navigation }) {
 
     var refNotification = push(dbRefs(db, "notifications/"));
     var now = new Date();
-    var notificationData = {id: refNotification.key, body: data.notification.body, title:data.notification.title, date:now, from:userJson.userId, type:job.companyId};
+    var notificationData = {id: refNotification.key, body: "Check who has applied for your job", title: "Someone applied to your job", date:now, from:userJson.userId, type:job.companyId};
     set(refNotification, notificationData)
     
     axios(config)

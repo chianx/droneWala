@@ -108,7 +108,6 @@ jobContainer: {
     backgroundColor:'#F8F8F8'
 },
 scrollView: {
-  flex: 1,
   backgroundColor: 'white',
   alignItems: 'center',
   justifyContent: 'center',
