@@ -68,7 +68,6 @@ export default function JobForm({navigation}) {
             
             if(validate && formData.aboutJobIsSet && formData.whoApplyIsSet) {
                 setLoading(true);
-                // navigation.navigate("Login")
                 setErrorMessage("");
                 
                 await AsyncStorage.getItem("userData", (error, result) => {

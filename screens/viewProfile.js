@@ -25,7 +25,12 @@ export default function ViewProfile({route, navigation}) {
                 // setIsLoading(false);
             }else {
                 setUser(data);
-                setCategory(data.category);
+                if(data.userType === "company") {
+                    setCategory(data.category);
+                }else {
+                    setCategory(data.droneSelect);
+                }
+                
                 setIsLoading(false);
             }
         })
@@ -43,21 +48,29 @@ export default function ViewProfile({route, navigation}) {
             <View style={styles.basic}>
                 <View style={{ paddingHorizontal: 20, justifyContent: 'center' }}>
                     <View style={{ flexDirection: 'row' }}>
-                        <Image source={{uri:user.logo}} style={styles.avatar} />
+                        {user.userType === "company" ? 
+                        <Image source={{uri:user.logo}} style={styles.avatar} /> :
+                        <Image source={{uri:user.profile}} style={styles.avatar} /> 
+                        }
                         <View style={{ flex: 1, justifyContent: 'center', paddingLeft: 15 }}>
-                            <Text style={{ fontSize: 21, color: 'white', fontWeight:500 }}>{user.companyName}</Text>
+                            {user.userType === "company" ? 
+                            <Text style={{ fontSize: 21, color: 'white', fontWeight:500 }}>{user.companyName}</Text> :
+                            <Text style={{ fontSize: 21, color: 'white', fontWeight:500 }}>{user.name}</Text> 
+                            }
                             <Text style={{fontSize: 16, color: 'white', fontWeight:400 }}><Ionicons name='location-outline' size={16} color='white' /> {user.city + ", " + user.state}</Text>
                             <Text style={{ fontSize: 16, color: 'white', fontWeight:400 }}><Ionicons name='ios-mail-outline' size={16} color='white' /> {" " + user.email}</Text>
+                            {user.userType === "company" ? 
                             <TouchableOpacity onPress={() => Linking.openURL(user.website)}>
                                 <Text style={{fontSize: 16, fontWeight:400, color: 'white' }}><MaterialCommunityIcons name="web" size={17} color="white" /> {user.website} <Feather name="external-link" size={16} color="white" /></Text>
-                            </TouchableOpacity>
+                            </TouchableOpacity> :
+                            <Text style={{ fontSize: 16, color: 'white', fontWeight:400 }}><Ionicons name='ios-call-outline' size={16} color='white' /> {" " + user.phone}</Text>}
                         </View>
                     </View>
                 </View>
             </View>
 
         {/* Category Listing */}
-        <Text style={{ fontSize: 20, color: '#606060', paddingBottom: 5, width:'93%', paddingLeft:10, paddingTop:10, fontWeight:'bold'}}>Fields of Work</Text>
+        <Text style={{ fontSize: 20, color: '#606060', paddingBottom: 5, width:'93%', paddingLeft:10, paddingTop:10, fontWeight:'bold'}}>{user.userType === "company" ? "Fields of Work" : "Drones"}</Text>
                 <View style={{flexDirection:'row', width:'93%', flex:1, flexWrap:'wrap'}}>
                 { category!= null && category.map((item, index) => {
                     return (
@@ -75,6 +88,7 @@ export default function ViewProfile({route, navigation}) {
 
           <Text style={{ fontSize: 20, color: '#606060', paddingBottom: 5, width:'93%', paddingLeft:10, paddingBottom:20, fontWeight:'bold'}}>More Info</Text>
 
+        {user.userType === "company" ? <View>
           <View style={{flexDirection:'row', justifyContent:'flex-start', paddingBottom:10, marginVertical:10, borderBottomWidth:0.5, borderColor:'#e0e0e0'}}>
               <Image source={Images.experience} style={styles.icons}/>
               <View style={{justifyContent:'center', paddingLeft:15}}>
@@ -86,7 +100,7 @@ export default function ViewProfile({route, navigation}) {
           <View style={{flexDirection:'row', justifyContent:'flex-start', paddingBottom:10, marginVertical:10, borderBottomWidth:0.5, borderColor:'#e0e0e0'}}>
               <Image source={Images.droneIcon} style={styles.icons}/>
               <View style={{justifyContent:'center', paddingLeft:15}}>
-                  <Text style={{fontWeight:'bold', fontSize:17, color:"#808080"}}>Number of Drones</Text>
+                  <Text style={{fontWeight:'bold', fontSize:17, color:"#808080"}}>Number of People</Text>
                   <Text style={{fontWeight:400, fontSize:15, color:"#808080"}}>{user.numPeople}</Text>
               </View>
           </View>
@@ -106,9 +120,47 @@ export default function ViewProfile({route, navigation}) {
                   <Text style={{fontWeight:400, fontSize:15, color:"#808080"}}>{user.foundedin}</Text>
               </View>
           </View>
+          </View> : 
+
+          // user == pilot
+          <View>
+          <View style={{flexDirection:'row', justifyContent:'flex-start', paddingBottom:10, marginVertical:10, borderBottomWidth:0.5, borderColor:'#e0e0e0'}}>
+              <Image source={Images.experience} style={styles.icons}/>
+              <View style={{justifyContent:'center', paddingLeft:15}}>
+              <Text style={{fontWeight:'bold', fontSize:17, color:"#808080"}}>Experience</Text>
+              <Text style={{fontWeight:400, fontSize:15, color:"#808080"}}>{user.experience}</Text>
+              </View>
+          </View>
+
+          <View style={{flexDirection:'row', justifyContent:'flex-start', paddingBottom:10, marginVertical:10, borderBottomWidth:0.5, borderColor:'#e0e0e0'}}>
+              <Image source={Images.droneIcon} style={styles.icons}/>
+              <View style={{justifyContent:'center', paddingLeft:15}}>
+                  <Text style={{fontWeight:'bold', fontSize:17, color:"#808080"}}>Number of Drones</Text>
+                  <Text style={{fontWeight:400, fontSize:15, color:"#808080"}}>{user.droneSelect.length}</Text>
+              </View>
+          </View>
+
+          <View style={{flexDirection:'row', justifyContent:'flex-start', paddingBottom:10, marginVertical:10, borderBottomWidth:0.5, borderColor:'#e0e0e0'}}>
+              <Image source={Images.certified} style={styles.icons}/>
+              <View style={{justifyContent:'center', paddingLeft:15}}>
+                  <Text style={{fontWeight:'bold', fontSize:17, color:"#808080"}}>Certified</Text>
+                  <Text style={{fontWeight:400, fontSize:15, color:"#808080"}}>{user.dcgaCert? "Yes": "No"}</Text>
+              </View>
+          </View>
+
+          <View style={{flexDirection:'row', justifyContent:'flex-start', paddingBottom:10, marginVertical:10, borderBottomWidth:0.5, borderColor:'#e0e0e0'}}>
+              <Image source={Images.calender} style={styles.icons}/>
+              <View style={{justifyContent:'center', paddingLeft:15}}>
+                  <Text style={{fontWeight:'bold', fontSize:17, color:"#808080"}}>D.O.B.</Text>
+                  <Text style={{fontWeight:400, fontSize:15, color:"#808080"}}>{user.dob}</Text>
+              </View>
+          </View>
+          </View>
+          }
 
         </View>
-
+          {user.userType === "company" ?
+          <View>
         <View style={styles.divider}>
             <View style={[styles.dividerView, {marginRight:20, marginLeft:20}]}></View>
             <Text style={styles.dividerText}>About us</Text>
@@ -117,6 +169,8 @@ export default function ViewProfile({route, navigation}) {
         <View style={{width:'90%', marginTop:10, marginBottom:30}}>
             <Text style={{color:'grey', fontSize:17}}>{user.about}</Text>
         </View>
+        </View> : <View style={{height:50}}></View>
+        }
     </View>
     }
     </ScrollView>

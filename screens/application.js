@@ -4,7 +4,9 @@ import Images from '../images/index'
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import * as OpenAnything from 'react-native-openanything'
-import {db} from '../firebase/databaseConfig'
+import {db} from '../firebase/databaseConfig';
+import { Entypo } from '@expo/vector-icons';
+import Toast from "react-native-root-toast";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {  
   push,
@@ -19,11 +21,11 @@ export default function Application({route, navigation}) {
   console.log("pilot",pilot)
   
   const jobApplicant = route.params.answer;
-  console.log("jobApplicat", jobApplicant)
+  console.log("jobApplicant", jobApplicant)
 
   const acceptRequest = async() => {
     // Change the applicant job status to applied...
-    var refs = ref(db, `applications/${jobApplicant.jobId}/${jobApplicant.id}`)
+    var refs = ref(db, `applications/${jobApplicant.jobId}/${pilot.userId}`)
     var final =  {
       status: "accepted" // rejected, review, accepted.
     }
@@ -64,23 +66,40 @@ export default function Application({route, navigation}) {
           });
     })
     console.log("application accepted.")
-
-    // TODO: SEND NOTIFICATION
-    // Done Prateek
+    Toast.show('Application Accepted. You may now contact this candidate', {
+      backgroundColor:'#a0a0a0',
+      duration: Toast.durations.LONG,
+      position: -100,
+      shadow: true,
+      borderRadius: 100, 
+      animation: true,
+      opacity:1,
+      hideOnPress: false,
+      delay: 1000,
+  });
 
   }
 
   const rejectRequest = () => {
     // Change the applicant job status to applied...
-    var refs = ref(db, `applications/${jobApplicant.jobId}/${jobApplicant.id}`)
+    var refs = ref(db, `applications/${jobApplicant.jobId}/${pilot.userId}`)
     var final =  {
       status: "rejected" // rejected, review, accepted.
     }
     update(refs, final);
     console.log("application rejected.")
 
-    // TODO: SEND NOTIFICATION
-    // We don't have to send notification in case of rejection
+    Toast.show('Application Rejected.', {
+      backgroundColor:'#a0a0a0',
+      duration: Toast.durations.LONG,
+      position: -100,
+      shadow: true,
+      borderRadius: 100, 
+      animation: true,
+      opacity:1,
+      hideOnPress: false,
+      delay: 1000,
+  });
   }
 
   return (
@@ -88,12 +107,16 @@ export default function Application({route, navigation}) {
         <View style={styles.container}>
           <View style={styles.basic}>
             <View style={{width:'70%'}}>
-              <Text style={styles.title}>{pilot.name}</Text>
+            <TouchableOpacity onPress ={() => {navigation.navigate("View Profile", {userType:"pilot", userId:pilot.userId})}}>
+              <Text style={styles.title}>{pilot.name} <Entypo name="link" size={18} color="#808080" /></Text>
+            </TouchableOpacity>
               <Text style={{color:'#808080', fontSize:16, paddingBottom:5}}><Ionicons name="location-outline" size={16} color="#808080" />{pilot.city}</Text>
               <Text style={{color:'#808080', fontSize:16, paddingBottom:5}}>Experience:{' ' + pilot.experience}</Text>
               <Text style={{color:'#808080', fontSize:16, paddingBottom:5}}><AntDesign name="calendar" size={16} color="#808080" />{' '+ pilot.dob}</Text>
             </View>
-            <Image source={Images.profile} style={styles.profilePic}/>
+            <TouchableOpacity onPress ={() => {navigation.navigate("View Profile", {userType:"pilot", userId:pilot.userId})}}>
+              <Image source={{uri : pilot.profile}} style={styles.profilePic}/>
+            </TouchableOpacity>
           </View>
           <View style={{paddingHorizontal:15, paddingTop:25}}>
             <Text style={styles.title}>Why does he think he is fit for the job ?</Text>
@@ -156,8 +179,8 @@ const styles = StyleSheet.create({
     color:'#505050'
   },
   profilePic: {
-    width:60,
-    height:60,
+    width:80,
+    height:80,
     borderRadius:70,
     borderWidth:1,
     borderColor:'#ffe5d3',

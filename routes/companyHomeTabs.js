@@ -105,7 +105,7 @@ export default function CompanyHomeTab({navigation}) {
 
             </Tab.Screen>
         
-        <Tab.Screen name="Job Details" component={JobDetails} 
+        {/* <Tab.Screen name="Job Details" component={JobDetails} 
           options={{
             headerShown:true,
             tabBarButton: () => null,
@@ -116,8 +116,8 @@ export default function CompanyHomeTab({navigation}) {
             </TouchableOpacity>
           )
           }}
-        />
-        <Tab.Screen name="Freelance Details" component={FreelanceDetails} 
+        /> */}
+        {/* <Tab.Screen name="Freelance Details" component={FreelanceDetails} 
           options={{
             headerShown:true,
             tabBarButton: () => null,
@@ -128,7 +128,7 @@ export default function CompanyHomeTab({navigation}) {
             </TouchableOpacity>
           )
           }}
-        />
+        /> */}
         
         
       </Tab.Navigator>

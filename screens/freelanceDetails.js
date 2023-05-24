@@ -174,14 +174,14 @@ export default function FreelanceDetails({ route, navigation, formData }) {
             </TouchableOpacity>
             <Text style={{ color: '#808080', fontSize: 16, paddingBottom: 5 }}><Ionicons name="location-outline" size={16} color="#808080" />{freelance.areaLoc}</Text>
             <Text style={{ color: '#808080', fontSize: 16, paddingBottom: 5 }}>Category:{' ' + freelance.category}</Text>
-            <Text style={{ color: '#808080', fontSize: 16, paddingBottom: 5 }}><AntDesign name="calendar" size={16} color="#808080" />{' ' + freelance.closingDate}</Text>
+            <Text style={{ color: '#808080', fontSize: 16, paddingBottom: 5 }}><AntDesign name="calendar" size={16} color="#808080" />{' ' + freelance.date}</Text>
           </View>
           <Image source={{uri: freelance.logo}} style={styles.profilePic} />
         </View>
         <View style={{ paddingHorizontal: 15, paddingTop: 25 }}>
           <Text style={styles.title}>Work Description</Text>
           <Text style={{ paddingTop: 7, fontSize: 15, color: '#505050', lineHeight: 21 }}>
-            {freelance.description}
+            {freelance.workDetails}
           </Text>
           <Text style={{ marginTop: 15, width: '100%', fontWeight: 600, fontSize: 18, color: '#505050' }}>Bid Criteria</Text>
           <Text style={{ paddingTop: 7, fontSize: 15, color: '#505050', lineHeight: 21 }}>
@@ -244,7 +244,7 @@ export default function FreelanceDetails({ route, navigation, formData }) {
               <TextInput
                 style={{width:'100%', backgroundColor:'white', borderRadius:10, borderWidth:1, fontSize:17,borderColor:'grey',marginBottom:13, height:45, padding:10}}
                 placeholder="Enter bid"
-                value={bid}
+                value={"" + bid}
                 keyboardType='numeric'
                 onChangeText={(bid) => {setBid(bid); console.log(bid);}}
               />

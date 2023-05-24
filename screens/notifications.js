@@ -11,7 +11,6 @@ export default function Notifications({navigation}) {
 
   const [isLoading, setIsLoading] = useState(false);
   const [notifications, setNotifications] = useState([]);
-  const [noNotification, setNoNotification] = useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
 
   const onRefresh = React.useCallback(async () => {
@@ -19,7 +18,7 @@ export default function Notifications({navigation}) {
 
     await getUserNotifications();
     setRefreshing(false);
-  }, [refreshing]);
+  }, []);
 
   const getUserNotifications = async () => {
     setIsLoading(true);
@@ -31,8 +30,7 @@ export default function Notifications({navigation}) {
 
       if(snapshot.val() == null) {
         console.log("user doesn't have notification.");
-        isLoading(false);
-        setNoNotification(true);
+        setIsLoading(false);
         return;
       }
       
@@ -90,7 +88,7 @@ export default function Notifications({navigation}) {
         <View style={styles.container}>
 
         {isLoading? <View style={{backgroundColor: '#e0e0e0', position:'absolute', flex:1, height:'100%', width:'100%', justifyContent:'center'}}><ActivityIndicator size="large" color="coral" /></View> :<></>}
-        {noNotification? <View style={{justifyContent:'center'}}><Text style={{fontSize:20, fontWeight:400, textAlign:'center'}}>No Notifications available at the moment.</Text></View> : <View>
+        {!isLoading && notifications.length === 0? <View style={{backgroundColor:'#f0f0f0', justifyContent:'center', height:'100%'}}><Text style={{fontSize:20, fontWeight:400, textAlign:'center'}}>No Notifications available at the moment.</Text></View> :<></>}
             <FlatList 
               data={notifications}
               refreshControl={
@@ -113,8 +111,6 @@ export default function Notifications({navigation}) {
                 </TouchableOpacity>
               )}
             />
-            </View>
-        }
         </View>
     )
 }

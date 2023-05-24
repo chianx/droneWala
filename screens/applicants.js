@@ -39,27 +39,18 @@ export default function Applicants({route, navigation}) {
         })
       }
     })
-    setApplied(applicants);
     setIsLoading(false);
+    setApplied(applicants);
+    
   }, [])
-  if(isLoading) {
-    return (
-      <View style={{backgroundColor: '#e0e0e0aa', height:300, justifyContent:'center'}}><ActivityIndicator size="large" color="coral" /></View>
-    )
-  }else  {
-    if(applied == 0) {
-      return (<View style={[styles.container, {alignItems: 'center', justifyContent: 'center'}]}>
-        <View style={{alignSelf: 'center', marginVertical: 'auto'}}>
-        <Text style={{fontSize: 20, alignContent: 'center', color: 'coral', fontWeight: 'bold', textShadowColor: 'grey', textShadowOffset: { width: -1.5, height: 1 }, textShadowRadius: 1,}}>No Applications Found</Text>
-        </View>
-        </View>
-      )
-    }else return (
+  return (
       <ScrollView
         contentContainerStyle={styles.scrollView}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
+        {isLoading? <View style={{backgroundColor: '#e0e0e0', position:'absolute', flex:1, height:'100%', width:'100%', justifyContent:'center'}}><ActivityIndicator size="large" color="coral" /></View> :<></>}
+        {applied.length === 0? <View style={{backgroundColor:'#f0f0f0', justifyContent:'center', height:'100%', width:'100%'}}><Text style={{fontSize:20, fontWeight:400, textAlign:'center'}}>No one has applied to this Job yet.</Text></View> :<></>}
         <View style={styles.container}>
             {applied.map((item, index) => {
                 return (
@@ -84,7 +75,7 @@ export default function Applicants({route, navigation}) {
         </View>
         </ScrollView>
     )
-  }}
+  }
 
 const styles = StyleSheet.create({
   container: {
@@ -117,7 +108,6 @@ jobContainer: {
     backgroundColor:'#F8F8F8'
 },
 scrollView: {
-  flex: 1,
   backgroundColor: 'white',
   alignItems: 'center',
   justifyContent: 'center',
