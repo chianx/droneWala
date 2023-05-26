@@ -163,6 +163,19 @@ export default function FreelanceDetails({ route, navigation, formData }) {
   useEffect(() => {
     mount()
   }, [])
+
+  function changeDateFormat(dateString) {
+    dateString = "" + dateString;
+    var parts = dateString.split('/'); // Split the string by slashes
+    var year = parts[0];
+    var month = parts[1];
+    var day = parts[2];
+
+    // Concatenate the parts in the desired format
+    var formattedDate = day + '/' + month + '/' + year;
+
+    return formattedDate;
+  }
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -174,7 +187,7 @@ export default function FreelanceDetails({ route, navigation, formData }) {
             </TouchableOpacity>
             <Text style={{ color: '#808080', fontSize: 16, paddingBottom: 5 }}><Ionicons name="location-outline" size={16} color="#808080" />{freelance.areaLoc}</Text>
             <Text style={{ color: '#808080', fontSize: 16, paddingBottom: 5 }}>Category:{' ' + freelance.category}</Text>
-            <Text style={{ color: '#808080', fontSize: 16, paddingBottom: 5 }}><AntDesign name="calendar" size={16} color="#808080" />{' ' + freelance.date}</Text>
+            <Text style={{ color: '#808080', fontSize: 16, paddingBottom: 5 }}><AntDesign name="calendar" size={16} color="#808080" />{' ' + changeDateFormat(freelance.date)}</Text>
           </View>
           <Image source={{uri: freelance.logo}} style={styles.profilePic} />
         </View>

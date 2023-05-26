@@ -50,6 +50,18 @@ export default function JobDetails({route, navigation}) {
     });
     }
   }
+  function changeDateFormat(dateString) {
+    dateString = "" + dateString;
+    var parts = dateString.split('/'); // Split the string by slashes
+    var year = parts[0];
+    var month = parts[1];
+    var day = parts[2];
+
+    // Concatenate the parts in the desired format
+    var formattedDate = day + '/' + month + '/' + year;
+
+    return formattedDate;
+  }
   return (
     <ScrollView>
         <View style={styles.container}>
@@ -62,6 +74,7 @@ export default function JobDetails({route, navigation}) {
               <Text style={{color:'#808080', fontSize:16, paddingBottom:5}}><Ionicons name="location-outline" size={16} color="#808080" />{' ' + user.city + ", " + user.state}</Text>
               <Text style={{color:'#808080', fontSize:16, paddingBottom:5}}><Ionicons name="ios-cash-outline" size={16} color="#808080" />{' ₹' + job.salRange}</Text>
               <Text style={{color:'#808080', fontSize:16, paddingBottom:5}}><AntDesign name="calendar" size={16} color="#808080" />{' '+job.ftORpt}</Text>
+              <Text style={{color:'#808080', fontSize:16, paddingBottom:5}}>Apply by:{' '+ changeDateFormat(job.date)}</Text>
             </View>
             <TouchableOpacity onPress={() => {navigation.navigate("View Profile", {userType:"company", userId:job.companyId})}}>
             <Image source={{uri: job.logo}} style={styles.profilePic}/>
