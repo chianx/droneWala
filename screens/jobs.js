@@ -4,7 +4,6 @@ import Images from '../images/index'
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
-import JobDetails from './jobDetails';
 import {db} from '../firebase/databaseConfig'
 import { ref, onValue } from 'firebase/database';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -118,6 +117,19 @@ export default function Jobs({navigation}) {
     
   }, []);
 
+  function changeDateFormat(dateString) {
+    dateString = "" + dateString;
+    var parts = dateString.split('/'); // Split the string by slashes
+    var year = parts[0];
+    var month = parts[1];
+    var day = parts[2];
+
+    // Concatenate the parts in the desired format
+    var formattedDate = day + '/' + month + '/' + year;
+
+    return formattedDate;
+  }
+
   return (
         
         <View style={styles.container}>
@@ -147,6 +159,7 @@ export default function Jobs({navigation}) {
                       <Text style={{color:'#808080', paddingBottom:3}}><Ionicons name="location-outline" size={14} color="#808080" />{' '+ item.location}</Text>
                       <Text style={{color:'#808080', paddingBottom:3}}><Ionicons name="ios-cash-outline" size={14} color="#808080" />{' ₹' + item.salRange}</Text>
                       <Text style={{color:'#808080', paddingBottom:3}}><AntDesign name="calendar" size={14} color="#808080" />{' '+item.ftORpt}</Text>
+                      <Text style={{color:'#808080', paddingBottom:3}}>Apply by: {' '+ changeDateFormat(item.date)}</Text>
                     </View>
                     <View style={{ justifyContent:'center', width:20}}>
                     <Text><MaterialIcons name="arrow-forward-ios" size={22} color="#C8C8C8" /></Text>

@@ -105,6 +105,19 @@ export default function Account({isClicked, setIsClicked, navigation}) {
     setIsClicked(!isClicked);
   };
 
+  function changeDateFormat(dateString) {
+    dateString = "" + dateString;
+    var parts = dateString.split('/'); // Split the string by slashes
+    var year = parts[0];
+    var month = parts[1];
+    var day = parts[2];
+
+    // Concatenate the parts in the desired format
+    var formattedDate = day + '/' + month + '/' + year;
+
+    return formattedDate;
+  }
+
   return (
         <ScrollView contentContainerStyle={{ flexGrow: 1}} refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -184,7 +197,7 @@ export default function Account({isClicked, setIsClicked, navigation}) {
               <Image source={Images.calender} style={styles.icons}/>
               <View style={{justifyContent:'center', paddingLeft:15}}>
                   <Text style={{fontWeight:'bold', fontSize:17, color:"#808080"}}>D.O.B.</Text>
-                  <Text style={{fontWeight:400, fontSize:15, color:"#808080"}}>{user.dob}</Text>
+                  <Text style={{fontWeight:400, fontSize:15, color:"#808080"}}>{changeDateFormat(user.dob)}</Text>
               </View>
           </View>
 

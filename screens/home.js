@@ -123,7 +123,18 @@ export default function Home({ navigation }) {
 
   }, [])
 
+  function changeDateFormat(dateString) {
+    dateString = "" + dateString;
+    var parts = dateString.split('/'); // Split the string by slashes
+    var year = parts[0];
+    var month = parts[1];
+    var day = parts[2];
 
+    // Concatenate the parts in the desired format
+    var formattedDate = day + '/' + month + '/' + year;
+
+    return formattedDate;
+  }
   const courses = [
     {
       key: 1,
@@ -192,7 +203,7 @@ export default function Home({ navigation }) {
         <View style={{ marginLeft: 5, marginTop: 20 }}>
           <Text style={{ color: '#808080' }}><Ionicons name="location-outline" size={14} color="#808080" />{item.location}</Text>
           <Text style={{ color: '#808080' }}><Ionicons name="ios-cash-outline" size={14} color="#808080" />{' ₹' + item.salRange}</Text>
-          <Text style={{ color: '#808080' }}><AntDesign name="calendar" size={14} color="#808080" />{' ' + item.date}</Text>
+          <Text style={{ color: '#808080' }}><AntDesign name="calendar" size={14} color="#808080" />{' ' + changeDateFormat(item.date)}</Text>
         </View>
       </View>
     </TouchableOpacity>
