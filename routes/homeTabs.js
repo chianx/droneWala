@@ -114,31 +114,7 @@ export default function HomeTab({navigation}) {
           }} 
         >{props => <Account {...props} isClicked={isClicked} setIsClicked={setIsClicked}/>}
         </Tab.Screen>
-        <Tab.Screen name="Course Details" component={CourseDetails} 
-          options={{
-            headerShown:true,
-            tabBarButton: () => null,
-            tabBarVisible: false,
-            headerLeft: () => (
-            <TouchableOpacity style={{paddingLeft:15, paddingRight:15}} onPress={() => navigation.navigate("Jobs")}>
-              <Ionicons name="arrow-back" size={26} color="black" />
-            </TouchableOpacity>
-          )
-          }}
-        />
         
-        {/* <Tab.Screen name="Job Details" component={JobDetails} 
-          options={{
-            headerShown:true,
-            tabBarButton: () => null,
-            tabBarVisible: false,
-            headerLeft: () => (
-            <TouchableOpacity style={{paddingLeft:15, paddingRight:15}} onPress={() => navigation.navigate("Jobs")}>
-              <Ionicons name="arrow-back" size={26} color="black" />
-            </TouchableOpacity>
-          )
-          }}
-        /> */}
 
         
       </Tab.Navigator>

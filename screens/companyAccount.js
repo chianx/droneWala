@@ -106,7 +106,7 @@ export default function Account({isClicked, setIsClicked, navigation }) {
               <Image source={Images.calender} style={styles.icons}/>
               <View style={{justifyContent:'center', paddingLeft:15}}>
                   <Text style={{fontWeight:'bold', fontSize:17, color:"#808080"}}>Founded on</Text>
-                  <Text style={{fontWeight:400, fontSize:15, color:"#808080"}}>{ChangeDateFormat(user.foundedin)}</Text>
+                  <Text style={{fontWeight:400, fontSize:15, color:"#808080"}}>{changeDateFormat(user.foundedin)}</Text>
               </View>
           </View>
 

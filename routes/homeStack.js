@@ -10,10 +10,13 @@ import Home from '../screens/home'
 import JobForm from '../jobForm/JobForm';
 import Notifications from '../screens/notifications';
 import JobDetails from '../screens/jobDetails';
+import JobStack from './jobStack'
+import { NavigationContainer } from '@react-navigation/native';
 
 const Stack = createNativeStackNavigator();
 
 export default function HomeStack({ navigation }) {
+    console.log("In homeStack");
     return (
         // <NavigationContainer independent={true}>
         <Stack.Navigator
@@ -75,11 +78,6 @@ export default function HomeStack({ navigation }) {
                 component={ChooseCategory}
                 options={{
                     headerShown: true,
-                    headerLeft: () => (
-                        <TouchableOpacity style={{ paddingLeft: 15, paddingRight: 15 }} onPress={() => navigation.navigate("home")}>
-                            <Ionicons name="arrow-back" size={26} color="black" />
-                        </TouchableOpacity>
-                    ),
                 }}
             />
             <Stack.Screen
@@ -87,11 +85,6 @@ export default function HomeStack({ navigation }) {
                 component={Notifications}
                 options={{
                     headerShown: true,
-                    headerLeft: () => (
-                        <TouchableOpacity style={{ paddingLeft: 15, paddingRight: 15 }} onPress={() => navigation.navigate("home")}>
-                            <Ionicons name="arrow-back" size={26} color="black" />
-                        </TouchableOpacity>
-                    ),
                 }}
             />
             <Stack.Screen
@@ -99,16 +92,19 @@ export default function HomeStack({ navigation }) {
                 component={JobDetails}
                 options={{
                     headerShown: true,
-                    headerLeft: () => (
-                        <TouchableOpacity style={{ paddingRight: 25 }} onPress={() => navigation.navigate("home")}>
-                            <Ionicons name="arrow-back" size={26} color="black" />
-                        </TouchableOpacity>
-                    ),
                 }}
             />
+            <Stack.Screen
+                name="Jobstack"
+                component={JobStack}
+                options={{
+                    headerShown: true,
+                }}
+            />
+            
 
         </Stack.Navigator>
-        // </NavigationContainer>
+        // </NavigationContainer> 
     );
 }
 

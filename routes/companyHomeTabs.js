@@ -105,31 +105,6 @@ export default function CompanyHomeTab({navigation}) {
 
             </Tab.Screen>
         
-        {/* <Tab.Screen name="Job Details" component={JobDetails} 
-          options={{
-            headerShown:true,
-            tabBarButton: () => null,
-            tabBarVisible: false,
-            headerLeft: () => (
-            <TouchableOpacity style={{paddingLeft:15, paddingRight:15}} onPress={() => navigation.navigate("My Jobs")}>
-              <Ionicons name="arrow-back" size={26} color="black" />
-            </TouchableOpacity>
-          )
-          }}
-        /> */}
-        {/* <Tab.Screen name="Freelance Details" component={FreelanceDetails} 
-          options={{
-            headerShown:true,
-            tabBarButton: () => null,
-            tabBarVisible: false,
-            headerLeft: () => (
-            <TouchableOpacity style={{paddingLeft:15, paddingRight:15}} onPress={() => navigation.navigate("My Jobs")}>
-              <Ionicons name="arrow-back" size={26} color="black" />
-            </TouchableOpacity>
-          )
-          }}
-        /> */}
-        
         
       </Tab.Navigator>
       //</NavigationContainer>
