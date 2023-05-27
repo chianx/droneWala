@@ -1,11 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
-import Images from '../images/index'
 import { Ionicons } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
 import { ref, onValue, orderByChild, get, query, limitToLast} from 'firebase/database';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {db} from '../firebase/databaseConfig'
 
 export default function ViewBids({route, navigation}) {
@@ -17,13 +13,6 @@ export default function ViewBids({route, navigation}) {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
-  }, []);
-
-  useEffect(() => {
-    setIsLoading(true);
     const freelanceRef = query(
       ref(db, `bids/${freelance.freelanceId}`),
       orderByChild('amount'),
@@ -45,10 +34,36 @@ export default function ViewBids({route, navigation}) {
         })
       }
       setApplied(applicants);
+      setRefreshing(false);
+    })
+  }, []);
+
+  useEffect(() => {
+    setIsLoading(true);
+    const freelanceRef = query(
+      ref(db, `bids/${freelance.freelanceId}`),
+      orderByChild('amount')
+    );
+    let applicants = [];
+    get(freelanceRef).then((snap) => {
+      const applications = snap.val()
+      console.log("Applications: " + applications);
+
+      for(var index in applications) {
+        console.log(`users/${applications[index].userId}  ${applications[index].amount}`)
+        const xRef = ref(db, `users/${applications[index].userId}`);
+            onValue(xRef, (snaps) => {
+              const x = snaps.val();
+              applicants.push({answer: applications[index], user:x});
+        })
+      }
+      setApplied(applicants);
+      const temp = applicants.sort(function(a, b) {return b.answer.amount -a.answer.amount}).slice(0,3)
+      setApplied(temp);
     })
     // console.log(applicants);
     
-    setIsLoading(false);
+    
   }, [])
 
   return (
@@ -65,9 +80,8 @@ export default function ViewBids({route, navigation}) {
         : 
             <FlatList 
               refreshControl={<RefreshControl
-                colors={["#9Bd35A", "#689F38"]}
                 refreshing={refreshing}
-                onRefresh={onRefresh.bind(this)} 
+                onRefresh={onRefresh} 
               />}
               data={users}
               renderItem={({item}) => (

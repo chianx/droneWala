@@ -202,22 +202,22 @@ export default function Apply({ route, navigation }) {
   };
   return (
     <View style={styles.container}>
-      {isLoading? <View>
-            <View style={{backgroundColor:"#d3d3d3aa", position: "absolute", flex: 1, zIndex: 3, width:'100%', height:630, justifyContent:'center'}}>
-                <ActivityIndicator size="large" color="coral" />
-            </View>
-        </View> : <></>}
       <View
         style={[
           {
             width: "100%",
             flex: 1,
+            paddingTop:20,
             alignItems: "center",
             opacity: isLoading ? 0.5 : 1,
             backgroundColor: isLoading ? "#e0e0e0" : "#fff",
           },
         ]}
       >
+      {isLoading?
+            <View style={{backgroundColor:"#d3d3d3aa", flex: 2, width:'100%', height:'100%', justifyContent:'center', position:"absolute"}}>
+                <ActivityIndicator size="large" color="coral" />
+            </View> : <></>}
         <View style={{ width: "90%" }}>
           <Text style={styles.text}>
             Why do you think you are fit for this Job ?
@@ -299,7 +299,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    paddingTop: 20,
     // justifyContent: 'center',
   },
   textArea: {

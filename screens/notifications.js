@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import Images from '../images/index'
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -11,6 +11,15 @@ export default function Notifications({navigation}) {
 
   const [isLoading, setIsLoading] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const [noNotification, setNoNotification] = useState(false);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+
+    await getUserNotifications();
+    setRefreshing(false);
+  }, [refreshing]);
 
   const getUserNotifications = async () => {
     setIsLoading(true);
@@ -21,7 +30,9 @@ export default function Notifications({navigation}) {
     onValue(notificationIDRefs, async(snapshot) => {
 
       if(snapshot.val() == null) {
-        console.log("user doesn't have notification.")
+        console.log("user doesn't have notification.");
+        isLoading(false);
+        setNoNotification(true);
         return;
       }
       
@@ -43,10 +54,12 @@ export default function Notifications({navigation}) {
         })
       }
 
-      setNotifications(tempNotificaitons);
+      setNotifications(tempNotificaitons.reverse());
       setIsLoading(false);
     })
   }
+
+  
 
   useEffect(() => {
     // messaging().getToken().then(token => {
@@ -75,9 +88,14 @@ export default function Notifications({navigation}) {
   return (
         
         <View style={styles.container}>
-        {isLoading? <View style={{backgroundColor: '#e0e0e0aa', flex:1, justifyContent:'center'}}><ActivityIndicator size="large" color="coral" /></View> : 
+
+        {isLoading? <View style={{backgroundColor: '#e0e0e0', position:'absolute', flex:1, height:'100%', width:'100%', justifyContent:'center'}}><ActivityIndicator size="large" color="coral" /></View> :<></>}
+        {noNotification? <View style={{justifyContent:'center'}}><Text style={{fontSize:20, fontWeight:400, textAlign:'center'}}>No Notifications available at the moment.</Text></View> : <View>
             <FlatList 
               data={notifications}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
               renderItem={({item}) => (
                 <TouchableOpacity onPress={() => {}}>
                 <View key={item.notificationId} style={styles.jobContainer}>
@@ -95,7 +113,8 @@ export default function Notifications({navigation}) {
                 </TouchableOpacity>
               )}
             />
-          }
+            </View>
+        }
         </View>
     )
 }
