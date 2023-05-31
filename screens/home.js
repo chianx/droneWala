@@ -47,7 +47,7 @@ export default function Home({ navigation }) {
       
     }
     setArticles(temp);
-    console.log(temp);
+
     if(val.userType === 'company') {
       console.log("usertype company selected");
       const starCountRef = ref(db, 'jobs/');
@@ -62,14 +62,14 @@ export default function Home({ navigation }) {
           }))
         }
         
-        console.log("Jobs: " + allJobs)
+        
         var tempJob = [];
         for(var element in allJobs) {
             if(allJobs[element].companyId != val.userId) {
                 continue;
             }
             tempJob.push(allJobs[element])
-            console.log("temp job = " + tempJob);
+            
         }
         setJobs(tempJob);
     });
