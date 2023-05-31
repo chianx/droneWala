@@ -12,8 +12,8 @@ export default function FreelanceForm({route, navigation}) {
     const category = route.params.category;
     const [screen, setScreen] = useState(0)
     const FormTitle = [
-        "Step 1",
-        "Step 2"
+        "Freelance Form",
+        "Freelance Form"
     ]
     
 // Screen 1 -- Options

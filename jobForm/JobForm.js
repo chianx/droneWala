@@ -12,8 +12,8 @@ export default function JobForm({navigation}) {
     const [loading, setLoading] = useState(false);
     const [screen, setScreen] = useState(0)
     const FormTitle = [
-        "Precise Details",
-        "Descriptions"
+        "Job Form",
+        "Job Form"
     ]
     const [errorMessage, setErrorMessage] = useState("");
     const [formData, setFormData] = useState(
