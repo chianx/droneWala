@@ -50,10 +50,10 @@ export default function Account({isClicked, setIsClicked, navigation }) {
                     <View style={{ flexDirection: 'row' }}>
                         <Image source={{uri:user.logo}} style={styles.avatar} />
                         <View style={{ flex: 1, justifyContent: 'center', paddingLeft: 15 }}>
-                            <Text style={{ fontSize: 21, color: 'white', fontWeight:500 }}>{user.companyName}</Text>
-                            <Text style={{fontSize: 16, color: 'white', fontWeight:400 }}><Ionicons name='location-outline' size={16} color='white' /> {user.city + ", " + user.state}</Text>
-                            <Text style={{ fontSize: 16, color: 'white', fontWeight:400 }}><Ionicons name='ios-mail-outline' size={16} color='white' /> {" " + user.email}</Text>
-                            <Text style={{ fontSize: 16, color: 'white', fontWeight:400 }}><MaterialCommunityIcons name="web" size={17} color="white" /> {" " + user.website}</Text>
+                            <Text style={{ fontSize: 21, color: 'black', fontWeight:500 }}>{user.companyName}</Text>
+                            <Text style={{fontSize: 16, color: 'black', fontWeight:400 }}><Ionicons name='location-outline' size={16} color='black' /> {user.city + ", " + user.state}</Text>
+                            <Text style={{ fontSize: 16, color: 'black', fontWeight:400 }}><Ionicons name='ios-mail-outline' size={16} color='black' /> {" " + user.email}</Text>
+                            <Text style={{ fontSize: 16, color: 'black', fontWeight:400 }}><MaterialCommunityIcons name="web" size={17} color="black" /> {" " + user.website}</Text>
                         </View>
                     </View>
                 </View>
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     },
     basic: {
         flex:1,
-        backgroundColor: '#fda172',
+        backgroundColor: '#edb58e',
         paddingVertical:40,
         marginBottom:10,
         width: '100%',
@@ -154,7 +154,9 @@ const styles = StyleSheet.create({
     avatar: {
         height: 75,
         width: 75,
-        borderRadius: 70
+        borderRadius: 70,
+        borderWidth: 3,
+        borderColor: 'black'
     },
     experienceBox: {
         marginTop: 17,

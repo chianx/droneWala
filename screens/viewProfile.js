@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     },
     basic: {
         flex:1,
-        backgroundColor: '#fda172',
+        backgroundColor: '#edb58e',
         paddingVertical:40,
         marginBottom:10,
         width: '100%',

@@ -17,7 +17,7 @@ export default function Signup({navigation}) {
               
               <TouchableOpacity style={styles.button} onPress={()=> navigation.navigate("Pilot")}>
                 <View style={{width:'40%', height:'100%', position:'absolute',left:0}}>
-                  <Image source={Images.profile} style={{width:"100%", height:"100%", borderTopLeftRadius:16, borderBottomLeftRadius:16}} />
+                  <Image source={Images.pilot} style={{width:"100%", height:"100%", borderTopLeftRadius:16, borderBottomLeftRadius:16}} />
                 </View>
                 <View style={{width:'60%', position:'absolute', right:0, justifyContent:'center'}}>
                   <Text style={styles.btnText}>Drone Pilot</Text>

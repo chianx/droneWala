@@ -4,7 +4,7 @@ const Images = {
     drone3 : require('./drone3.png'),
     drone : require('./drone.png'),
     profile : require('./profile.jpg'),
-    background : require('./backgroundOrange.jpg'),
+    pilot : require('./pilot.jpg'),
     coral : require('./gray.jpg'),
     experience: require('./experience.png'),
     droneIcon: require('./droneIcon.png'),
@@ -18,5 +18,9 @@ const Images = {
     companyCoral: require('./companyCoral.png'),
     institute: require('./institute.png'),
     calender: require('./calendarOrange.png'),
+    agri_survey: require('./agri_survey.jpg'),
+    cine_main: require('./cine_Main.jpg'),
+    cinematography: require('./cinematography.jpg'),
+    
 }
 export default Images;
