@@ -6,12 +6,21 @@ import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-root-toast';
+import EditJobModal from './editJob';
 
-export default function JobDetails({route, navigation}) {
+export default function JobDetails({isClicked, setIsClicked, route, navigation}) {
   const [userType, setUserType] = useState("");
   const [user, setUser] = useState({});
   const job = route.params.job;
   const [canApply, setCanAplly] = useState(true);
+  
+  const handleSaveProfile =() => {
+    setIsClicked(!isClicked);
+  };
+
+  const handleCancelEdit = () => {
+    setIsClicked(!isClicked);
+  };
 
   const mount = async () => {
     const userdata = await AsyncStorage.getItem("userData");
@@ -116,7 +125,15 @@ export default function JobDetails({route, navigation}) {
           }
           </View>
         </View>
-
+        
+        {userType === 'company' ? 
+          <EditJobModal
+            visible={isClicked}
+            onSave={handleSaveProfile}
+            onClose={handleCancelEdit}
+            job = {job}
+          /> 
+      : null}
       </ScrollView>
     )
 }

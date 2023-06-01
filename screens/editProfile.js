@@ -248,7 +248,7 @@ const EditProfileModal = ({ visible, onClose, setUserPrev }) => {
                 data={category}
                 save="value"
                 label="Categories"
-                boxStyles={[user.interestIsSet ? null : { borderColor: "red" }, { backgroundColor: "white" }]}
+                boxStyles={[{ backgroundColor: "white" }]}
               />
             </View>
 
