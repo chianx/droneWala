@@ -77,7 +77,7 @@ export default function JobForm({navigation}) {
                     var refs = push(ref(db, "jobs/"));
                     const salRange = formData.salRangeFrom+' - '+formData.salRangeTo ;
 
-                    var final =  {companyId: userJson.userId, aboutCompany: userJson.about, logo: userJson.logo, companyName: userJson.companyName, jobId: refs.key, jobTitle: formData.jobTitle, location:formData.location ,salRange: salRange,ftORpt: formData.ftORpt,numOpen: formData.numOpen,date: formData.date,aboutJob: formData.aboutJob,whoApply: formData.whoApply, }
+                    var final =  {companyId: userJson.userId, aboutCompany: userJson.about, logo: userJson.logo, companyName: userJson.companyName, jobId: refs.key, jobTitle: formData.jobTitle, location:formData.location ,salRange: salRange,ftORpt: formData.ftORpt,numOpen: formData.numOpen,date: formData.date,aboutJob: formData.aboutJob,whoApply: formData.whoApply, salRangeFrom: formData.salRangeFrom, salRangeTo: formData.salRangeTo }
                     set(refs, final).then(async() => {
                         console.log("Job Form Posted Successfully!");
                     });

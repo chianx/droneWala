@@ -68,7 +68,7 @@ export default function Notifications({navigation}) {
         <View style={styles.container}>
 
         {isLoading? <View style={{backgroundColor: '#e0e0e0', position:'absolute', flex:1, height:'100%', width:'100%', justifyContent:'center'}}><ActivityIndicator size="large" color="coral" /></View> :<></>}
-        {!isLoading && notifications.length === 0? <View style={{backgroundColor:'#f0f0f0', justifyContent:'center', height:'100%'}}><Text style={{fontSize:20, fontWeight:400, textAlign:'center'}}>No Notifications available at the moment.</Text></View> :<></>}
+        {!isLoading && notifications.length == 0? <View style={{backgroundColor:'#f0f0f0', justifyContent:'center', height:'100%'}}><Text style={{fontSize:20, fontWeight:800, textAlign:'center', color: 'grey'}}>No Notifications available at the moment.</Text></View> :<></>}
             <FlatList 
               data={notifications}
               refreshControl={
