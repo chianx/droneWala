@@ -41,7 +41,7 @@ export default function Login( {navigation} ) {
   const getUserData = async(uid) => {
     console.log(uid);
     return get(child(ref(db), "users/" + uid)).then(async (userSnap) => {
-      if(userSnap.exists) {
+      if(userSnap.exists()) {
         var user = userSnap.val()
         console.log(user);
         await AsyncStorage.setItem("userData", JSON.stringify(user));
@@ -50,6 +50,16 @@ export default function Login( {navigation} ) {
         navigation.navigate("HomeDrawer");
       }else {
         console.log("No user found!!!");
+        navigation.navigate("SignupStack");
+        Toast.show('New User detected', {
+          duration: Toast.durations.LONG,
+          position: -100,
+          shadow: true,
+          animation: true,
+          opacity:1,
+          hideOnPress: false,
+          delay: 2000,
+        });
       }
     }).catch((error) => {
       console.error("Error while fetching user data ");

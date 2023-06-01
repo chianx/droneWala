@@ -5,7 +5,7 @@ import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios'
 import {db} from '../firebase/databaseConfig'
-import { ref, onValue, get } from 'firebase/database';
+import { ref, onValue, get, child } from 'firebase/database';
 
 export default function Notifications({navigation}) {
 
@@ -60,26 +60,6 @@ export default function Notifications({navigation}) {
   
 
   useEffect(() => {
-    // messaging().getToken().then(token => {
-    //   var topicName = "Freelance";
-    //   var config = {
-    //     method:'post',
-    //     url: "https://iid.googleapis.com/iid/v1/" + token +  "/rel/topics/" + topicName,
-    //     headers: {
-    //       Authorization: 
-    //           'key=AAAAjoab_0Y:APA91bEsHKY-W-hT0iIH3NycyckJay3rdc8VAAUSYsDgrM3-5D-cHPlOWiNWXWkqAv8QEmfRS9QHc2_A9wC6X-p9na-wGQ4hNJrMyCJ3QYlmIsNaOcb8tC_pVP1Lc5XHWIlHqxFRKzos',
-    //           'Content-Type': 'application/json',
-    //     },
-    //   }
-    //   console.log("token", token);
-    //   if (token) {
-    //     axios(config).then(function (response) {
-    //       console.log(JSON.stringify(response));
-    //     }).catch(function (error) {
-    //         console.log(error);
-    //     });
-    //   }
-    // })
     getUserNotifications()
   }, [])
 

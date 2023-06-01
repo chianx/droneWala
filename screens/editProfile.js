@@ -13,6 +13,8 @@ import Toast from 'react-native-root-toast';
 const EditProfileModal = ({ visible, onClose, setUserPrev }) => {
 
   const [user, setUser] = useState({});
+  const [drones, setDrones] = useState([]);
+  const [interests, setInterests] = useState([]);
     const mount = async() => {
       const userdata = await AsyncStorage.getItem("userData");
       const val = JSON.parse(userdata)
@@ -224,11 +226,15 @@ const EditProfileModal = ({ visible, onClose, setUserPrev }) => {
                 // placeholder='Select Drones'
                 notFoundText='Drone not found'
                 setSelected={(val) => {
-                  if(val.length === 0) {
-                    setUser({...user, droneSelect:val, selectedDroneIsSet:false})
-                  }else {
-                    setUser({...user, droneSelect:val, selectedDroneIsSet:true})
-                  }
+                  setDrones(val);
+                  // if(val.length === 0) {
+                  //   setUser({...user, droneSelect:val, selectedDroneIsSet:false})
+                  // }else {
+                  //   setUser({...user, droneSelect:val, selectedDroneIsSet:true})
+                  // }
+                }}
+                onSelect={() => {
+                  setUser({ ...user, droneSelect:drones, selectedDroneIsSet: true});
                 }}
                 data={dronesList}
                 save="value"
@@ -241,14 +247,16 @@ const EditProfileModal = ({ visible, onClose, setUserPrev }) => {
             <Text style={styles.label}>Interests</Text>
               <MultipleSelectList
                 setSelected={(val) => {
-                  if(val === []) {
-                    setUser({...user })
-                  }
+                  setInterests(val);
                 }}
+                onSelect={() => {
+                  setUser({ ...user, interests:interests, interestsIsSet: true});
+                }}
+                search={false}
                 data={category}
                 save="value"
                 label="Categories"
-                boxStyles={[user.interestIsSet ? null : { borderColor: "red" }, { backgroundColor: "white" }]}
+                boxStyles={[user.interestsIsSet ? null : { borderColor: "red" }, { backgroundColor: "white" }]}
               />
             </View>
 
