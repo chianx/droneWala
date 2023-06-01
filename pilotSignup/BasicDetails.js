@@ -136,14 +136,14 @@ export default function BasicDetails({ formData, setFormData }) {
                         placeholderTextColor="grey"
                         placeholder='Date of Birth *'
                         value={formData.dob}
-                        style={{ width: 280, fontSize: 17, height: 55, color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', borderColor: formData.dateIsSet ? 'grey' : 'red', marginRight: 20, marginBottom: 15 }}
+                        style={{ width: 280, fontSize: 17, height: 55, color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, paddingHorizontal: 18, justifyContent: 'center', borderColor: formData.dateIsSet ? 'grey' : 'red', marginBottom: 15 }}
                     /></TouchableOpacity> :
                         <TouchableOpacity onPress={() => { setOpen(!open) }} style={{ padding: 0 }}><TextInput
                         editable={false}
                         placeholderTextColor="grey"
                         placeholder='Date of Birth *'
                         value={formData.dob}
-                        style={{ width: 280, fontSize: 17, height: 55, color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', borderColor: formData.dateIsSet ? 'grey' : 'red', marginRight: 20, marginBottom: 15 }}
+                        style={{ width: 280, fontSize: 17, height: 55, color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, paddingHorizontal: 18, justifyContent: 'center', borderColor: formData.dateIsSet ? 'grey' : 'red', marginBottom: 15 }}
                     /></TouchableOpacity>
                     }
                 </View>
@@ -154,6 +154,7 @@ export default function BasicDetails({ formData, setFormData }) {
                           setOpen(!open);
                         }}
                         mode="calendar"
+                        style={{ width: 280, fontSize: 17, height: 55, color: 'grey', backgroundColor: 'white'}}
                         maximumDate={todaysDate}
                     /> : <></>}
                 </View>
@@ -182,7 +183,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         alignItems: "flex-start",
         justifyContent: "center",
-        padding: 15,
+        paddingHorizontal: 18,
         fontSize: 17,
         color: 'grey'
     },
@@ -196,7 +197,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         alignItems: "flex-start",
         justifyContent: "center",
-        padding: 15,
+        paddingHorizontal: 18,
         fontSize: 17,
         color: 'grey'
     },
