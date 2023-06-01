@@ -74,7 +74,7 @@ export default function ViewBids({route, navigation}) {
         users.length == 0 ? 
         <View style={[styles.container, {alignItems: 'center', justifyContent: 'center'}]}>
         <View style={{alignSelf: 'center', marginVertical: 'auto'}}>
-        <Text style={{fontSize: 20, alignContent: 'center', color: 'coral', fontWeight: 'bold', textShadowColor: 'grey', textShadowOffset: { width: -1.5, height: 1 }, textShadowRadius: 1,}}>No Bids Placed Yet</Text>
+        <Text style={{fontSize: 20, alignContent: 'center', color: 'grey', fontWeight: 800}}>No Bids Placed Yet</Text>
         </View>
         </View>
         : 
