@@ -94,8 +94,8 @@ const CustomDrawer = ({prop, navigation}) => {
             /> :
             <EditProfileModalComp
                 visible={launch}
-                onSave={launchEditProfile}
                 onClose={closeEditProfile}
+                setUserPrev={setUser}
                 user={user}
             />}
         </View>

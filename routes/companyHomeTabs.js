@@ -2,17 +2,13 @@ import React, {useState} from 'react';
 import { Text, View, TouchableOpacity, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Home from '../screens/home'
 import Images from '../images/index';
 import HomeStack from './homeStack';
 import FreelanceStack from './freelanceStack';
 import Account from '../screens/companyAccount';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import JobDetails from '../screens/jobDetails';
-import FreelanceDetails from '../screens/freelanceDetails';
-import JobStack from './jobStack';
-import Notifications from '../screens/notifications';
+import JobStack from './jobStack';;
 import { FontAwesome5 } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
@@ -56,7 +52,7 @@ export default function CompanyHomeTab({navigation}) {
       >
         <Tab.Screen name="Home" component={HomeStack}
           options ={{
-            headerTitle: () => <Text style={{ fontSize: 26, color: 'grey', fontWeight: 'bold' }}>Drone<Text style={{ fontWeight: 'bold', fontSize: 26, color: 'coral' }}>Walas</Text></Text> ,
+            headerTitle: () => <Text style={{ fontSize: 26, color: 'grey', fontWeight: 'bold' }}>Drones<Text style={{ fontWeight: 'bold', fontSize: 26, color: 'coral' }}>Wala</Text></Text> ,
             headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.openDrawer()}>
               <Image

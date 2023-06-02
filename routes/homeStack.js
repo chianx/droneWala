@@ -45,7 +45,7 @@ export default function HomeStack({ navigation }) {
                 name="home"
                 component={Home} 
                 options={{
-                    headerTitle: () => <Text style={{ fontSize: 26, color: 'grey', fontWeight: 'bold' }}>Drone<Text style={{ fontWeight: 'bold', fontSize: 26, color: 'coral' }}>Walas</Text></Text>,
+                    headerTitle: () => <Text style={{ fontSize: 26, color: 'grey', fontWeight: 'bold' }}>Drones<Text style={{ fontWeight: 'bold', fontSize: 26, color: 'coral' }}>Wala</Text></Text>,
                     headerLeft: () => (
                         <TouchableOpacity onPress={() => navigation.openDrawer()}>
                             <Image

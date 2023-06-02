@@ -5,7 +5,7 @@ import Swiper from 'react-native-swiper';
 export default function WalkThrough({navigation}) {
     const swiperRef = useRef(null);
     const walkthroughList = [
-        {key:1, title: "Welcome to Drones Wala", image: Images.drone1},
+        {key:1, title: "Welcome to DronesWala", image: Images.drone1},
         {key:2, title: "Searching for Jobs?", image: Images.drone2},
         {key:3, title: "Need a Drone Pilot for your job?", image: Images.drone3}
     ];

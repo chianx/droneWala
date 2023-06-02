@@ -141,7 +141,7 @@ export default function Login( {navigation} ) {
         
         {/* Logo */}
         <View style={{marginBottom:0, marginTop:60}}>
-            <Text style={{fontSize:30, color:'grey', fontWeight:'bold'}}>Drone<Text style={{fontWeight:'bold', fontSize:30, color:'coral'}}>Walas</Text></Text>
+            <Text style={{fontSize:30, color:'grey', fontWeight:'bold'}}>Drones<Text style={{fontWeight:'bold', fontSize:30, color:'coral'}}>Wala</Text></Text>
         </View>
 
         <Image style={{width:'100%', height:240}} source={Images.droneDelivery} />

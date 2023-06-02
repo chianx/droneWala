@@ -38,7 +38,7 @@ export default function Account({isClicked, setIsClicked, navigation}) {
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
-      fetchJobsApplied(user);
+      mount();
       setRefreshing(false);
     }, 1300);
   }, []);

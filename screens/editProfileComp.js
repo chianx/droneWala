@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { Image, View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { SelectList } from 'react-native-dropdown-select-list'
 import DatePicker from 'react-native-modern-datepicker';
 import { MultipleSelectList } from 'react-native-dropdown-select-list'
 import { db } from '../firebase/databaseConfig'
 import validator from 'validator';
-import { ref, update} from 'firebase/database'
+import {storage} from '../firebase/firebase'
+import { ref, getDownloadURL,uploadBytesResumable, uploadBytes} from 'firebase/storage';
+import { ref as dbRef, update} from 'firebase/database'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-root-toast';
+import * as ImagePicker from 'expo-image-picker'
 
 const EditProfileModalComp = ({ visible, onClose, setUserPrev }) => {
 
   const [user, setUser] = useState({});
+  const [image, setImage] = useState(null);
   const mount = async () => {
     const userdata = await AsyncStorage.getItem("userData");
     const val = JSON.parse(userdata)
@@ -29,7 +33,7 @@ const EditProfileModalComp = ({ visible, onClose, setUserPrev }) => {
   const handleSave = () => {
     if (user.dateIsSet && user.emailIsSet && user.addressIsSet && user.stateIsSet && user.cityIsSet && user.pinIsSet && user.categoryIsSet && user.websiteIsSet && user.aboutIsSet) {
 
-      update(ref(db, `users/${user.userId}`), user).then(() => {
+      update(dbRef(db, `users/${user.userId}`), user).then(() => {
         // Add loading icon.
         AsyncStorage.setItem("userData", JSON.stringify(user));
         Toast.show('Profile Updated!!', {
@@ -132,6 +136,63 @@ const EditProfileModalComp = ({ visible, onClose, setUserPrev }) => {
     }
   }
 
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 4],
+      quality: 1
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+      console.log("Hello", image);
+      // Save image code starts from here
+      const metadata = {
+        contentType: 'image/jpeg'
+      };
+      const storageRef = ref(storage, 'profiles/' + Date.now())
+      const blobImage = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+          resolve(xhr.response);
+        };
+        xhr.onerror = function () {
+          reject(new TypeError("Network request failed"));
+        };
+        xhr.responseType = "blob";
+        xhr.open("GET", result.assets[0].uri, true);
+        xhr.send(null);
+      })
+      const uploadTask = uploadBytesResumable(storageRef, blobImage, metadata);
+      uploadTask.on('state_changed',
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+          switch (snapshot.state) {
+            case 'paused':
+              console.log('Upload is paused');
+              break;
+            case 'running':
+              console.log('Upload is running');
+              break;
+          }
+        },
+        (error) => {
+          console.log(error)
+        },
+        () => {
+          // Upload completed successfully, now we can get the download URL
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setUser({...user, logo: downloadURL, logoIsSet: true});
+            console.log('File available at', downloadURL);
+          });
+        });
+      // Save image code ends from here
+    }
+
+  };
+
   return (
     <Modal visible={visible} animationType="slide">
       <View style={{ alignItems: 'center', padding: 15, backgroundColor: 'coral', elevation: 15 }}>
@@ -144,7 +205,12 @@ const EditProfileModalComp = ({ visible, onClose, setUserPrev }) => {
         <View style={styles.modalContainer}>
           <View style={styles.formContainer}>
 
-            
+            <Text style={styles.label}>Company Logo</Text>
+            <View style={{ width: '100%', alignItems:'center'}}>
+              <TouchableOpacity onPress={() => pickImage()} style={[styles.logobtn, user.logoIsSet ? null : {borderColor: "red"}]}><Text style={{ color: 'grey', fontSize: 17 }}>Change Profile (Click Here)</Text></TouchableOpacity>
+              {<Image source={{ uri: image === null ?  user.logo : image }} style={{ width: 180, height: 180, marginBottom: 15, borderRadius:10}} />}
+            </View>
+
             <Text style={styles.label}>Email</Text>
             <TextInput
               style={[user.emailIsSet ? styles.TextInput : styles.errorTextInput]}
@@ -239,7 +305,7 @@ const EditProfileModalComp = ({ visible, onClose, setUserPrev }) => {
                 data={numPeople}
                 save="value"
                 search={false}
-                boxStyles={[user.numIsSet ? null : { borderColor: "red" }, { backgroundColor: "white" }]}
+                boxStyles={[user.numPeopleIsSet ? null : { borderColor: "red" }, { backgroundColor: "white" }]}
                 label="NumPeople"
               />
             </View>
@@ -354,7 +420,33 @@ const styles = StyleSheet.create({
     padding: 9,
     width: 135,
     color: 'white'
-  }
+  },
+  logobtn: {
+    backgroundColor: "#e0e0e0",
+    borderColor: "black",
+    borderRadius: 8,
+    width: 300,
+    height: 45,
+    marginBottom: 10,
+    alignItems:'center',
+    borderWidth:1,
+    borderColor:'grey',
+    paddingHorizontal: 15,
+    justifyContent: 'center'
+  },
+  errorlogobtn: {
+      backgroundColor: "white",
+      borderColor: "red",
+      borderRadius: 8,
+      width: 280,
+      height: 55,
+      marginBottom: 10,
+      alignItems:'center',
+      borderWidth:1,
+      borderColor:'grey',
+      paddingHorizontal: 15,
+      justifyContent: 'center'
+    }
 });
 
 export default EditProfileModalComp;

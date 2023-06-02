@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, ScrollView, Pressable } from 'react-native';
+import {Image, View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, ScrollView, Pressable } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { SelectList } from 'react-native-dropdown-select-list'
 import DatePicker from 'react-native-modern-datepicker';
 import { MultipleSelectList } from 'react-native-dropdown-select-list'
-import { configureProps } from 'react-native-reanimated/lib/reanimated2/core';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { db } from '../firebase/databaseConfig'
-import { ref, update} from 'firebase/database'
+import {storage} from '../firebase/firebase'
+import { ref, getDownloadURL,uploadBytesResumable, uploadBytes} from 'firebase/storage';
+import { ref as dbRef, update} from 'firebase/database'
 import Toast from 'react-native-root-toast';
+import * as ImagePicker from 'expo-image-picker'
 
 const EditProfileModal = ({ visible, onClose, setUserPrev }) => {
 
   const [user, setUser] = useState({});
   const [drones, setDrones] = useState([]);
   const [interests, setInterests] = useState([]);
+  const [image, setImage] = useState(null);
     const mount = async() => {
       const userdata = await AsyncStorage.getItem("userData");
       const val = JSON.parse(userdata)
@@ -31,7 +34,7 @@ const EditProfileModal = ({ visible, onClose, setUserPrev }) => {
   const handleSave = () => {
     if(user.nameIsSet && user.dateIsSet && user.addressIsSet && user.stateIsSet && user.cityIsSet && user.pinIsSet) {
       
-      update(ref(db, `users/${user.userId}`), user).then(() => {
+      update(dbRef(db, `users/${user.userId}`), user).then(() => {
         // Add loading icon.
         AsyncStorage.setItem("userData", JSON.stringify(user));
         Toast.show('Profile Updated!!', {
@@ -123,6 +126,63 @@ const EditProfileModal = ({ visible, onClose, setUserPrev }) => {
     }
   }
 
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 4],
+      quality: 1
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+      console.log("Hello", image);
+      // Save image code starts from here
+      const metadata = {
+        contentType: 'image/jpeg'
+      };
+      const storageRef = ref(storage, 'profiles/' + Date.now())
+      const blobImage = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+          resolve(xhr.response);
+        };
+        xhr.onerror = function () {
+          reject(new TypeError("Network request failed"));
+        };
+        xhr.responseType = "blob";
+        xhr.open("GET", result.assets[0].uri, true);
+        xhr.send(null);
+      })
+      const uploadTask = uploadBytesResumable(storageRef, blobImage, metadata);
+      uploadTask.on('state_changed',
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+          switch (snapshot.state) {
+            case 'paused':
+              console.log('Upload is paused');
+              break;
+            case 'running':
+              console.log('Upload is running');
+              break;
+          }
+        },
+        (error) => {
+          console.log(error)
+        },
+        () => {
+          // Upload completed successfully, now we can get the download URL
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setUser({...user, profile: downloadURL, profileIsSet: true});
+            console.log('File available at', downloadURL);
+          });
+        });
+      // Save image code ends from here
+    }
+
+  };
+
   return (
     <Modal visible={visible} animationType="slide">
     <View style={{ alignItems:'center', padding:15, backgroundColor:'coral', elevation:15}}>
@@ -134,6 +194,12 @@ const EditProfileModal = ({ visible, onClose, setUserPrev }) => {
     <ScrollView>
         <View style={styles.modalContainer}>
           <View style={styles.formContainer}>
+            
+            <Text style={styles.label}>Profile Picture</Text>
+            <View style={{ width: '100%', alignItems:'center'}}>
+              <TouchableOpacity onPress={() => pickImage()} style={[styles.logobtn, user.profileIsSet ? null : {borderColor: "red"}]}><Text style={{ color: 'grey', fontSize: 17 }}>Change Profile (Click Here)</Text></TouchableOpacity>
+              {<Image source={{ uri: image === null ?  user.profile : image }} style={{ width: 180, height: 180, marginBottom: 15, borderRadius:10}} />}
+            </View>
 
             <Text style={styles.label}>Full Name</Text>
             <TextInput
@@ -355,7 +421,33 @@ const styles = StyleSheet.create({
     padding:9,
     width:135,
     color:'white'
-}
+},
+logobtn: {
+  backgroundColor: "#e0e0e0",
+  borderColor: "black",
+  borderRadius: 8,
+  width: 300,
+  height: 45,
+  marginBottom: 10,
+  alignItems:'center',
+  borderWidth:1,
+  borderColor:'grey',
+  paddingHorizontal: 15,
+  justifyContent: 'center'
+},
+errorlogobtn: {
+    backgroundColor: "white",
+    borderColor: "red",
+    borderRadius: 8,
+    width: 280,
+    height: 55,
+    marginBottom: 10,
+    alignItems:'center',
+    borderWidth:1,
+    borderColor:'grey',
+    paddingHorizontal: 15,
+    justifyContent: 'center'
+  }
 });
 
 export default EditProfileModal;

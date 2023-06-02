@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native';
+import {RefreshControl, StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native';
 import Images from '../images/index';
 import { Ionicons } from '@expo/vector-icons';
 import EditProfileModalComp from './editProfileComp';
@@ -11,13 +11,20 @@ export default function Account({isClicked, setIsClicked, navigation }) {
 
     const [user, setUser] = useState({});
     const [category, setCategory] = useState([]);
+    const [refreshing, setRefreshing] = useState(false);
     const mount = async() => {
       const userdata = await AsyncStorage.getItem("userData");
       const val = JSON.parse(userdata)
       setUser(val);
       setCategory(val.category);
     }
-    
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        setTimeout(() => {
+          mount();
+          setRefreshing(false);
+        }, 200);
+    }, []);
     const handleSaveProfile =() => {
        setIsClicked(!isClicked);
        mount()
@@ -43,7 +50,9 @@ export default function Account({isClicked, setIsClicked, navigation }) {
         return formattedDate;
       }
     return (
-      <ScrollView>
+      <ScrollView contentContainerStyle={{ flexGrow: 1}} refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }>
         <View style={styles.container}>
             <View style={styles.basic}>
                 <View style={{ paddingHorizontal: 20, justifyContent: 'center' }}>
