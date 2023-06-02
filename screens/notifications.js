@@ -5,7 +5,7 @@ import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios'
 import {db} from '../firebase/databaseConfig'
-import { ref, onValue, get } from 'firebase/database';
+import { ref, onValue, get, child } from 'firebase/database';
 
 export default function Notifications({navigation}) {
 
@@ -60,26 +60,6 @@ export default function Notifications({navigation}) {
   
 
   useEffect(() => {
-    // messaging().getToken().then(token => {
-    //   var topicName = "Freelance";
-    //   var config = {
-    //     method:'post',
-    //     url: "https://iid.googleapis.com/iid/v1/" + token +  "/rel/topics/" + topicName,
-    //     headers: {
-    //       Authorization: 
-    //           'key=AAAAjoab_0Y:APA91bEsHKY-W-hT0iIH3NycyckJay3rdc8VAAUSYsDgrM3-5D-cHPlOWiNWXWkqAv8QEmfRS9QHc2_A9wC6X-p9na-wGQ4hNJrMyCJ3QYlmIsNaOcb8tC_pVP1Lc5XHWIlHqxFRKzos',
-    //           'Content-Type': 'application/json',
-    //     },
-    //   }
-    //   console.log("token", token);
-    //   if (token) {
-    //     axios(config).then(function (response) {
-    //       console.log(JSON.stringify(response));
-    //     }).catch(function (error) {
-    //         console.log(error);
-    //     });
-    //   }
-    // })
     getUserNotifications()
   }, [])
 
@@ -88,7 +68,7 @@ export default function Notifications({navigation}) {
         <View style={styles.container}>
 
         {isLoading? <View style={{backgroundColor: '#e0e0e0', position:'absolute', flex:1, height:'100%', width:'100%', justifyContent:'center'}}><ActivityIndicator size="large" color="coral" /></View> :<></>}
-        {!isLoading && notifications.length === 0? <View style={{backgroundColor:'#f0f0f0', justifyContent:'center', height:'100%'}}><Text style={{fontSize:20, fontWeight:400, textAlign:'center'}}>No Notifications available at the moment.</Text></View> :<></>}
+        {!isLoading && notifications.length == 0? <View style={{backgroundColor:'#f0f0f0', justifyContent:'center', height:'100%'}}><Text style={{fontSize:20, fontWeight:800, textAlign:'center', color: 'grey'}}>No Notifications available at the moment.</Text></View> :<></>}
             <FlatList 
               data={notifications}
               refreshControl={

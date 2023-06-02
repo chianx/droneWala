@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'; 
 import FreelanceDetails from '../screens/freelanceDetails';
 import FreelanceCompanies from '../screens/freelanceCompany';
-import {TouchableOpacity, Image, Switch } from 'react-native';
+import {TouchableOpacity, Image, Switch, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -10,6 +10,8 @@ import FreelanceForm from '../freelanceForm/form';
 import ChooseCategory from '../freelanceForm/choose';
 import ViewBids from '../screens/viewBids';
 import ViewProfile from '../screens/viewProfile';
+import { Feather } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios'
 const Stack = createNativeStackNavigator();
@@ -18,6 +20,11 @@ import Toast from 'react-native-root-toast';
 export default function FreelanceStack({navigation}) {
     const [userType, setUserType] = useState("");
     const [isEnabled, setIsEnabled] = useState(true);
+
+    const [isClicked, setIsClicked] = useState(false);
+    const handleClick = () => {
+    setIsClicked(true)
+    } 
 
     const toggleSwitch = async(state) => {
         
@@ -135,8 +142,28 @@ export default function FreelanceStack({navigation}) {
             />
             <Stack.Screen 
                 name="Freelance Details" 
-                component={FreelanceDetails}
-            />
+                options={{
+                    headerShown:true,
+                    headerRight: () => (                    
+                    <View style={{justifyContent: 'center'}}>
+                        { userType === "company" ? 
+                            <View style={{flexDirection: 'row', justifyContent: 'space-evenly', alignContent: 'space-between', position: 'absolute', right: '6%'}}>
+                                <TouchableOpacity onPress={handleClick}
+                                    style={{paddingRight:'11%'}}
+                                >
+                                    <Feather name="edit" size={24} color="black" />
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => console.log("Edit 2")}
+                                    style={{paddingRight:'11%', marginLeft: 8}}
+                                >
+                                    <MaterialIcons name="delete" size={24} color="black" /> 
+                                </TouchableOpacity>
+                            </View> 
+                        : null }
+                    </View> 
+                  )
+                  }} 
+            >{props => <FreelanceDetails {...props} isClicked={isClicked} setIsClicked={setIsClicked}/>}</Stack.Screen>
             <Stack.Screen 
                 name="Post a Project" 
                 component={ChooseCategory}

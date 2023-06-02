@@ -111,15 +111,18 @@ export default function FreelanceCompanies({navigation}) {
 
 
     return (
-        <View style={styles.container}>
+      <View style={styles.container}>
         {isLoading? <View style={{backgroundColor: '#e0e0e0aa', flex:1, justifyContent:'center'}}><ActivityIndicator size="large" color="coral" /></View> 
         :
-        freelance.length === 0 ? 
+        freelance.length == 0 ? 
         <View style={[styles.container, { alignItems: 'center', justifyContent: 'center'}]}>
           <View style={{alignSelf: 'center', alignItems: 'center'}}>
-            <Text style={{fontSize: 20, alignContent: 'center', color: 'coral', fontWeight: 'bold', textShadowColor: 'grey', textShadowOffset: { width: -1.5, height: 1 }, textShadowRadius: 1,}}>No Projects Posted Yet</Text>
-            <Text style={{fontSize: 20, alignContent: 'center', color: 'coral', fontWeight: 'bold', textShadowColor: 'grey', textShadowOffset: { width: -1.5, height: 1 }, textShadowRadius: 1,}}>Add now</Text>
+            <Text style={{fontSize: 20, alignContent: 'center', color: 'grey', fontWeight: 800}}>No Projects Posted Yet</Text>
             {userType === "company"? 
+                <Text style={{fontSize: 20, alignContent: 'center', color: 'grey', fontWeight: 800}}>Add now</Text>
+                : <></>
+              }
+              {userType === "company"? 
                 <TouchableOpacity style={{alignItems:'center', width:'100%'}} onPress={() => navigation.navigate("Post a Project")}>
                     <Ionicons name="add-circle-sharp" size={60} color="coral" />
                 </TouchableOpacity> : <></>
@@ -142,7 +145,9 @@ export default function FreelanceCompanies({navigation}) {
             }
         </View>
         }
-        </View>
+
+        
+      </View>
     )
 }
 

@@ -38,7 +38,7 @@ export default function PilotDetails({ formData, setFormData }) {
   ]
 
   const handleCERTNumberChange = (certNum) => {
-    if(certNum.trim().length === 10) {
+    if(certNum.trim().length == 13) {
       setFormData({ ...formData, certNum:certNum, dcgaCertIsSet: true });
     } else {
       setFormData({ ...formData, certNum:certNum, dcgaCertIsSet: false });
@@ -59,12 +59,14 @@ export default function PilotDetails({ formData, setFormData }) {
                     setFormData({ ...formData, dcgaCert:false, certNum: "" });
                     handleCERTNumberChange("")
                   }}>
-                  <Text style={styles.button}>Press if you don't have DCGA Certification!</Text>
+                  <Text style={[styles.button]}>Don't have DCGA Certification?</Text>
                 </Pressable>
                 <TextInput
                   style={[formData.dcgaCertIsSet ? styles.TextInput : styles.errorTextInput]}
                   placeholderTextColor="black"
-                  placeholder='CERT Number *'
+                  placeholder='Certification Number *'
+                  maxLength={13}
+                  // keyboardType='alphanumeric'
                   value={formData.certNum}
                   onChangeText={(certNum) => handleCERTNumberChange(certNum)}
                 >
@@ -79,13 +81,13 @@ export default function PilotDetails({ formData, setFormData }) {
                     setshouldShow((prev) => !prev)
                     // setFormData({ ...formData, dcgaCert:true });
                   }}>
-                  <Text style={styles.button}>Press if you have DCGA Certification!</Text>
+                  <Text style={styles.button}>Have DCGA Certification?</Text>
                 </Pressable>
               </View>
             )
         }
       </View>
-      <View style={{ marginBottom: 20, width:280 }} >
+      <View style={{ marginBottom: 20 }} >
         <MultipleSelectList
           style={[formData.selectedDroneIsSet ? null : {borderColor: "red"}]}
           placeholder='Select Drones *'
@@ -97,7 +99,7 @@ export default function PilotDetails({ formData, setFormData }) {
           data={drone}
           save="value"
           value={formData.droneSelect}
-          boxStyles={[formData.selectedDroneIsSet ? null : { borderColor: "red" }, { backgroundColor: "white" }]}
+          boxStyles={[formData.selectedDroneIsSet ? null : { borderColor: "red" }, { backgroundColor: "white", width: 280, height: 55, alignItems: 'center' }]}
           onSelect={() => {
             setFormData({ ...formData, droneSelect:selectedDrone, selectedDroneIsSet: t });
           }}
@@ -115,14 +117,14 @@ export default function PilotDetails({ formData, setFormData }) {
           data={experience}
           save="value"
           value={formData.experience}
-          boxStyles={[formData.experienceIsSet ? null : { borderColor: "red" }, { backgroundColor: "white" }]}
+          boxStyles={[formData.experienceIsSet ? null : { borderColor: "red" }, { backgroundColor: "white", width: 280, height: 55, alignItems: 'center'}]}
           onSelect={() => {
             setFormData({ ...formData, experience: selectedExperience, experienceIsSet: te });            
           }}
           label="Experience"
         />
       </View>
-      <View style={{marginBottom: 20, width:280}}>
+      <View style={{marginBottom: 20 }}>
         <MultipleSelectList
           setSelected={(val) => {
             setSelectedInterest(val)
@@ -132,7 +134,7 @@ export default function PilotDetails({ formData, setFormData }) {
           placeholder='Select Interests *'
           search={false}
           save="value"
-          boxStyles={[formData.interestsIsSet ? null : {borderColor : "red"}, {backgroundColor: "white", padding:16}]}
+          boxStyles={[formData.interestsIsSet ? null : {borderColor : "red"}, {backgroundColor: "white", width: 280, height: 55, alignItems: 'center'}]}
           label="Interest"
           onSelect={() => {
             setFormData({ ...formData, interests:selectedInterest, interestsIsSet: tee});
@@ -153,11 +155,11 @@ const styles = StyleSheet.create({
     borderWidth:1,
     borderColor:'grey',
     width: 280,
-    height: 45,
+    height: 55,
     marginBottom: 20,
     alignItems: "flex-start",
     justifyContent: "center",
-    padding: 10,
+    paddingHorizontal: 20,
     fontSize: 15,
     color: 'black'
   },
@@ -167,11 +169,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'red',
     width: 280,
-    height: 45,
+    height: 55,
     marginBottom: 20,
     alignItems: "flex-start",
     justifyContent: "center",
-    padding: 10,
+    paddingHorizontal: 20,
     fontSize: 15,
     color: 'grey'
 },
@@ -181,7 +183,7 @@ const styles = StyleSheet.create({
     top:13
   },
   button_inp: {
-    padding: 10,
+    // padding: 10,
     flexDirection: "column"
   },
   pressable: {
@@ -189,8 +191,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderColor: 'black',
     borderWidth: 1,
-    marginBottom: 5,
-    width: 270,
+    marginBottom: 20,
+    width: 280,
+    height: 55,
+    alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: 7
   },
   containerT: {

@@ -1,4 +1,4 @@
-import React from 'react';
+import {React, useState, useEffect} from 'react';
 import { Text, View, TouchableOpacity, Image } from 'react-native';
 import CourseDetails from '../screens/courseDetails';
 import Learning from '../screens/learning'
@@ -9,11 +9,31 @@ import Images from '../images/index'
 import Home from '../screens/home'
 import JobForm from '../jobForm/JobForm';
 import Notifications from '../screens/notifications';
+import { Feather } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import JobDetails from '../screens/jobDetails';
+import JobStack from './jobStack'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { NavigationContainer } from '@react-navigation/native';
 
 const Stack = createNativeStackNavigator();
 
 export default function HomeStack({ navigation }) {
+    const [userType, setUserType] = useState("");
+    const [isClicked, setIsClicked] = useState(false);
+    const handleClick = () => {
+    setIsClicked(true)
+    } 
+    const mount = async() => {
+        const type = await AsyncStorage.getItem("userType");
+        const jsonType = JSON.parse(type);
+        setUserType(jsonType);
+      }
+  
+      useEffect(() => {
+          mount();
+      }, [])
+    console.log("In homeStack");
     return (
         // <NavigationContainer independent={true}>
         <Stack.Navigator
@@ -25,7 +45,7 @@ export default function HomeStack({ navigation }) {
                 name="home"
                 component={Home} 
                 options={{
-                    headerTitle: () => <Text style={{ fontSize: 26, color: 'grey', fontWeight: 'bold' }}>Drone<Text style={{ fontWeight: 'bold', fontSize: 26, color: 'coral' }}>Walas</Text></Text>,
+                    headerTitle: () => <Text style={{ fontSize: 26, color: 'grey', fontWeight: 'bold' }}>Drones<Text style={{ fontWeight: 'bold', fontSize: 26, color: 'coral' }}>Wala</Text></Text>,
                     headerLeft: () => (
                         <TouchableOpacity onPress={() => navigation.openDrawer()}>
                             <Image
@@ -75,11 +95,6 @@ export default function HomeStack({ navigation }) {
                 component={ChooseCategory}
                 options={{
                     headerShown: true,
-                    headerLeft: () => (
-                        <TouchableOpacity style={{ paddingLeft: 15, paddingRight: 15 }} onPress={() => navigation.navigate("home")}>
-                            <Ionicons name="arrow-back" size={26} color="black" />
-                        </TouchableOpacity>
-                    ),
                 }}
             />
             <Stack.Screen
@@ -87,28 +102,43 @@ export default function HomeStack({ navigation }) {
                 component={Notifications}
                 options={{
                     headerShown: true,
-                    headerLeft: () => (
-                        <TouchableOpacity style={{ paddingLeft: 15, paddingRight: 15 }} onPress={() => navigation.navigate("home")}>
-                            <Ionicons name="arrow-back" size={26} color="black" />
-                        </TouchableOpacity>
-                    ),
                 }}
             />
             <Stack.Screen
-                name="Job Details"
-                component={JobDetails}
+                name="Job Details" 
+                options={{
+                    headerShown:true,
+                    headerRight: () => (                    
+                    <View style={{justifyContent: 'center'}}>
+                        { userType === "company" ? 
+                            <View style={{flexDirection: 'row', justifyContent: 'space-evenly', alignContent: 'space-between', position: 'absolute', right: '6%'}}>
+                                <TouchableOpacity onPress={handleClick}
+                                    style={{paddingRight:'11%'}}
+                                >
+                                    <Feather name="edit" size={24} color="black" />
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => console.log("Edit 2")}
+                                    style={{paddingRight:'11%', marginLeft: 8}}
+                                >
+                                    <MaterialIcons name="delete" size={24} color="black" /> 
+                                </TouchableOpacity>
+                            </View> 
+                        : null }
+                    </View> 
+                  )
+                  }} 
+            >{props => <JobDetails {...props} isClicked={isClicked} setIsClicked={setIsClicked}/>}</Stack.Screen>
+            <Stack.Screen
+                name="Jobstack"
+                component={JobStack}
                 options={{
                     headerShown: true,
-                    headerLeft: () => (
-                        <TouchableOpacity style={{ paddingRight: 25 }} onPress={() => navigation.navigate("home")}>
-                            <Ionicons name="arrow-back" size={26} color="black" />
-                        </TouchableOpacity>
-                    ),
                 }}
             />
+            
 
         </Stack.Navigator>
-        // </NavigationContainer>
+        // </NavigationContainer> 
     );
 }
 

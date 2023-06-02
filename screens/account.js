@@ -38,7 +38,7 @@ export default function Account({isClicked, setIsClicked, navigation}) {
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
-      fetchJobsApplied(user);
+      mount();
       setRefreshing(false);
     }, 1300);
   }, []);
@@ -132,6 +132,7 @@ export default function Account({isClicked, setIsClicked, navigation}) {
                             <Text style={{ fontSize: 21, color: 'white', fontWeight:500 }}>{user.name}</Text>
                             <Text style={{fontSize: 16, color: 'white', fontWeight:400 }}><Ionicons name='location-outline' size={16} color='white' /> {user.city + ", " + user.state}</Text>
                             <Text style={{ fontSize: 16, color: 'white', fontWeight:400 }}><Ionicons name='ios-mail-outline' size={16} color='white' /> {" " + user.email}</Text>
+                            <Text style={{ fontSize: 16, color: 'white', fontWeight:400 }}><Ionicons name='ios-call-outline' size={16} color='white' /> {" " + user.phone}</Text>
                         </View>
                     </View>
                 </View>

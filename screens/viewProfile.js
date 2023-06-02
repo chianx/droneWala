@@ -175,12 +175,12 @@ export default function ViewProfile({route, navigation}) {
           {user.userType === "company" ?
           <View>
         <View style={styles.divider}>
-            <View style={[styles.dividerView, {marginRight:20, marginLeft:20}]}></View>
+            <View style={[styles.dividerView, {marginRight:10, marginLeft:10}]}></View>
             <Text style={styles.dividerText}>About us</Text>
-            <View style={[styles.dividerView, {marginRight:20, marginLeft:20}]}></View>
+            <View style={[styles.dividerView, {marginRight:10, marginLeft:10}]}></View>
         </View>
-        <View style={{width:'90%', marginTop:10, marginBottom:30}}>
-            <Text style={{color:'grey', fontSize:17}}>{user.about}</Text>
+        <View style={{width:'100%', marginTop:10, marginBottom:30}}>
+            <Text style={{color:'grey', fontSize:17, marginHorizontal:'4%'}}>{user.about}</Text>
         </View>
         </View> : <View style={{height:50}}></View>
         }
@@ -308,7 +308,7 @@ const styles = StyleSheet.create({
     dividerView: {
         height:2,
         backgroundColor:'#8e8e8e',
-        width:'25%',
+        width:'28%',
         opacity: 100
     },
     dividerText: {

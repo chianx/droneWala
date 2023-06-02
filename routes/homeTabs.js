@@ -60,7 +60,7 @@ export default function HomeTab({navigation}) {
         <Tab.Screen name="Home" component={HomeStack} 
           options ={{
             headerShown: false,
-            headerTitle: () => <Text style={{ fontSize: 26, color: 'grey', fontWeight: 'bold' }}>Drone<Text style={{ fontWeight: 'bold', fontSize: 26, color: 'coral' }}>Walas</Text></Text> ,
+            headerTitle: () => <Text style={{ fontSize: 26, color: 'grey', fontWeight: 'bold' }}>Drones<Text style={{ fontWeight: 'bold', fontSize: 26, color: 'coral' }}>Wala</Text></Text> ,
             headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.openDrawer()}>
               <Image
@@ -114,31 +114,7 @@ export default function HomeTab({navigation}) {
           }} 
         >{props => <Account {...props} isClicked={isClicked} setIsClicked={setIsClicked}/>}
         </Tab.Screen>
-        <Tab.Screen name="Course Details" component={CourseDetails} 
-          options={{
-            headerShown:true,
-            tabBarButton: () => null,
-            tabBarVisible: false,
-            headerLeft: () => (
-            <TouchableOpacity style={{paddingLeft:15, paddingRight:15}} onPress={() => navigation.navigate("Jobs")}>
-              <Ionicons name="arrow-back" size={26} color="black" />
-            </TouchableOpacity>
-          )
-          }}
-        />
         
-        {/* <Tab.Screen name="Job Details" component={JobDetails} 
-          options={{
-            headerShown:true,
-            tabBarButton: () => null,
-            tabBarVisible: false,
-            headerLeft: () => (
-            <TouchableOpacity style={{paddingLeft:15, paddingRight:15}} onPress={() => navigation.navigate("Jobs")}>
-              <Ionicons name="arrow-back" size={26} color="black" />
-            </TouchableOpacity>
-          )
-          }}
-        /> */}
 
         
       </Tab.Navigator>

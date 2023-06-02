@@ -100,7 +100,7 @@ export default function StepOne({ formData, setFormData }) {
                 />
             </View>
 
-            <Text style={{ color: "coral", marginBottom: 10 }}>Enter Work Duration (in weeks)</Text>
+            <Text style={{ color: "coral", marginBottom: 10 }}>Enter Work Duration (in days)</Text>
             <View style={{ flexDirection: 'row' }}>
                 <TextInput
                     // style={[formData.workDurationFromIsSet ? styles.TextInput : styles.errorTextInput, { width: 180}]}

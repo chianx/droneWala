@@ -8,6 +8,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Applicants from '../screens/applicants'
 import Images from '../images/index'
+import { Feather } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import Application from '../screens/application';
 import JobForm from '../jobForm/JobForm'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -17,7 +19,10 @@ const Stack = createNativeStackNavigator();
 
 export default function JobStack({navigation}) {
     const [userType, setUserType] = useState("");
-  
+    const [isClicked, setIsClicked] = useState(false);
+    const handleClick = () => {
+    setIsClicked(true)
+    } 
     const mount = async() => {
       const type = await AsyncStorage.getItem("userType");
       const jsonType = JSON.parse(type);
@@ -58,8 +63,28 @@ export default function JobStack({navigation}) {
             />
             <Stack.Screen 
                 name="Job Details" 
-                component={JobDetails}
-            />
+                options={{
+                    headerShown:true,
+                    headerRight: () => (                    
+                    <View style={{justifyContent: 'center'}}>
+                        { userType === "company" ? 
+                            <View style={{flexDirection: 'row', justifyContent: 'space-evenly', alignContent: 'space-between', position: 'absolute', right: '6%'}}>
+                                <TouchableOpacity onPress={handleClick}
+                                    style={{paddingRight:'11%'}}
+                                >
+                                    <Feather name="edit" size={24} color="black" />
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => console.log("Edit 2")}
+                                    style={{paddingRight:'11%', marginLeft: 8}}
+                                >
+                                    <MaterialIcons name="delete" size={24} color="black" /> 
+                                </TouchableOpacity>
+                            </View> 
+                        : null }
+                    </View> 
+                  )
+                  }} 
+            >{props => <JobDetails {...props} isClicked={isClicked} setIsClicked={setIsClicked}/>}</Stack.Screen>
             <Stack.Screen 
                 name="Post a Job" 
                 component={JobForm}

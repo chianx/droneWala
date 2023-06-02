@@ -112,14 +112,14 @@ export default function BasicDetails({ formData, setFormData }) {
     }
   }
   const handleCINChange = (CINno) => {
-    if (CINno.trim().length >= 5) {
+    if (CINno.trim().length == 21) {
       setFormData({ ...formData, CINno: CINno, cinIsSet: true });
     } else {
       setFormData({ ...formData, CINno: CINno, cinIsSet: false });
     }
   }
   const handleGSTChange = (GSTno) => {
-    if (GSTno.trim().length >= 5) {
+    if (GSTno.trim().length == 15) {
         setFormData({ ...formData, GSTno: GSTno, gstIsSet:true });
     } else {
         setFormData({ ...formData, GSTno: GSTno, gstIsSet:false });
@@ -132,8 +132,8 @@ export default function BasicDetails({ formData, setFormData }) {
           style={[formData.cinIsSet ? styles.TextInput : styles.errorTextInput]}
           placeholderTextColor="grey"
           placeholder='CIN Number *'
-          keyboardType='numeric'
-            // maxLength={12}
+          // keyboardType='numeric'
+          maxLength={21}
           value={formData.CINno}
           onChangeText={(CINno) => handleCINChange(CINno)}
         />
@@ -143,8 +143,8 @@ export default function BasicDetails({ formData, setFormData }) {
           style={[formData.gstIsSet ? styles.TextInput : styles.errorTextInput]}
           placeholderTextColor="grey"
           placeholder='GST Number *'
-          keyboardType='numeric'
-            // maxLength={6}
+          // keyboardType='numeric'
+          maxLength={15}
           value={formData.GSTno}
           onChangeText={(GSTno) => handleGSTChange(GSTno)}
         />

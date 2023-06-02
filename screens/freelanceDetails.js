@@ -9,13 +9,22 @@ import {db} from '../firebase/databaseConfig'
 import { ref, onValue, push, update, remove, runTransaction, set } from 'firebase/database';
 import Toast from 'react-native-root-toast';
 import axios from 'axios';
+import EditFreelanceModal from './editFreelance';
 
-export default function FreelanceDetails({ route, navigation, formData }) {
+export default function FreelanceDetails({ route, navigation, isClicked, setIsClicked, formData }) {
   const freelance = route.params.freelance;
   const [userType, setUserType] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [bid, setBid] = useState(0);
   const [canApply, setCanApply] = useState(true);
+
+  const handleSaveProfile =() => {
+    setIsClicked(!isClicked);
+  };
+
+  const handleCancelEdit = () => {
+    setIsClicked(!isClicked);
+  };
   
   const sendNotification = async (userJson, token) => {
     console.log(token);
@@ -268,6 +277,15 @@ export default function FreelanceDetails({ route, navigation, formData }) {
         
       </Modal>
       </View>
+
+      {userType === 'company' ? 
+          <EditFreelanceModal
+            visible={isClicked}
+            onSave={handleSaveProfile}
+            onClose={handleCancelEdit}
+            freelance = {freelance}
+          /> 
+      : null}
 
     </ScrollView>
   )

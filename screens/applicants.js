@@ -19,7 +19,7 @@ export default function Applicants({route, navigation}) {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
-    }, 1300);
+    }, 1000);
   }, []);
 
   useEffect (() => {
@@ -39,19 +39,23 @@ export default function Applicants({route, navigation}) {
         })
       }
     })
-    setIsLoading(false);
-    setApplied(applicants);
+    
+    setTimeout(() => {
+      setApplied(applicants);
+      setIsLoading(false);
+    }, 1000);
+    
     
   }, [])
   return (
       <ScrollView
-        contentContainerStyle={styles.scrollView}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
-        {isLoading? <View style={{backgroundColor: '#e0e0e0', position:'absolute', flex:1, height:'100%', width:'100%', justifyContent:'center'}}><ActivityIndicator size="large" color="coral" /></View> :<></>}
-        {applied.length === 0? <View style={{backgroundColor:'#f0f0f0', justifyContent:'center', height:'100%', width:'100%'}}><Text style={{fontSize:20, fontWeight:400, textAlign:'center'}}>No one has applied to this Job yet.</Text></View> :<></>}
         <View style={styles.container}>
+        {isLoading? <View style={{backgroundColor: '#e0e0e0', height:'100%', width:'100%', justifyContent:'center'}}><ActivityIndicator size="large" color="coral" /></View> :<></>}
+        {!isLoading && applied.length === 0? <View style={{backgroundColor:'#f0f0f0', justifyContent:'center', height:'100%', width:'100%'}}><Text style={{fontSize:20, fontWeight:400, textAlign:'center'}}>No one has applied to this Job yet.</Text></View> :<></>}
+
             {applied.map((item, index) => {
                 return (
                     <TouchableOpacity key={index} onPress={() => navigation.navigate("Application", {pilot: item.user, answer:item.answer})}>
@@ -79,7 +83,7 @@ export default function Applicants({route, navigation}) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex:1,
     backgroundColor: '#ffffff',
     alignItems: 'center',
   },
@@ -106,10 +110,5 @@ jobContainer: {
     borderTopWidth: 3,
     borderTopColor: '#ffe5d3',
     backgroundColor:'#F8F8F8'
-},
-scrollView: {
-  backgroundColor: 'white',
-  alignItems: 'center',
-  justifyContent: 'center',
 },
 });
