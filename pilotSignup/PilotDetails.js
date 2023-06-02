@@ -32,9 +32,11 @@ export default function PilotDetails({ formData, setFormData }) {
 
   const interests = [
     { key: '1', value: 'Agriculture' },
-    { key: '2', value: 'Delivery' },
-    { key: '3', value: 'Survey Mapping' },
-    { key: '4', value: 'Events' },
+    { key: '2', value: 'Real Estate' },
+    { key: '3', value: 'Geographical Surveys' },
+    { key: '4', value: '3D Mapping and Modeling' },
+    { key: '5', value: 'Surveying and Mapping' },
+    { key: '6', value: 'Aerial Photography' },
   ]
 
   const handleCERTNumberChange = (certNum) => {
@@ -95,7 +97,7 @@ export default function PilotDetails({ formData, setFormData }) {
             setSelectedDrone(val)
             setT(true)
           }}
-          search={false}
+          search={true}
           data={drone}
           save="value"
           value={formData.droneSelect}

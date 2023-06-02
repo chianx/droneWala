@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Image, View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
 import { SelectList } from 'react-native-dropdown-select-list'
 import DatePicker from 'react-native-modern-datepicker';
 import { MultipleSelectList } from 'react-native-dropdown-select-list'
@@ -12,15 +11,20 @@ import { ref as dbRef, update} from 'firebase/database'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-root-toast';
 import * as ImagePicker from 'expo-image-picker'
+import { MaterialIcons, Entypo, AntDesign} from '@expo/vector-icons';
 
 const EditProfileModalComp = ({ visible, onClose, setUserPrev }) => {
 
   const [user, setUser] = useState({});
   const [image, setImage] = useState(null);
+  const [interests, setInterests] = useState([]);
+  const [customInterest, setCustomInterest] = useState('');
+  const [openInterestPicker, setOpenInterestPicker] = useState(false);
   const mount = async () => {
     const userdata = await AsyncStorage.getItem("userData");
-    const val = JSON.parse(userdata)
+    const val = JSON.parse(userdata);
     setUser(val);
+    setInterests(val.category);
   }
   useEffect(() => {
     mount();
@@ -65,16 +69,28 @@ const EditProfileModalComp = ({ visible, onClose, setUserPrev }) => {
     }
   };
 
-  const [cat, setCat] = useState([])
+  const deleteInterest = (item) => {
+    array = interests.filter((ele) => ele !== item);
+    setInterests(array);
+    setUser({ ...user, category:array});
+  }
+  const handleAddInterest = () => {
+    let arr = [...interests, customInterest];
+    setInterests(arr);
+    setCustomInterest('');
+    setUser({ ...user, category:arr});
+  }
   const handleButtonOpen = () => {
     setOpen(!open);
     setUser({ ...user, foundedin: date, dateIsSet: true })
   }
   const category = [
     { key: '1', value: 'Agriculture' },
-    { key: '2', value: 'Delivery' },
-    { key: '3', value: 'Survey Mapping' },
-    { key: '4', value: 'Events' },
+    { key: '2', value: 'Real Estate' },
+    { key: '3', value: 'Geographical Surveys' },
+    { key: '4', value: '3D Mapping and Modeling' },
+    { key: '5', value: 'Surveying and Mapping' },
+    { key: '6', value: 'Aerial Photography' },
   ]
 
   const numPeople = [
@@ -309,21 +325,55 @@ const EditProfileModalComp = ({ visible, onClose, setUserPrev }) => {
                 label="NumPeople"
               />
             </View>
-            <View style={{ marginBottom: 20, width: 300 }}>
-              <Text style={styles.label}>Categories</Text>
-              <MultipleSelectList
-                setSelected={(val) => {
-                  setCat(val)
-                  
-                }}
-                data={category}
+
+
+            <Text style={styles.label}>My Interests</Text>
+            <View style={{marginBottom:20, width:300}}>
+            <View style={{flexDirection:'row', flexWrap:'wrap', width:'100%'}}>
+                {interests != null ? interests.map((item, index) => {
+                    return (
+                        <View key = {index} style={{flexDirection:'row', justifyContent:'center', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>
+                        <Text style={{ fontSize:13, color: 'white'}}>{item}</Text>
+                        <TouchableOpacity onPress={() => {deleteInterest(item)}} style={{marginLeft:5, position:'relative', top:1}}><Entypo name="cross" size={17} color="black" /></TouchableOpacity>
+                        </View>
+                    )
+                    }) :<></>
+                }
+                <TouchableOpacity onPress={() => setOpenInterestPicker(!openInterestPicker)}>
+                  <Text style={{paddingLeft: 15}}><MaterialIcons name={openInterestPicker? "cancel" : "add-circle"} size={45} color="coral" /></Text>
+                </TouchableOpacity>
+            </View>
+            {openInterestPicker? 
+            <View style= {{backgroundColor:'white', width:300, marginBottom:20, borderWidth:1.2, borderColor:'grey', borderRadius:13}}>
+            <MultipleSelectList 
+                setSelected={(val) => setInterests(val)} 
+                placeholder='Select Interests from List'
+                data={category} 
                 save="value"
+                onSelect={() =>  {
+                  setUser({ ...user, category:interests});
+                }} 
                 label="Categories"
-                boxStyles={[user.categoryIsSet ? null : { borderColor: "red" }, { backgroundColor: "white" }]}
-                onSelect={() => {
-                  setUser({ ...user, category: cat, categoryIsSet: true })
-                }}
-              />
+                maxHeight={260}
+                boxStyles={{borderWidth:0, backgroundColor:'white', height:40, marginBottom:0}}
+                dropdownStyles={{borderWidth:0, backgroundColor:'white'}}
+                badgeStyles={{height:0, width:0, backgroundColor:'grey', paddingHorizontal:0}}
+            />
+            <View style={{alignItems:'center', paddingBottom:15}}>
+                  <TextInput
+                      value={customInterest}
+                      onChangeText={setCustomInterest}
+                      placeholder="Your faourite interest"
+                      style={{height:30, fontSize:17, width:'87%', height:40, borderBottomWidth:1, marginBottom:5, borderColor:'grey'}}
+                  />
+                  
+                  <TouchableOpacity onPress={handleAddInterest}
+                      style={{justifyContent:'center', width:'90%', height:40, backgroundColor:'coral', alignItems:'center', }}>
+                      <Text style={{fontSize:16, color:'white'}}>Add</Text>
+                  </TouchableOpacity>
+                </View>
+            </View> :<></>
+            }
             </View>
           </View>
         </View>
