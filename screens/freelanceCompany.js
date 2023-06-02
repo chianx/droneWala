@@ -111,7 +111,7 @@ export default function FreelanceCompanies({navigation}) {
 
 
     return (
-        <View style={styles.container}>
+      <View style={styles.container}>
         {isLoading? <View style={{backgroundColor: '#e0e0e0aa', flex:1, justifyContent:'center'}}><ActivityIndicator size="large" color="coral" /></View> 
         :
         freelance.length == 0 ? 
@@ -145,7 +145,9 @@ export default function FreelanceCompanies({navigation}) {
             }
         </View>
         }
-        </View>
+
+        
+      </View>
     )
 }
 
