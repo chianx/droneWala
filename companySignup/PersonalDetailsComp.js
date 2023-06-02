@@ -1,15 +1,8 @@
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, TextInput, StyleSheet, TouchableOpacity} from "react-native";
 import React, { useState } from "react";
 import DatePicker from "react-native-modern-datepicker";
 
 export default function PersonalDetails({ formData, setFormData }) {
-  const [date, setDate] = useState("");
   const handleButtonOpen = () => {
     setOpen(!open);
   };
@@ -19,10 +12,6 @@ export default function PersonalDetails({ formData, setFormData }) {
   const month = date1.getMonth() + 1;
   const day = date1.getDate();
   const todaysDate = year + "-0" + month + "-" + day;
-
-  const [nameIsSet, setNameIsSet] = useState(false);
-  const [dateIsSet, setDateIsSet] = useState(false);
-  const [emailIsSet, setEmailIsSet] = useState(false);
 
   const handleNameChange = (name) => {
     if (name.trim().length > 2) {
