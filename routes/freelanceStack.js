@@ -14,8 +14,11 @@ import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios'
-const Stack = createNativeStackNavigator();
 import Toast from 'react-native-root-toast';
+import { db } from '../firebase/databaseConfig'
+import { ref as dbRef, remove} from 'firebase/database'
+
+const Stack = createNativeStackNavigator();
 
 export default function FreelanceStack({navigation}) {
     const [userType, setUserType] = useState("");
@@ -25,6 +28,13 @@ export default function FreelanceStack({navigation}) {
     const handleClick = () => {
     setIsClicked(true)
     } 
+
+    const deleteFreelance = (id) => {
+        ref = dbRef(db, `freelance/${id}`)
+        remove(ref).then(() => {
+            console.log('Freelance Deleted')
+        })
+    }
 
     const toggleSwitch = async(state) => {
         

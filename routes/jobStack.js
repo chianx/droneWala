@@ -14,8 +14,17 @@ import Application from '../screens/application';
 import JobForm from '../jobForm/JobForm'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ViewProfile from '../screens/viewProfile';
+import { db } from '../firebase/databaseConfig'
+import { ref as dbRef, remove} from 'firebase/database'
 
 const Stack = createNativeStackNavigator();
+
+const deleteJob = (id) => {
+    ref = dbRef(db, `jobs/${id}`)
+    remove(ref).then(() => {
+        console.log('Job Deleted')
+    })
+}
 
 export default function JobStack({navigation}) {
     const [userType, setUserType] = useState("");
@@ -74,7 +83,7 @@ export default function JobStack({navigation}) {
                                 >
                                     <Feather name="edit" size={24} color="black" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => console.log("Edit 2")}
+                                <TouchableOpacity onPress={(deleteJob) => console.log("Edit 2")}
                                     style={{paddingRight:'11%', marginLeft: 8}}
                                 >
                                     <MaterialIcons name="delete" size={24} color="black" /> 

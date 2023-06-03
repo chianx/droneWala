@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { db } from '../firebase/databaseConfig'
 import { ref, update} from 'firebase/database'
 import Toast from 'react-native-root-toast';
+import { ref as dbRef, update} from 'firebase/database'
 
 const EditJobModal = ({ visible, onClose, job }) => {
     const [jobFinal, setJobFinal] = useState(job);
@@ -38,39 +39,33 @@ const EditJobModal = ({ visible, onClose, job }) => {
 
 
     const handleSave = () => {
-        // console.log(jobFinal.jobTitleIsSet
-        //     ,jobFinal.salRangeFromIsSet, jobFinal.salRangeToIsSet, jobFinal.ftORptIsSet, jobFinal.numOpenIsSet, 
-        //     jobFinal.dateIsSet, jobFinal.locationIsSet, jobFinal.aboutJobIsSet, jobFinal.whoApplyIsSet)
-        // if(jobFinal.jobTitleIsSet && jobFinal.salRangeFromIsSet && jobFinal.salRangeToIsSet && jobFinal.ftORptIsSet && jobFinal.numOpenIsSet && jobFinal.dateIsSet && jobFinal.locationIsSet && jobFinal.aboutJobIsSet && jobFinal.whoApplyIsSet) {
-        //     update(ref(db, `jobs/${jobFinal.jobId}`), job).then(() => {
-        //         // Add loading icon.
-        //         Toast.show('Job Updated!!', {
-        //           backgroundColor:'#fda172',
-        //           duration: Toast.durations.LONG,
-        //           position: -100,
-        //           shadow: true,
-        //           borderRadius: 50, 
-        //           animation: true,
-        //           opacity: 100,
-        //           hideOnPress: false
-        //         });
-        //       }).catch((error) => {
-        //         // Correct this.
-        //         setErrorMessage(error.toString);
-        //         Toast.show('No Internet. Unable to update!!', {
-        //           backgroundColor:'#fda172',
-        //           duration: Toast.durations.LONG,
-        //           position: -100,
-        //           shadow: true,
-        //           borderRadius: 50, 
-        //           animation: true,
-        //           hideOnPress: false
-        //         });
-        //       })
-        //       onClose();
-        //       console.log("Save!" + "\n");
-        //     console.log(jobFinal);
-        // }
+        console.log(jobFinal)
+        update(dbRef(db, `jobs/${job.jobId}`), jobFinal).then(() => {
+            // Add loading icon.
+            Toast.show('Job Post Updated!!', {
+              backgroundColor:'#fda172',
+              duration: Toast.durations.LONG,
+              position: -100,
+              shadow: true,
+              borderRadius: 50, 
+              animation: true,
+              opacity: 100,
+              hideOnPress: false
+            });
+          }).catch((error) => {
+            // Correct this.
+            setErrorMessage(error.toString);
+            Toast.show('No Internet. Unable to update!!', {
+              backgroundColor:'#fda172',
+              duration: Toast.durations.LONG,
+              position: -100,
+              shadow: true,
+              borderRadius: 50, 
+              animation: true,
+              hideOnPress: false
+            });
+          })
+          onClose()
     };
 
     const handlejobTitle = (jobTitle) => {

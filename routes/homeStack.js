@@ -15,8 +15,17 @@ import JobDetails from '../screens/jobDetails';
 import JobStack from './jobStack'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
+import { db } from '../firebase/databaseConfig'
+import { ref as dbRef, remove} from 'firebase/database'
 
 const Stack = createNativeStackNavigator();
+
+const deleteJob = (id) => {
+    ref = dbRef(db, `jobs/${id}`)
+    remove(ref).then(() => {
+        console.log('Job Deleted')
+    })
+}
 
 export default function HomeStack({ navigation }) {
     const [userType, setUserType] = useState("");
