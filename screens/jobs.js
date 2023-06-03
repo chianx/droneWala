@@ -81,7 +81,6 @@ export default function Jobs({navigation}) {
       if(user.userType === "company") {
         var tempJob = [];
         for(var element in allJobs) {
-          console.log(allJobs[element]);
           if(allJobs[element].companyId != user.userId) {
               continue;
           }

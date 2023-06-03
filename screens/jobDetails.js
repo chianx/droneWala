@@ -1,14 +1,16 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-root-toast';
 import EditJobModal from './editJob';
+import { db } from '../firebase/databaseConfig'
+import { ref as dbRef, remove} from 'firebase/database'
 
-export default function JobDetails({isClicked, setIsClicked, route, navigation}) {
+export default function JobDetails({isClicked, setIsClicked, route, navigation, deleteIsClicked, setDeleteIsClicked}) {
   const [userType, setUserType] = useState("");
   const [user, setUser] = useState({});
   const job = route.params.job;
@@ -28,6 +30,17 @@ export default function JobDetails({isClicked, setIsClicked, route, navigation})
     setUser(val);
     setUserType(val.userType);
     var userId = val.userId;
+    if(deleteIsClicked && val.userType==="company") {
+      Alert.alert(
+        'Delete Job',
+        'Are you sure you want to delete this Job Post?',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          { text: 'Delete', onPress: deleteJob, style: 'destructive' },
+        ]
+      );
+      setDeleteIsClicked(false);
+    }
     if(job.applied) {
       for(var index in job.applied) {
         if(job.applied[index] === userId) {
@@ -37,10 +50,20 @@ export default function JobDetails({isClicked, setIsClicked, route, navigation})
       }
     }
   }
+
+  const deleteJob = () => {
+    
+    ref = dbRef(db, `jobs/${job.id}`)
+    remove(ref).then(() => {
+        console.log('Job Deleted');
+        navigation.navigate("Jobs");
+    })
+  }
+  
   useEffect(() => {
     mount();
 
-  }, [])
+  }, [deleteIsClicked])
 
   const handleApply = () => {
     if(canApply) {
