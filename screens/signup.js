@@ -13,7 +13,7 @@ export default function Signup({navigation}) {
 
               <Image style={{width:'100%', height:'25%'}} source={Images.droneBanner} />
 
-              <Text style={styles.ques}>You are ..?</Text>
+              <Text style={styles.ques}>Choose Your Profile.</Text>
               
               <TouchableOpacity style={styles.button} onPress={()=> navigation.navigate("Pilot")}>
                 <View style={{width:'40%', height:'100%', position:'absolute',left:0}}>

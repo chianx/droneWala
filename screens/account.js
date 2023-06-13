@@ -85,9 +85,6 @@ export default function Account({isClicked, setIsClicked, navigation}) {
         setRejected(tempRejected);
         setAll(tempApplied);
         setDataList(tempApplied);
-        console.log("applied ", tempApplied);
-        console.log("rejected ", tempRejected);
-        console.log("Accepted ", tempAccepted);
       }, 1300);
       
       })

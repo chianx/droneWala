@@ -30,8 +30,14 @@ const deleteJob = (id) => {
 export default function HomeStack({ navigation }) {
     const [userType, setUserType] = useState("");
     const [isClicked, setIsClicked] = useState(false);
+    const [deleteIsClicked, setDeleteIsClicked] = useState(false);
     const handleClick = () => {
     setIsClicked(true)
+    } 
+
+    const handleDelete = () => {
+        console.log("Delete is clicked now");
+        setDeleteIsClicked(true)
     } 
     const mount = async() => {
         const type = await AsyncStorage.getItem("userType");
@@ -126,7 +132,7 @@ export default function HomeStack({ navigation }) {
                                 >
                                     <Feather name="edit" size={24} color="black" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => console.log("Edit 2")}
+                                <TouchableOpacity onPress={handleDelete}
                                     style={{paddingRight:'11%', marginLeft: 8}}
                                 >
                                     <MaterialIcons name="delete" size={24} color="black" /> 
@@ -136,7 +142,7 @@ export default function HomeStack({ navigation }) {
                     </View> 
                   )
                   }} 
-            >{props => <JobDetails {...props} isClicked={isClicked} setIsClicked={setIsClicked}/>}</Stack.Screen>
+            >{props => <JobDetails {...props} isClicked={isClicked} setIsClicked={setIsClicked} deleteIsClicked={deleteIsClicked} setDeleteIsClicked={setDeleteIsClicked}/>}</Stack.Screen>
             <Stack.Screen
                 name="Jobstack"
                 component={JobStack}

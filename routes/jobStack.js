@@ -14,23 +14,18 @@ import Application from '../screens/application';
 import JobForm from '../jobForm/JobForm'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ViewProfile from '../screens/viewProfile';
-import { db } from '../firebase/databaseConfig'
-import { ref as dbRef, remove} from 'firebase/database'
 
 const Stack = createNativeStackNavigator();
-
-const deleteJob = (id) => {
-    ref = dbRef(db, `jobs/${id}`)
-    remove(ref).then(() => {
-        console.log('Job Deleted')
-    })
-}
 
 export default function JobStack({navigation}) {
     const [userType, setUserType] = useState("");
     const [isClicked, setIsClicked] = useState(false);
+    const [deleteIsClicked, setDeleteIsClicked] = useState(false);
     const handleClick = () => {
-    setIsClicked(true)
+        setIsClicked(true)
+    } 
+    const handleDelete = () => {
+        setDeleteIsClicked(true)
     } 
     const mount = async() => {
       const type = await AsyncStorage.getItem("userType");
@@ -83,7 +78,7 @@ export default function JobStack({navigation}) {
                                 >
                                     <Feather name="edit" size={24} color="black" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={(deleteJob) => console.log("Edit 2")}
+                                <TouchableOpacity onPress={handleDelete}
                                     style={{paddingRight:'11%', marginLeft: 8}}
                                 >
                                     <MaterialIcons name="delete" size={24} color="black" /> 
@@ -93,7 +88,8 @@ export default function JobStack({navigation}) {
                     </View> 
                   )
                   }} 
-            >{props => <JobDetails {...props} isClicked={isClicked} setIsClicked={setIsClicked}/>}</Stack.Screen>
+            >{props => <JobDetails {...props} isClicked={isClicked} setIsClicked={setIsClicked} deleteIsClicked={deleteIsClicked} setDeleteIsClicked={setDeleteIsClicked} />
+            }</Stack.Screen>
             <Stack.Screen 
                 name="Post a Job" 
                 component={JobForm}

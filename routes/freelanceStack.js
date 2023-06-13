@@ -15,25 +15,21 @@ import { MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios'
 import Toast from 'react-native-root-toast';
-import { db } from '../firebase/databaseConfig'
-import { ref as dbRef, remove} from 'firebase/database'
 
 const Stack = createNativeStackNavigator();
 
 export default function FreelanceStack({navigation}) {
     const [userType, setUserType] = useState("");
     const [isEnabled, setIsEnabled] = useState(true);
+    const [deleteIsClicked, setDeleteIsClicked] = useState(false);
 
     const [isClicked, setIsClicked] = useState(false);
     const handleClick = () => {
-    setIsClicked(true)
+        setIsClicked(true)
     } 
-
-    const deleteFreelance = (id) => {
-        ref = dbRef(db, `freelance/${id}`)
-        remove(ref).then(() => {
-            console.log('Freelance Deleted')
-        })
+    const handleDelete = () => {
+        console.log("clicked now");
+        setDeleteIsClicked(true)
     }
 
     const toggleSwitch = async(state) => {
@@ -163,7 +159,7 @@ export default function FreelanceStack({navigation}) {
                                 >
                                     <Feather name="edit" size={24} color="black" />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => console.log("Edit 2")}
+                                <TouchableOpacity onPress={handleDelete}
                                     style={{paddingRight:'11%', marginLeft: 8}}
                                 >
                                     <MaterialIcons name="delete" size={24} color="black" /> 
@@ -173,7 +169,7 @@ export default function FreelanceStack({navigation}) {
                     </View> 
                   )
                   }} 
-            >{props => <FreelanceDetails {...props} isClicked={isClicked} setIsClicked={setIsClicked}/>}</Stack.Screen>
+            >{props => <FreelanceDetails {...props} isClicked={isClicked} setIsClicked={setIsClicked} deleteIsClicked={deleteIsClicked} setDeleteIsClicked={setDeleteIsClicked} />}</Stack.Screen>
             <Stack.Screen 
                 name="Post a Project" 
                 component={ChooseCategory}

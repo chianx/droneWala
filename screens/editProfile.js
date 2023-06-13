@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {Image, View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, ScrollView, Pressable } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
 import { SelectList } from 'react-native-dropdown-select-list'
 import DatePicker from 'react-native-modern-datepicker';
 import { MultipleSelectList } from 'react-native-dropdown-select-list'
@@ -10,7 +9,8 @@ import {storage} from '../firebase/firebase'
 import { ref, getDownloadURL,uploadBytesResumable, uploadBytes} from 'firebase/storage';
 import { ref as dbRef, update} from 'firebase/database'
 import Toast from 'react-native-root-toast';
-import * as ImagePicker from 'expo-image-picker'
+import * as ImagePicker from 'expo-image-picker';
+import { MaterialIcons, Entypo, AntDesign} from '@expo/vector-icons';
 
 const EditProfileModal = ({ visible, onClose, setUserPrev }) => {
 
@@ -18,10 +18,16 @@ const EditProfileModal = ({ visible, onClose, setUserPrev }) => {
   const [drones, setDrones] = useState([]);
   const [interests, setInterests] = useState([]);
   const [image, setImage] = useState(null);
+  const [customValue, setCustomValue] = useState('');
+  const [customInterest, setCustomInterest] = useState('');
+  const [openDronePicker, setOpenDronePicker] = useState(false);
+  const [openInterestPicker, setOpenInterestPicker] = useState(false);
     const mount = async() => {
       const userdata = await AsyncStorage.getItem("userData");
       const val = JSON.parse(userdata)
       setUser(val);
+      setDrones(val.droneSelect);
+      setInterests(val.interests);
     }
     useEffect(() => {
       mount();
@@ -62,12 +68,39 @@ const EditProfileModal = ({ visible, onClose, setUserPrev }) => {
       })
       setUserPrev(user);
       onClose();
+    }else {
+      console.log("this cannot happen");
     }
   };
   const handleButtonOpen =() => {
     setOpen(!open);
     setUser({...user, dob:date, dateIsSet:true})
   }
+
+  const deleteDrone = (item) => {
+      array = drones.filter((ele) => ele !== item);
+      setDrones(array);
+      setUser({ ...user, droneSelect:array, selectedDroneIsSet: true});
+  }
+  const deleteInterest = (item) => {
+      array = interests.filter((ele) => ele !== item);
+      setInterests(array);
+      setUser({ ...user, interests:array});
+  }
+  const [show, setShow] = useState(false);
+
+    const handleAddClick = () => {
+      let arr = [...drones, customValue];
+      setDrones(arr);
+      setCustomValue('');
+      setUser({ ...user, droneSelect:arr, selectedDroneIsSet: true});
+    }
+    const handleAddInterest = () => {
+      let arr = [...interests, customInterest];
+      setInterests(arr);
+      setCustomInterest('');
+      setUser({ ...user, interests:arr});
+    }
   const exp = [
     { key: '1', value: '0-1 Years'},
     { key: '2', value: '1-2 Years'},
@@ -76,20 +109,34 @@ const EditProfileModal = ({ visible, onClose, setUserPrev }) => {
     { key: '5', value: '5+ Years'},
   ]
   const dronesList = [
-    { key: '1', value: 'Tropogo' },
-    { key: '2', value: 'Slider' },
-    { key: '3', value: 'Agri' },
-    { key: '4', value: 'Delivery' },
-    { key: '5', value: 'Survey Mapping' },
+    { key: '1', value: 'Acecore Neo' },
+    { key: '2', value: 'Cardinal II' },
+    { key: '3', value: 'TechEagle' },
+    { key: '4', value: 'DJI Air 2s' },
+    { key: '5', value: 'DJI Phantom 4 RTK' },
+    { key: '6', value: 'Sensefly ebee SQ' },
+    { key: '7', value: 'Edall White Hawk' },
+    { key: '8', value: 'Quantum Trinirty' },
+    { key: '9', value: 'Delair UX 11' },
+    { key: '10', value: 'Xiaomi 1080P' },
+    { key: '11', value: 'Paras Agricopter' },
+    { key: '12', value: 'Parrot Anafi' },
+    { key: '13', value: 'Parrot DISCO' },
+    { key: '14', value: 'CDSpace SNAP' },
+    { key: '15', value: 'Skydio' },
+    { key: '16', value: 'Throttle Lookout' },
+    { key: '16', value: 'Throttle Lookout' },
   ]
   const category = [
     { key: '1', value: 'Agriculture' },
-    { key: '2', value: 'Delivery' },
-    { key: '3', value: 'Survey Mapping' },
-    { key: '4', value: 'Events' },
+    { key: '2', value: 'Real Estate' },
+    { key: '3', value: 'Geographical Surveys' },
+    { key: '4', value: '3D Mapping and Modeling' },
+    { key: '5', value: 'Surveying and Mapping' },
+    { key: '6', value: 'Aerial Photography' },
   ]
 
-  const [shouldShow, setshouldShow] = useState(false)
+  const [shouldShow, setshouldShow] = useState(false);
   const handleNameChange = (name) => {
     if (name.trim().length > 2) {
       setUser({...user, name, nameIsSet:true})
@@ -286,49 +333,107 @@ const EditProfileModal = ({ visible, onClose, setUserPrev }) => {
               />
             </View>
 
+            <Text style={styles.label}>My Drones</Text>
             <View style={{marginBottom:20, width:300}}>
-              <Text style={styles.label}>My Drones</Text>
-              <MultipleSelectList
-                // placeholder='Select Drones'
-                notFoundText='Drone not found'
-                setSelected={(val) => {
-                  setDrones(val);
-                  // if(val.length === 0) {
-                  //   setUser({...user, droneSelect:val, selectedDroneIsSet:false})
-                  // }else {
-                  //   setUser({...user, droneSelect:val, selectedDroneIsSet:true})
-                  // }
-                }}
-                onSelect={() => {
+            <View style={{flexDirection:'row', flexWrap:'wrap', width:'100%'}}>
+                { drones.map((item, index) => {
+                    return (
+                        <View key = {index} style={{flexDirection:'row', justifyContent:'center', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>
+                        <Text style={{ fontSize:13, color: 'white'}}>{item}</Text>
+                        <TouchableOpacity onPress={() => {deleteDrone(item)}} style={{marginLeft:5, position:'relative', top:1}}><Entypo name="cross" size={17} color="black" /></TouchableOpacity>
+                        </View>
+                    )
+                    }) 
+                }
+                <TouchableOpacity onPress={() => setOpenDronePicker(!openDronePicker)}>
+                  <Text style={{paddingLeft: 15}}><MaterialIcons name={openDronePicker? "cancel" : "add-circle"} size={45} color="coral" /></Text>
+                </TouchableOpacity>
+                </View>
+            </View>
+            {openDronePicker? 
+            <View style= {{backgroundColor:'white', width:300, marginBottom:20, borderWidth:1.2, borderColor:'grey', borderRadius:13}}>
+            <MultipleSelectList 
+                setSelected={(val) => setDrones(val)} 
+                placeholder='Select Drones from List'
+                data={dronesList} 
+                save="value"
+                onSelect={() =>  {
                   setUser({ ...user, droneSelect:drones, selectedDroneIsSet: true});
-                }}
-                data={dronesList}
-                save="value"
-                boxStyles={[user.selectedDroneIsSet ? null : { borderColor: "red" }, { backgroundColor: "white" }]}
+                }} 
                 label="Drones"
-              />
-            </View>
+                maxHeight={260}
+                boxStyles={{borderWidth:0, backgroundColor:'white', height:40, marginBottom:0}}
+                dropdownStyles={{borderWidth:0, backgroundColor:'white'}}
+                badgeStyles={{height:0, width:0, backgroundColor:'grey', paddingHorizontal:0}}
+            />
+            <View style={{alignItems:'center', paddingBottom:15}}>
+                  <TextInput
+                      value={customValue}
+                      onChangeText={setCustomValue}
+                      placeholder="Your Drone"
+                      style={{height:30, fontSize:17, width:'87%', height:40, borderBottomWidth:1, marginBottom:5, borderColor:'grey'}}
+                  />
+                  
+                  <TouchableOpacity onPress={handleAddClick}
+                      style={{justifyContent:'center', width:'90%', height:40, backgroundColor:'coral', alignItems:'center', }}>
+                      <Text style={{fontSize:16, color:'white'}}>Add</Text>
+                  </TouchableOpacity>
+                </View>
+            </View> :<></>
+            }
 
+            <Text style={styles.label}>My Interests</Text>
             <View style={{marginBottom:20, width:300}}>
-            <Text style={styles.label}>Interests</Text>
-              <MultipleSelectList
-                setSelected={(val) => {
-                  setInterests(val);
-                }}
-                onSelect={() => {
-                  setUser({ ...user, interests:interests, interestsIsSet: true});
-                }}
-                search={false}
-                data={category}
-                save="value"
-                label="Categories"
-                boxStyles={[user.interestsIsSet ? null : { borderColor: "red" }, { backgroundColor: "white" }]}
-              />
+            <View style={{flexDirection:'row', flexWrap:'wrap', width:'100%'}}>
+                {interests != null ? interests.map((item, index) => {
+                    return (
+                        <View key = {index} style={{flexDirection:'row', justifyContent:'center', borderRadius:10, padding:10, backgroundColor:'#c0c0c0', margin:6}}>
+                        <Text style={{ fontSize:13, color: 'white'}}>{item}</Text>
+                        <TouchableOpacity onPress={() => {deleteInterest(item)}} style={{marginLeft:5, position:'relative', top:1}}><Entypo name="cross" size={17} color="black" /></TouchableOpacity>
+                        </View>
+                    )
+                    }) :<></>
+                }
+                <TouchableOpacity onPress={() => setOpenInterestPicker(!openInterestPicker)}>
+                  <Text style={{paddingLeft: 15}}><MaterialIcons name={openInterestPicker? "cancel" : "add-circle"} size={45} color="coral" /></Text>
+                </TouchableOpacity>
             </View>
+            {openInterestPicker? 
+            <View style= {{backgroundColor:'white', width:300, marginBottom:20, borderWidth:1.2, borderColor:'grey', borderRadius:13}}>
+            <MultipleSelectList 
+                setSelected={(val) => setInterests(val)} 
+                placeholder='Select Interests from List'
+                data={category} 
+                save="value"
+                onSelect={() =>  {
+                  setUser({ ...user, interests:interests});
+                }} 
+                label="Categories"
+                maxHeight={260}
+                boxStyles={{borderWidth:0, backgroundColor:'white', height:40, marginBottom:0}}
+                dropdownStyles={{borderWidth:0, backgroundColor:'white'}}
+                badgeStyles={{height:0, width:0, backgroundColor:'grey', paddingHorizontal:0}}
+            />
+            <View style={{alignItems:'center', paddingBottom:15}}>
+                  <TextInput
+                      value={customInterest}
+                      onChangeText={setCustomInterest}
+                      placeholder="Your faourite interest"
+                      style={{height:30, fontSize:17, width:'87%', height:40, borderBottomWidth:1, marginBottom:5, borderColor:'grey'}}
+                  />
+                  
+                  <TouchableOpacity onPress={handleAddInterest}
+                      style={{justifyContent:'center', width:'90%', height:40, backgroundColor:'coral', alignItems:'center', }}>
+                      <Text style={{fontSize:16, color:'white'}}>Add</Text>
+                  </TouchableOpacity>
+                </View>
+            </View> :<></>
+            }
+            </View>
+          </View>
 
-          </View>
-          </View>
-          </ScrollView>
+        </View>
+      </ScrollView>
 
           <View style={{alignItems:'center', width:'100%', backgroundColor:'white',position:'absolute', bottom:0, borderTopWidth:1, borderTopColor:'grey', marginVertical:7}}>
           <TouchableOpacity style={styles.saveButton} onPress={handleSave}>

@@ -3,11 +3,7 @@ import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, ScrollView,
 import { AntDesign } from '@expo/vector-icons';
 import { SelectList } from 'react-native-dropdown-select-list'
 import DatePicker from 'react-native-modern-datepicker';
-import { MultipleSelectList } from 'react-native-dropdown-select-list';
-import { configureProps } from 'react-native-reanimated/lib/reanimated2/core';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { db } from '../firebase/databaseConfig'
-import { ref, update} from 'firebase/database'
 import Toast from 'react-native-root-toast';
 import { ref as dbRef, update} from 'firebase/database'
 
@@ -34,9 +30,6 @@ const EditJobModal = ({ visible, onClose, job }) => {
         { key: '3', value: 'Internship' }
     ]
     const [selectedFTPT, setselectedFTPT] = useState("");
-
-
-
 
     const handleSave = () => {
         console.log(jobFinal)
@@ -76,16 +69,17 @@ const EditJobModal = ({ visible, onClose, job }) => {
         }
     }
     const handlesalRangeFrom = (salRangeFrom) => {
-       
+        let salRange = salRangeFrom + " - " + jobFinal.salRangeTo;
         if(parseInt(salRangeFrom.trim()) > 0) {
-            setJobFinal({ ...jobFinal, salRangeFrom:salRangeFrom.trim(), salRangeFromIsSet: true });
+            setJobFinal({ ...jobFinal, salRangeFrom:salRangeFrom.trim(), salRangeFromIsSet: true, salRange:salRange });
         }else {
             setJobFinal({ ...jobFinal, salRangeFrom:salRangeFrom.trim(), salRangeFromIsSet: false });
         }
     }
     const handlesalRangeTo = (salRangeTo) => {
+        let salRange = jobFinal.salRangeFrom + " - " + salRangeTo;
         if(parseInt(salRangeTo.trim()) > 0 && parseInt(salRangeTo) > parseInt(jobFinal.salRangeFrom)) {
-            setJobFinal({ ...jobFinal, salRangeTo:salRangeTo.trim(), salRangeToIsSet: true });
+            setJobFinal({ ...jobFinal, salRangeTo:salRangeTo.trim(), salRangeToIsSet: true, salRange: salRange});
         }else {
             setJobFinal({ ...jobFinal, salRangeTo:salRangeTo.trim(), salRangeToIsSet: false });
         }
@@ -257,7 +251,7 @@ const EditJobModal = ({ visible, onClose, job }) => {
             </ScrollView>
 
             <View style={{alignItems:'center', width:'100%', backgroundColor:'white',position:'absolute', bottom:0, borderTopWidth:1, borderTopColor:'grey', marginVertical:7}}>
-                <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+                <TouchableOpacity style={styles.saveButton} onPress={() => handleSave()}>
                     <Text style={styles.saveButtonText}>Save</Text>
                 </TouchableOpacity>
             </View>

@@ -36,8 +36,6 @@ const EditFreelanceModal = ({ visible, onClose, freelance }) => {
     
 
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
-    const [image, setImage] = useState(null);
-
   useEffect(() => {
     (async () => {
       const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -48,16 +46,6 @@ const EditFreelanceModal = ({ visible, onClose, freelance }) => {
   if (hasGalleryPermission === false) {
     return <Text>No access to gallery</Text>
   }
-
-  // file upload
-  const [answer, setAnswer] = useState("");
-  const [file, setFile] = useState(null);
-  const [fileName, setFileName] = useState("");
-  const [url, setUrl] = useState(null);
-  const [error, setError] = useState("");
-  const [answerExists, setAnswerExists] = useState(false);
-  const [fileExists, setFileExists] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const selectDoc = async () => {
     let result = await DocumentPicker.getDocumentAsync({

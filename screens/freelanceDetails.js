@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, TextInput, StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { Modal, TextInput, StyleSheet, Text, View, Image, Alert, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
@@ -11,7 +11,7 @@ import Toast from 'react-native-root-toast';
 import axios from 'axios';
 import EditFreelanceModal from './editFreelance';
 
-export default function FreelanceDetails({ route, navigation, isClicked, setIsClicked, formData }) {
+export default function FreelanceDetails({ route, navigation, isClicked, setIsClicked, deleteIsClicked, setDeleteIsClicked }) {
   const freelance = route.params.freelance;
   const [userType, setUserType] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -150,16 +150,30 @@ export default function FreelanceDetails({ route, navigation, isClicked, setIsCl
     
   }
 
-  const handleBid = (bid) => {
-
-    setBid(bid);
-  };
+  const deleteFreelance = () => {
+    let freeLanceref = ref(db, `freelance/${freelance.freelanceId}`)
+    remove(freeLanceref).then(() => {
+        console.log('Freelance Deleted')
+        navigation.navigate("Freelance Projects");
+    })
+  }
 
   const mount = async () => {
     const userdata = await AsyncStorage.getItem("userData");
     const json = JSON.parse(userdata);
     setUserType(json.userType);
     var userId = json.userId;
+    if(deleteIsClicked && json.userType==="company") {
+      Alert.alert(
+        'Delete Freelance',
+        'Are you sure you want to delete this Freelance Post?',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          { text: 'Delete', onPress: deleteFreelance, style: 'destructive' },
+        ]
+      );
+      setDeleteIsClicked(false);
+    }
     if(freelance.applied) {
       for(var index in freelance.applied) {
         if(freelance.applied[index] === userId) {
@@ -171,7 +185,7 @@ export default function FreelanceDetails({ route, navigation, isClicked, setIsCl
   }
   useEffect(() => {
     mount()
-  }, [])
+  }, [deleteIsClicked])
 
   function changeDateFormat(dateString) {
     dateString = "" + dateString;
