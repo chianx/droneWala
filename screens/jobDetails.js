@@ -69,7 +69,6 @@ export default function JobDetails({isClicked, setIsClicked, route, navigation, 
     if(canApply) {
       navigation.navigate("Apply", {job:job});
     }else {
-      console.log("Here");
       Toast.show('You have already applied to this Job.', {
         // backgroundColor:'#fda172',
         duration: Toast.durations.LONG,
@@ -79,7 +78,21 @@ export default function JobDetails({isClicked, setIsClicked, route, navigation, 
         opacity:1,
         hideOnPress: false,
         delay: 500,
-    });
+      });
+      
+      console.log("You have already applied to this Job.");
+      // Toast.show('You have already applied to this Job.', {
+      //   backgroundColor:'#fda172',
+      //   duration: Toast.durations.LONG,
+      //   position: -130,
+      //   shadow: true,
+      //   animation: true,
+      //   opacity:1,
+      //   hideOnPress: false,
+      //   delay: 500,
+      // }
+      // );
+      
     }
   }
   function changeDateFormat(dateString) {

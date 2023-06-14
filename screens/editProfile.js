@@ -125,7 +125,6 @@ const EditProfileModal = ({ visible, onClose, setUserPrev }) => {
     { key: '14', value: 'CDSpace SNAP' },
     { key: '15', value: 'Skydio' },
     { key: '16', value: 'Throttle Lookout' },
-    { key: '16', value: 'Throttle Lookout' },
   ]
   const category = [
     { key: '1', value: 'Agriculture' },

@@ -12,20 +12,15 @@ import Notifications from '../screens/notifications';
 import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import JobDetails from '../screens/jobDetails';
+import FreelanceForm from '../freelanceForm/form';
 import JobStack from './jobStack'
+import Apply from '../screens/apply';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { db } from '../firebase/databaseConfig'
 import { ref as dbRef, remove} from 'firebase/database'
 
 const Stack = createNativeStackNavigator();
-
-const deleteJob = (id) => {
-    ref = dbRef(db, `jobs/${id}`)
-    remove(ref).then(() => {
-        console.log('Job Deleted')
-    })
-}
 
 export default function HomeStack({ navigation }) {
     const [userType, setUserType] = useState("");
@@ -149,6 +144,14 @@ export default function HomeStack({ navigation }) {
                 options={{
                     headerShown: true,
                 }}
+            />
+            <Stack.Screen 
+                name="Freelance Form" 
+                component={FreelanceForm}
+            />
+            <Stack.Screen 
+                name="Apply" 
+                component={Apply}
             />
             
 

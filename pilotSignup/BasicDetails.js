@@ -94,7 +94,7 @@ export default function BasicDetails({ formData, setFormData }) {
 
     const handleNameChange = (name) => {
       setFname(name);
-        if (formData.name.trim().length >= 2) {
+        if (name.trim().length >= 2) {
           setFnameSet(true);
             setFormData({ ...formData, name:name, nameIsSet: true});
         } else {
@@ -104,7 +104,7 @@ export default function BasicDetails({ formData, setFormData }) {
     }
     const handleEmailChange = (email) => {
         var validRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        if (formData.email.match(validRegex)) {
+        if (email.match(validRegex)) {
             setFormData({ ...formData, email: email, emailIsSet: true });
         } else {
             setFormData({ ...formData, email: email, emailIsSet: false });

@@ -14,11 +14,12 @@ export default function BasicDetails({ formData, setFormData }) {
 
   const category = [
     { key: '1', value: 'Agriculture' },
-    { key: '2', value: 'Delivery' },
-    { key: '3', value: 'Survey Mapping' },
-    { key: '4', value: 'Events' },
-    { key: '5', value: 'Miscellaneous' },
-]
+    { key: '2', value: 'Real Estate' },
+    { key: '3', value: 'Geographical Surveys' },
+    { key: '4', value: '3D Mapping and Modeling' },
+    { key: '5', value: 'Surveying and Mapping' },
+    { key: '6', value: 'Aerial Photography' },
+  ]
   const getAddress = async(pincode) => {
 
     // const options = {

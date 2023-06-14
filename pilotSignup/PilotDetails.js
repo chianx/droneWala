@@ -15,11 +15,22 @@ export default function PilotDetails({ formData, setFormData }) {
   const [tee, setTee] = useState(false);
 
   const drone = [
-    { key: '1', value: 'Tropogo' },
-    { key: '2', value: 'Slider' },
-    { key: '3', value: 'Agri' },
-    { key: '4', value: 'Delivery' },
-    { key: '5', value: 'Survey Mapping' },
+    { key: '1', value: 'Acecore Neo' },
+    { key: '2', value: 'Cardinal II' },
+    { key: '3', value: 'TechEagle' },
+    { key: '4', value: 'DJI Air 2s' },
+    { key: '5', value: 'DJI Phantom 4 RTK' },
+    { key: '6', value: 'Sensefly ebee SQ' },
+    { key: '7', value: 'Edall White Hawk' },
+    { key: '8', value: 'Quantum Trinirty' },
+    { key: '9', value: 'Delair UX 11' },
+    { key: '10', value: 'Xiaomi 1080P' },
+    { key: '11', value: 'Paras Agricopter' },
+    { key: '12', value: 'Parrot Anafi' },
+    { key: '13', value: 'Parrot DISCO' },
+    { key: '14', value: 'CDSpace SNAP' },
+    { key: '15', value: 'Skydio' },
+    { key: '16', value: 'Throttle Lookout' },
   ]
 
   const experience = [
@@ -89,7 +100,7 @@ export default function PilotDetails({ formData, setFormData }) {
             )
         }
       </View>
-      <View style={{ marginBottom: 20 }} >
+      <View style={{ marginBottom: 20, width:300 }} >
         <MultipleSelectList
           style={[formData.selectedDroneIsSet ? null : {borderColor: "red"}]}
           placeholder='Select Drones *'
@@ -101,7 +112,7 @@ export default function PilotDetails({ formData, setFormData }) {
           data={drone}
           save="value"
           value={formData.droneSelect}
-          boxStyles={[formData.selectedDroneIsSet ? null : { borderColor: "red" }, { backgroundColor: "white", width: 280, height: 55, alignItems: 'center' }]}
+          boxStyles={[formData.selectedDroneIsSet ? null : { borderColor: "red" }, { backgroundColor: "white", width: 300, alignItems: 'center' }]}
           onSelect={() => {
             setFormData({ ...formData, droneSelect:selectedDrone, selectedDroneIsSet: t });
           }}
@@ -119,14 +130,14 @@ export default function PilotDetails({ formData, setFormData }) {
           data={experience}
           save="value"
           value={formData.experience}
-          boxStyles={[formData.experienceIsSet ? null : { borderColor: "red" }, { backgroundColor: "white", width: 280, height: 55, alignItems: 'center'}]}
+          boxStyles={[formData.experienceIsSet ? null : { borderColor: "red" }, { backgroundColor: "white", width: 300, alignItems: 'center'}]}
           onSelect={() => {
             setFormData({ ...formData, experience: selectedExperience, experienceIsSet: te });            
           }}
           label="Experience"
         />
       </View>
-      <View style={{marginBottom: 20 }}>
+      <View style={{marginBottom: 20, width:300 }}>
         <MultipleSelectList
           setSelected={(val) => {
             setSelectedInterest(val)
@@ -136,7 +147,7 @@ export default function PilotDetails({ formData, setFormData }) {
           placeholder='Select Interests *'
           search={false}
           save="value"
-          boxStyles={[formData.interestsIsSet ? null : {borderColor : "red"}, {backgroundColor: "white", width: 280, height: 55, alignItems: 'center'}]}
+          boxStyles={[formData.interestsIsSet ? null : {borderColor : "red"}, {backgroundColor: "white", width: 300, alignItems: 'center'}]}
           label="Interest"
           onSelect={() => {
             setFormData({ ...formData, interests:selectedInterest, interestsIsSet: tee});
@@ -156,7 +167,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth:1,
     borderColor:'grey',
-    width: 280,
+    width: 300,
     height: 55,
     marginBottom: 20,
     alignItems: "flex-start",
@@ -170,7 +181,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: 'red',
-    width: 280,
+    width: 300,
     height: 55,
     marginBottom: 20,
     alignItems: "flex-start",
@@ -194,7 +205,7 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderWidth: 1,
     marginBottom: 20,
-    width: 280,
+    width: 300,
     height: 55,
     alignItems: 'center',
     justifyContent: 'center',

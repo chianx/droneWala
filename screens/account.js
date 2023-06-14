@@ -219,9 +219,10 @@ export default function Account({isClicked, setIsClicked, navigation}) {
               {dataList.map((item, index) => {
                 return (
                   <View key={index} style={styles.jobContainer}>
+                  {item != null?
                     <View style={{flexDirection:'row'}}>
                       <View style={{paddingRight:20}}>
-                        <Image source={{uri: item.logo}} style={styles.profilePic}/>
+                         <Image source={{uri: item.logo}} style={styles.profilePic}/> 
                       </View>
                       <View style={{paddingRight:20, width:200}}>
                         <Text style={styles.title}>{item.jobTitle}</Text>
@@ -230,8 +231,10 @@ export default function Account({isClicked, setIsClicked, navigation}) {
                         <Text style={{color:'#808080'}}><Ionicons name="ios-cash-outline" size={14} color="#808080" />{' ₹' + item.salRange}</Text>
                         <Text style={{color:'#808080'}}><AntDesign name="calendar" size={14} color="#808080" />{' '+item.ftORpt}</Text>
                       </View>
-                    </View> 
+                    </View>
+                    :<></>} 
                   </View>
+                  
                 )
               })}
             </View>

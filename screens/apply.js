@@ -12,7 +12,7 @@ import axios from 'axios';
 import * as fireBaseDatabase from 'firebase/database';
 import {ref, getDownloadURL, uploadBytesResumable, uploadBytes } from "firebase/storage";
 import Toast from "react-native-root-toast";
-import {set, ref as dbRefs, push, runTransaction, get, child} from 'firebase/database';
+import {set, ref as dbRefs, push, runTransaction, get, child, update} from 'firebase/database';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Apply({ route, navigation }) {
@@ -131,7 +131,7 @@ export default function Apply({ route, navigation }) {
             if (downloadURL != null) {
               // Add the answer to the firebase database.
               const userdata = await AsyncStorage.getItem("userData");
-              var json = await JSON.parse(userdata);
+              let json = await JSON.parse(userdata);
               console.log("userdata id " + json.userId);
               var refs = dbRefs(db, `applications/${job.jobId}/${json.userId}`)
               var final =  {
@@ -162,19 +162,39 @@ export default function Apply({ route, navigation }) {
               });
 
               var userRef = dbRefs(db, "users/" + json.userId)
-              runTransaction(userRef, (user) => {
-                console.log("This is user", user);
+              
+              
+              get(userRef).then((user) => {
+                console.log("this is user", user);
+                var arr = [];
                 if(user.applied) {
-                  var arr = Array.from(user.applied);
+                  arr = Array.from(user.applied);
                   arr.push(job.jobId);
-                  user = {...user, applied: arr}
+                  user = {...user, applied: arr};
                 }else {
-                  var arr = []
+                  arr = []
                   arr.push(job.jobId);
-                  user = {...user, applied: arr}
+                  user = {...user, applied: arr};
                 }
-                return user
-              });
+                var updateRef = dbRefs(db, "users/" + json.userId)
+                var final = {applied: arr};
+                console.log("this is updateref", updateRef);
+                update(updateRef, final);
+              })
+              
+              // runTransaction(userRef, (user) => {
+              //   console.log("This is user", user);
+              //   if(user.applied) {
+              //     var arr = Array.from(user.applied);
+              //     arr.push(job.jobId);
+              //     user = {...user, applied: arr}
+              //   }else {
+              //     var arr = []
+              //     arr.push(job.jobId);
+              //     user = {...user, applied: arr}
+              //   }
+              //   return user
+              // });
 
               const starCountRef = fireBaseDatabase.ref(db, 'users/' + job.companyId + "/fcmToken");
               fireBaseDatabase.onValue(starCountRef, (snapshot) => {
@@ -195,7 +215,7 @@ export default function Apply({ route, navigation }) {
 
               })
               setIsLoading(false);
-              navigation.navigate("Jobs");
+              navigation.navigate("Jobs", {screen : "Jobs"});
             }
           });
         }
