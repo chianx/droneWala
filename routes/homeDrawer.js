@@ -18,10 +18,10 @@ export default function HomeDrawer({navigation}) {
     const [userType, setUserType] = useState("");
     const mount = async() => {
       const userdata = await AsyncStorage.getItem("userData");
-      const val = JSON.parse(userdata);
+      const val = await JSON.parse(userdata);
       console.log(val)
       setUserType(val.userType);
-      console.log("userType in homeDrawer = " + userType);
+      console.log("userType in homeDrawer = " + val.userType);
     }
     useEffect(() => {
       mount();
