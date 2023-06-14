@@ -24,7 +24,7 @@ export default function Account({isClicked, setIsClicked, navigation}) {
   const [active, setActive] = useState('Applied');
   const [dataList, setDataList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-
+  
   const mount = async() => {
     const userdata = await AsyncStorage.getItem("userData");
     const val = JSON.parse(userdata)
