@@ -15,6 +15,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Notifications from '../screens/notifications';
 import HomeStack from './homeStack'; 
+import NotificationStack from './notificationStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -23,7 +24,7 @@ export default function HomeTab({navigation}) {
   const handleClick = () => {
     setIsClicked(true)
   } 
-  
+  console.log("In Home tabs of pilot")
   return (
     //<NavigationContainer independent={true}>
       <Tab.Navigator
@@ -54,6 +55,7 @@ export default function HomeTab({navigation}) {
           headerShown:false,
           tabBarActiveTintColor: '#ed7117',
           tabBarInactiveTintColor: 'gray',
+          tabBarHideOnKeyboard:true,
           
         })}
       >
@@ -114,7 +116,20 @@ export default function HomeTab({navigation}) {
           }} 
         >{props => <Account {...props} isClicked={isClicked} setIsClicked={setIsClicked}/>}
         </Tab.Screen>
-        
+
+        <Tab.Screen name="NotificationStack" component={NotificationStack} 
+              options ={{
+                headerShown:true,
+                headerLeft: () => (
+                  <TouchableOpacity style={{paddingRight:10, paddingLeft:25}} onPress = {() => navigation.navigate("CompanyHomeStack")}>
+                    <Ionicons name="arrow-back-outline" size={25} color="black"/>
+                  </TouchableOpacity>
+                ),
+                title:'Notifications',
+                tabBarVisible: false,
+                tabBarItemStyle : {position:'absolute', width:0, height:0}
+              }}
+            />
 
         
       </Tab.Navigator>

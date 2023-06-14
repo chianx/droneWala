@@ -11,6 +11,7 @@ import LoginStack from './loginStack';
 import TermsAndConditions from '../screens/termsAndConditions'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import NotificationStack from './notificationStack';
 
 const Drawer = createDrawerNavigator();
 
@@ -27,11 +28,11 @@ export default function HomeDrawer({navigation}) {
       mount();
       
     }, []);
-    
+    console.log("userType in homeDrawer = " + userType);
     return (
       // <NavigationContainer independent={true}>
         <Drawer.Navigator 
-          initialRouteName="Home"
+          initialRouteName="HomeTabsInDrawer"
           screenOptions={{
             headerShown : false, 
            
@@ -42,10 +43,12 @@ export default function HomeDrawer({navigation}) {
           }} 
            drawerContent={(prop) => <CustomDrawer prop={prop} navigation= {navigation}/>}
         >
-          <Drawer.Screen name="Home" component= {userType === "company"? CompanyHomeTab: HomeTabs}
+          <Drawer.Screen name="HomeTabsInDrawer" component= {userType === "company"? CompanyHomeTab: HomeTabs}
             initialParams = {{navigation: navigation}}
-            options={{drawerIcon: ({color}) => 
-              <Ionicons name="home-outline" size={22} color={color}/>}}
+            options={{
+              title: 'Home',
+              drawerIcon: ({color}) => <Ionicons name="home-outline" size={22} color={color}/>
+            }}
             />
           <Drawer.Screen name="About" component={About} 
             options={{drawerIcon: ({color}) => 
