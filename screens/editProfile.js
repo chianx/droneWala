@@ -242,9 +242,9 @@ const EditProfileModal = ({ visible, onClose, setUserPrev }) => {
           <View style={styles.formContainer}>
             
             <Text style={styles.label}>Profile Picture</Text>
-            <View style={{ width: '100%', alignItems:'center'}}>
+            <View style={{ width: '100%'}}>
               <TouchableOpacity onPress={() => pickImage()} style={[styles.logobtn, user.profileIsSet ? null : {borderColor: "red"}]}><Text style={{ color: 'grey', fontSize: 17 }}>Change Profile (Click Here)</Text></TouchableOpacity>
-              {<Image source={{ uri: image === null ?  user.profile : image }} style={{ width: 180, height: 180, marginBottom: 15, borderRadius:10}} />}
+              {<Image source={{ uri: image === null ?  user.profile : image }} style={{ width: 180, height: 180, marginBottom: 15, borderRadius:10, marginLeft: '18%'}} />}
             </View>
 
             <Text style={styles.label}>Full Name</Text>
