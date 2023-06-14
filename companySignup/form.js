@@ -1,4 +1,4 @@
-import { View, Text, Modal, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, Modal, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native'
 import React, { useState } from 'react'
 import BasicDetails from './BasicDetailsComp';
 import PersonalDetails from './PersonalDetailsComp';
@@ -102,11 +102,11 @@ export default function Form({navigation}) {
                 // Final
                 var uid = auth.currentUser.uid
                 var fcmToken;
+                setLoading(true);
                 const authStatus = await messaging().requestPermission();
                 const enabled = 
                     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
                     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-                setLoading(true);
                 if(enabled) {
                     messaging().getToken().then( async(token) => {
                         console.log(token);
@@ -161,6 +161,7 @@ export default function Form({navigation}) {
                 }
             }else {
                 setErrorMessage(errMsg);
+                setLoading(false);
             }
             
         }
@@ -207,10 +208,10 @@ export default function Form({navigation}) {
                 errMsg = "Invalid Website, Try including https"
                 formData.websiteIsSet = false
             }else if (!formData.aboutIsSet) {
-                errMsg = "Invalid About"
+                errMsg = "About length too short"
                 formData.aboutIsSet = false
             }else if (!formData.numPeopleIsSet) {
-                errMsg = "Select Number of People"
+                errMsg = "Select Number of employees in company"
                 formData.aboutIsSet = false
             }
             else validate = true;
@@ -227,19 +228,23 @@ export default function Form({navigation}) {
     }
     return (
         <Modal visible={true} animationType="slide" style={{backgroundColor: 'white'}}>
+        {loading?
+            <View style={{backgroundColor:"#d3d3d3aa", flex: 2, width:'100%', height:'100%', justifyContent:'center', position:"absolute", opacity:0.7}}>
+                <ActivityIndicator size="large" color="coral" />
+            </View> : <></>}
             <View style={styles.wrapper}>
                 <Text style={styles.title}>{FormTitle[screen]}</Text>
             </View>
 
             <ScrollView>
-            <View style={{width:'100%', alignItems:'center', marginBottom:100}}>
+            <View style={{width:'100%', alignItems:'center', marginBottom:100, opacity:loading? 0.4 : 1}}>
                 {ScreenDisplay()}
 
                 {errorMessage != "" ? <View style={{marginLeft:20, marginBottom: 20}}><Text style={{color:'red', borderRadius: 8, textAlign: 'center',width: 160, height: 30, }}>{errorMessage}</Text></View> : <></>}
             </View>
             </ScrollView>
 
-            <View style={styles.apply}>
+            <View style={[styles.apply, {opacity:loading? 0.6 : 1}]}>
                 <TouchableOpacity
                     style={[styles.prevButton]}
                     onPress={() => {

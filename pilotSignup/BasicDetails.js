@@ -93,16 +93,16 @@ export default function BasicDetails({ formData, setFormData }) {
     const todaysDate = year + '-0' + month + '-' + day;
 
     const handleNameChange = (name) => {
-      setFname(name);
+      console.log(name);
         if (name.trim().length >= 2) {
-          setFnameSet(true);
-            setFormData({ ...formData, name:name, nameIsSet: true});
+          setFormData({ ...formData, name:name, nameIsSet: true});
         } else {
-          setFnameSet(false);
           setFormData({ ...formData, name:name, nameIsSet: false});
         }
     }
     const handleEmailChange = (email) => {
+      email = email.trim();
+      console.log(email);
         var validRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         if (email.match(validRegex)) {
             setFormData({ ...formData, email: email, emailIsSet: true });
@@ -119,10 +119,10 @@ export default function BasicDetails({ formData, setFormData }) {
       </View>
             <View style={styles.inputView}>
                 <TextInput
-                    style={[fnameSet ? styles.TextInput : styles.errorTextInput]}
+                    style={[formData.nameIsSet ? styles.TextInput : styles.errorTextInput]}
                     placeholderTextColor="grey"
                     placeholder='Full Name *'
-                    value={fname}
+                    value={formData.name}
                     onChangeText={(name) => handleNameChange(name)}
                 />
             </View>

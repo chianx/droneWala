@@ -21,6 +21,7 @@ export default function PersonalDetails({ formData, setFormData }) {
     }
   };
   const handleEmailChange = (email) => {
+    email = email.trim();
     var validRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (email.match(validRegex)) {
       setFormData({ ...formData, email: email, emailIsSet: true });

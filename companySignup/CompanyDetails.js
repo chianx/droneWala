@@ -7,13 +7,6 @@ import {storage} from '../firebase/firebase'
 import { ref, getDownloadURL,uploadBytesResumable, uploadBytes} from 'firebase/storage';
 
 export default function PersonalDetails({ formData, setFormData }) {
-  const [companyName, setCompName] = useState(formData.companyName);
-  const [compSet, setCompSet] = useState(formData.companyIsSet);
-  const [website, setWebsite] = useState(formData.website);
-  const [webSet, setWebSet] = useState(formData.websiteIsSet);
-  const [selectedNumPeople, setSelectedNumPeople] = React.useState("");
-  const [websiteIsSet, setwebsiteIsSet] = useState(false)
-  const [aboutIsSet, setaboutIsSet] = useState(false)
   const [peopleIsSet, setpeopleIsSet] = useState(formData.numPeopleIsSet)
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
   const [image, setImage] = useState(null);
@@ -94,22 +87,17 @@ export default function PersonalDetails({ formData, setFormData }) {
   ]
 
   const handleNameChange = (companyName) => {
-    setCompName(companyName);
     if (companyName.trim().length > 2) {
-      setCompSet(true);
       setFormData({ ...formData, companyName:companyName, companyIsSet: true});
     } else {
-      setCompSet(false);
       setFormData({ ...formData, companyName:companyName, companyIsSet: false});
     }
   }
   const handleWebsiteChange = (website) => {
-    setWebsite(website);
+    website = website.trim();
     if (validator.isURL(website)) {
-      setWebSet(true);
       setFormData({ ...formData, website: website, websiteIsSet: true });
     } else {
-      setWebSet(false);
       setFormData({ ...formData, website: website, websiteIsSet: false });
     }
   }
@@ -130,20 +118,20 @@ export default function PersonalDetails({ formData, setFormData }) {
 
       <View style={styles.inputView}>
         <TextInput
-          style={[compSet ? styles.TextInput : styles.errorTextInput]}
+          style={[formData.companyIsSet ? styles.TextInput : styles.errorTextInput]}
           placeholderTextColor="grey"
           placeholder='Company Name *'
-          value={companyName}
+          value={formData.companyName}
           onChangeText={(companyName) => handleNameChange(companyName)}
         />
       </View>
 
       <View style={styles.inputView}>
         <TextInput
-          style={[webSet ? styles.TextInput : styles.errorTextInput]}
+          style={[formData.websiteIsSet ? styles.TextInput : styles.errorTextInput]}
           placeholderTextColor="grey"
           placeholder='Website URL *'
-          value={website}
+          value={formData.website}
           onChangeText={(website) => handleWebsiteChange(website)}
         />
       </View>

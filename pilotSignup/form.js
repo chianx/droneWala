@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Modal, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, Modal, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native'
 import React, { useState } from 'react'
 import BasicDetails from './BasicDetails';
 import PersonalDetails from './PersonalDetails';
@@ -221,19 +221,24 @@ export default function PilotForm({navigation}) {
     }
     return (
         <Modal visible={true} animationType="slide">
+        {loading?
+            <View style={{backgroundColor:"#d3d3d3aa", flex: 2, width:'100%', height:'100%', justifyContent:'center', position:"absolute", opacity:0.7}}>
+                <ActivityIndicator size="large" color="coral" />
+            </View> : <></>}
             <View style={styles.wrapper}>
                 <Text style={styles.title}>{FormTitle[screen]}</Text>
             </View>
 
             <ScrollView>
-            <View style={{width:'100%', alignItems:'center', marginBottom:100}}>
+            <View style={{width:'100%', alignItems:'center', marginBottom:100, opacity:loading? 0.3 : 1}}>
+
                 {ScreenDisplay()}
 
                 {errorMessage != "" ? <View style={{marginLeft:20, marginBottom: 20}}><Text style={{color:'red', borderRadius: 8, textAlign: 'center',width: 160, height: 30, }}>{errorMessage}</Text></View> : <></>}
             </View>
             </ScrollView>
 
-            <View style={styles.apply}>
+            <View style={[styles.apply, {opacity:loading? 0.5 : 1}]}>
                 <TouchableOpacity
                     style={[styles.prevButton]}
                     onPress={() => {

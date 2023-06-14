@@ -46,8 +46,19 @@ export default function Login( {navigation} ) {
         console.log(user);
         await AsyncStorage.setItem("userData", JSON.stringify(user));
         await AsyncStorage.setItem("userType", JSON.stringify(user.userType));
+        await AsyncStorage.setItem("login", "true");
         setIsLoading(false);  
         navigation.navigate("HomeDrawer");
+        Toast.show('Welcome to DronesWala', {
+          backgroundColor:'#fda172',
+          duration: Toast.durations.LONG,
+          position: -100,
+          shadow: true,
+          animation: true,
+          opacity:1,
+          hideOnPress: false,
+          delay: 3000,
+        });
       }else {
         console.log("No user found!!!");
         navigation.navigate("SignupStack");
@@ -94,17 +105,7 @@ export default function Login( {navigation} ) {
         });
       }else {
         getUserData(userId)
-        Toast.show('Welcome to DronesWala', {
-          backgroundColor:'#fda172',
-          duration: Toast.durations.LONG,
-          position: -100,
-          shadow: true,
-          animation: true,
-          opacity:1,
-          hideOnPress: false,
-          delay: 3000,
-        });
-        await AsyncStorage.setItem("login", "true");
+        
       }
     })
     .catch((error) => {
