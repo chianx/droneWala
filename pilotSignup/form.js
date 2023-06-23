@@ -221,10 +221,11 @@ export default function PilotForm({navigation}) {
     }
     return (
         <Modal visible={true} animationType="slide">
-        {loading?
-            <View style={{backgroundColor:"#d3d3d3aa", flex: 2, width:'100%', height:'100%', justifyContent:'center', position:"absolute", opacity:0.7}}>
-                <ActivityIndicator size="large" color="coral" />
-            </View> : <></>}
+            {loading?
+                <View style={{backgroundColor:"#d3d3d3aa", flex: 2, width:'100%', height:'100%', justifyContent:'center', position:"absolute", opacity:0.7}}>
+                    <ActivityIndicator size="large" color="coral" />
+                </View> : <></>
+            }
             <View style={styles.wrapper}>
                 <Text style={styles.title}>{FormTitle[screen]}</Text>
             </View>

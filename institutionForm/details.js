@@ -7,17 +7,11 @@ import {storage} from '../firebase/firebase'
 import { ref, getDownloadURL,uploadBytesResumable, uploadBytes} from 'firebase/storage';
 
 export default function PersonalDetails({ formData, setFormData }) {
-    //     logoIsSet  -- _/
-    // instituteIsSet -- _/
-    // nameIsSet      -- _/
-    // emailIsSet     -- _/
-    // dateIsSet      -- _/
-    // contactNumIsSet
-    // registrationNumIIsSet
+
     const [date, setDate] = useState('');
     const handleButtonOpen = () => {
         setOpen(!open);
-        if (date.length !== '') setFormData({ ...formData, foundedin: date, dateIsSet: true });
+        if (date.trim() !== '') setFormData({ ...formData, foundedin: date, dateIsSet: true });
         else setFormData({ ...formData, foundedin: date, dateIsSet: false });
     }
     const [open, setOpen] = useState(false)
@@ -48,8 +42,8 @@ export default function PersonalDetails({ formData, setFormData }) {
 
         if (!result.canceled) {
             setImage(result.assets[0].uri);
-            console.log("Hello", image);
             // Save image code starts from here
+            
             const metadata = {
                 contentType: 'image/jpeg'
             };
@@ -99,11 +93,6 @@ export default function PersonalDetails({ formData, setFormData }) {
         return <Text>No access to gallery</Text>
     }
 
-
-    const [nameIsSet, setNameIsSet] = useState(false);
-    const [dateIsSet, setDateIsSet] = useState(false);
-    const [emailIsSet, setEmailIsSet] = useState(false);
-
     const handleNameChange = (name) => {
         if (name.trim().length > 2) {
             setFormData({ ...formData, name: name, nameIsSet: true });
@@ -119,6 +108,7 @@ export default function PersonalDetails({ formData, setFormData }) {
         }
     }
     const handleEmailChange = (email) => {
+        email = email.trim();
         var validRegex = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/;
         if (email.match(validRegex)) {
             setFormData({ ...formData, email: email, emailIsSet: true });
@@ -146,7 +136,7 @@ export default function PersonalDetails({ formData, setFormData }) {
                 <TouchableOpacity onPress={() => pickImage()} style={[styles.logobtn, formData.logoIsSet ? null : { borderColor: "red" }]}><Text style={{ color: 'grey', fontSize: 17 }}>Select Logo * (Click Here)</Text></TouchableOpacity>
                 {image && <Image source={{ uri: image }} style={{ width: 180, height: 180, marginBottom: 15, borderRadius: 10 }} />}
             </View>
-            <View style={styles.inputView}>
+            <View>
                 <TextInput
                     style={[formData.instituteIsSet ? styles.TextInput : styles.errorTextInput]}
                     placeholderTextColor="grey"
@@ -155,16 +145,16 @@ export default function PersonalDetails({ formData, setFormData }) {
                     onChangeText={(instituteName) => handleInstNameChange(instituteName)}
                 />
             </View>
-            <View style={styles.inputView}>
+            <View>
                 <TextInput
                     style={[formData.nameIsSet ? styles.TextInput : styles.errorTextInput]}
                     placeholderTextColor="grey"
-                    placeholder='Full Name *'
+                    placeholder='Contact Person Name *'
                     value={formData.name}
                     onChangeText={(name) => handleNameChange(name)}
                 />
             </View>
-            <View style={[styles.inputView]}>
+            <View>
                 <TextInput
                     style={[formData.emailIsSet ? styles.TextInput : styles.errorTextInput]}
                     placeholderTextColor="grey"
@@ -182,21 +172,23 @@ export default function PersonalDetails({ formData, setFormData }) {
                         placeholderTextColor="grey"
                         placeholder='Date of Founding *'
                         value={formData.foundedin}
-                        style={{ width: 280, fontSize: 17, height: 55, color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', borderColor: formData.dateIsSet ? 'grey' : 'red', marginRight: 20, marginBottom: 15 }}
+                        style={{ width: 300, fontSize: 17, height: 55, color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', borderColor: formData.dateIsSet ? 'grey' : 'red', marginBottom: 15 }}
                     /></TouchableOpacity> :
-                        <TouchableOpacity onPress={() => { setOpen(!open) }} style={{ padding: 0 }}><TextInput
-                        editable={false}
-                        placeholderTextColor="grey"
-                        placeholder='Date of Founding *'
-                        value={formData.foundedin}
-                        style={{ width: 280, fontSize: 17, height: 55, color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', borderColor: formData.dateIsSet ? 'grey' : 'red', marginRight: 20, marginBottom: 15 }}
+                        <TouchableOpacity onPress={() => { setOpen(!open) }} style={{ padding: 0 }}>
+                        <TextInput
+                            editable={false}
+                            placeholderTextColor="grey"
+                            placeholder='Date of Founding *'
+                            value={formData.foundedin}
+                            style={{ width: 300, fontSize: 17, height: 55, color: 'grey', backgroundColor: 'white', borderWidth: 1, borderRadius: 8, textAlign: 'center', justifyContent: 'center', borderColor: formData.dateIsSet ? 'grey' : 'red', marginBottom: 15 }}
                     /></TouchableOpacity>
                     }
                 </View>
                 <View>
                     {open ? <DatePicker
                         onSelectedChange={(date) => {
-                            setDate(date)
+                            setFormData({ ...formData, foundedin: date, dateIsSet: true });
+                            setOpen(!open);
                         }}
                         mode="calendar"
                         maximumDate={todaysDate}
@@ -207,7 +199,7 @@ export default function PersonalDetails({ formData, setFormData }) {
                 <TextInput
                 style={[formData.contactNumIsSet ? styles.TextInput : styles.errorTextInput]}
                 placeholderTextColor="grey"
-                placeholder='Contact Number *'
+                placeholder='Phone Number *'
                 keyboardType='numeric'
                 required={true}
                 maxLength={10}
@@ -237,10 +229,10 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         borderWidth: 1,
         borderColor: 'grey',
-        width: 280,
+        width: 300,
         height: 55,
         marginBottom: 20,
-        alignItems: "flex-start",
+        // alignItems: "flex-start",
         justifyContent: "center",
         padding: 15,
         fontSize: 17,
@@ -251,10 +243,10 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         borderWidth: 1,
         borderColor: 'red',
-        width: 280,
+        width: 300,
         height: 55,
         marginBottom: 20,
-        alignItems: "flex-start",
+        // alignItems: "flex-start",
         justifyContent: "center",
         padding: 15,
         fontSize: 17,
@@ -279,7 +271,7 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         borderColor: "black",
         borderRadius: 8,
-        width: 280,
+        width: 300,
         height: 55,
         marginBottom: 10,
         // alignItems:'center',

@@ -7,7 +7,7 @@ export default function TermsAndConditions({navigation}) {
   return (
     <ScrollView>
             <View style={{ alignItems:'center', padding:15, backgroundColor:'coral', elevation:15, width:'100%'}}>
-              <TouchableOpacity style={styles.closeButton} onPress={() => {navigation.navigate("Home")}}>
+              <TouchableOpacity style={styles.closeButton} onPress={() => {navigation.navigate("HomeTabsInDrawer")}}>
                 <AntDesign name="close" size={28} color="white" />
               </TouchableOpacity>
               <Text style={{color:'white', fontWeight:'bold', fontSize:22}}>Terms and Condition</Text>
@@ -71,12 +71,13 @@ const styles = StyleSheet.create({
     fontWeight:'bold',
     marginBottom:11,
     marginTop:5,
-    textAlign:'center'
-
+    textAlign:'center',
   },
   normalText: {
     fontSize:14,
     marginBottom:7,
+    width:'100%',
+    padding:3,
   },
   closeButton: {
     position: 'absolute',

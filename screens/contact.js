@@ -40,7 +40,7 @@ export default function Contact({navigation}) {
   return (
         <View style={styles.container}>
             <View style={{ alignItems:'center', padding:15, backgroundColor:'coral', elevation:15}}>
-              <TouchableOpacity style={styles.closeButton} onPress={() => {navigation.navigate("Home")}}>
+              <TouchableOpacity style={styles.closeButton} onPress={() => {navigation.navigate("HomeTabsInDrawer")}}>
                 <AntDesign name="close" size={28} color="white" />
               </TouchableOpacity>
               <Text style={styles.heading}>Contact Us</Text>

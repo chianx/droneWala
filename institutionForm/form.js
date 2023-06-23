@@ -1,4 +1,4 @@
-import { View, Text, Modal, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, Modal, StyleSheet,ActivityIndicator, TouchableOpacity, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import PersonalDetails from './details';
 import { db, auth } from '../firebase/databaseConfig'
@@ -33,7 +33,7 @@ export default function InstitutionForm({navigation}) {
             contactNum: "",
             designation: "",
             designationIsSet: false,
-            registrationNumIIsSet: false,
+            registrationNumIsSet: false,
             contactNumIsSet: false,
             logoIsSet: false,
             instituteIsSet: false,
@@ -73,9 +73,9 @@ export default function InstitutionForm({navigation}) {
             }else if(!formData.contactNumIsSet) {
                 errMsg = "Invalid Contact Number"
                 formData.contactNumIsSet = false
-            }else if(!formData.registrationNumIIsSet) {
+            }else if(!formData.registrationNumIsSet) {
                 errMsg = "Invalid Registration Number"
-                formData.registrationNumIIsSet = false
+                formData.registrationNumIsSet = false
             }else validate = true;
            
             if(validate) {
@@ -118,6 +118,7 @@ export default function InstitutionForm({navigation}) {
                 }
             }else {
                 setErrorMessage(errMsg);
+                setLoading(false);
             }
             
         }
@@ -126,19 +127,25 @@ export default function InstitutionForm({navigation}) {
     
     return (
         <Modal visible={true} animationType="slide">
+            {loading?
+                <View style={{backgroundColor:"#d3d3d3aa", flex: 2, width:'100%', height:'100%', justifyContent:'center', position:"absolute", opacity:0.7}}>
+                    <ActivityIndicator size="large" color="coral" />
+                </View> : <></>
+            }
+        
             <View style={styles.wrapper}>
                 <Text style={styles.title}>{FormTitle[screen]}</Text>
             </View>
 
             <ScrollView>
-                <View style={{width:'100%', alignItems:'center', marginBottom:100}}>
+            <View style={{width:'100%', alignItems:'center', marginBottom:100, opacity:loading? 0.3 : 1}}>
                     {ScreenDisplay()}
 
                     {errorMessage != "" ? <View style={{marginLeft:20, marginBottom: 20}}><Text style={{color:'red', borderRadius: 8, textAlign: 'center',width: 160, height: 30, }}>{errorMessage}</Text></View> : <></>}
                 </View>
             </ScrollView>
 
-            <View style={styles.apply}>
+            <View style={[styles.apply, {opacity:loading? 0.5 : 1}]}>
                 <TouchableOpacity
                     style={[styles.prevButton]}
                     onPress={() => {
@@ -161,7 +168,7 @@ export default function InstitutionForm({navigation}) {
 
 const styles = StyleSheet.create({
     wrapper: {
-        marginTop:50,
+        marginTop:30,
         alignItems: "center",
     },
     title: {
